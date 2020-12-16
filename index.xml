@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Co1a&#39;s Blog</title>
+    <link>https://max-cheng.github.io/</link>
+    <description>Recent content on Co1a&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <copyright>&lt;a href=&#34;https://creativecommons.org/licenses/by-nc/4.0/&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;CC BY-NC 4.0&lt;/a&gt;</copyright>
+    <lastBuildDate>Sun, 16 Aug 2020 16:00:00 +0000</lastBuildDate><atom:link href="https://max-cheng.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>About</title>
+      <link>https://max-cheng.github.io/about/</link>
+      <pubDate>Tue, 15 Dec 2020 20:46:25 +0800</pubDate>
+      
+      <guid>https://max-cheng.github.io/about/</guid>
+      <description>This is a demo
+🙆🏻‍♂️
+你会吗</description>
+    </item>
+    
+    <item>
+      <title>2Step为Hexo主题添加LikeCoin的赞赏键</title>
+      <link>https://max-cheng.github.io/posts/2020/08/2step%E4%B8%BAhexo%E4%B8%BB%E9%A2%98%E6%B7%BB%E5%8A%A0likecoin%E7%9A%84%E8%B5%9E%E8%B5%8F%E9%94%AE/</link>
+      <pubDate>Sun, 16 Aug 2020 16:00:00 +0000</pubDate>
+      
+      <guid>https://max-cheng.github.io/posts/2020/08/2step%E4%B8%BAhexo%E4%B8%BB%E9%A2%98%E6%B7%BB%E5%8A%A0likecoin%E7%9A%84%E8%B5%9E%E8%B5%8F%E9%94%AE/</guid>
+      <description>最近一直想切换到Hexo,但是只在本地上切换了,并没有托管至Github,闲下来之后看看能不能切换过去,很喜慌Matters这种Like Botton,想着也把这个按钮一并移植过去
+Step1.定位正文的父元素 首先打开Chrome，打开Hexo本地伺服，开启开发者控制台.
+举个例子，我想要把赞赏键添加至文章末尾
+显而易见，正文的父级为article-entry
+将整个主题文件夹拖入Visual Studio Code,使用自带的检索按钮搜寻上文中的父级标签.
+Step2. 插入对应代码 根据对Hexo主题模版分析，我们想要在content正下方插入对应LikeCoin 的贊賞鍵，所以套在最后的post.content的正下方.
+&amp;lt;% if (config.liker.enable&amp;amp;&amp;amp;!index){ %&amp;gt; &amp;lt;div&amp;gt; &amp;lt;script type=&amp;quot;text/javascript&amp;quot;&amp;gt; document.write(&amp;quot;&amp;lt;iframe scrolling=&#39;no&#39; frameborder=&#39;0&#39; style=&#39;width:100%; max-width:485px; height:240px; margin:auto; overflow:hidden; display:block;&#39;src=&#39;https://button.like.co/in/embed/&amp;quot;+&#39;&amp;lt;%- config.liker.id %&amp;gt;&#39;+&amp;quot;/button?referrer=&amp;quot; +encodeURIComponent(location.href.split(&amp;quot;?&amp;quot;)[0].split(&amp;quot;#&amp;quot;)[0]) + &amp;quot;&#39;&amp;gt;&amp;lt;/iframe&amp;gt;&amp;quot;); &amp;lt;/script&amp;gt; &amp;lt;div&amp;gt; &amp;lt;% } %&amp;gt; 在hexo的配置文件_config.yml中插入
+liker: enable: true id: Your liker id 让我们来试试效果如何.
+修改后的主题文件已上传至Github，需要的朋友可以自取
+使用方法:
+ 将主题设置为hexo-theme-ocean 在Hexo_config.yml中添加相应字段 Enjoy~  **Note:**在Ocean中,在主页也会显示赞赏键,需要在判断语句中进行更改,文中所提供的代码判断语句仅适用于Ocean,其他朋友动手需要自己研究一下.</description>
+    </item>
+    
+    <item>
+      <title>Nuc8在线安装黑苹果教程</title>
+      <link>https://max-cheng.github.io/posts/2020/03/nuc8%E5%9C%A8%E7%BA%BF%E5%AE%89%E8%A3%85%E9%BB%91%E8%8B%B9%E6%9E%9C%E6%95%99%E7%A8%8B/</link>
+      <pubDate>Mon, 30 Mar 2020 16:00:00 +0000</pubDate>
+      
+      <guid>https://max-cheng.github.io/posts/2020/03/nuc8%E5%9C%A8%E7%BA%BF%E5%AE%89%E8%A3%85%E9%BB%91%E8%8B%B9%E6%9E%9C%E6%95%99%E7%A8%8B/</guid>
+      <description>最近很多新朋友通过黑苹果了解到了Nuc8,我自己液使用了将近一年之久,闲来无事也照着维奇的轮子自己撸了一个,废话少说,直接进入教程。
+准备阶段  一个格式为Fat32的U盘(容量大等于1G) 有线连接或安装白果卡的的Nuc8 将bios中的Secure Boot,Fast Boot关闭(详见weachy的这篇博客)  下载阶段   下载EFI解压到U盘根目录(我这里没有U盘,使用文件夹演示)
+文件目录应为
+. └── EFI ├── BOOT │ └── ... ├── OC │ ├── ... | ... └── readme.txt 我这里使用的是weachy大佬维护的EFI,同时欢迎各位捐赠
+  下载Magic-Stick-Creator至根目录或使用捐赠包内附带的文件,这里默认使用Magic-Stick-Creator
+  macOS   下载Magic-Stick-Creator_v1.0.8_darwin_amd64.zip并移动至U盘更目录
+  解压后执行
+cd /Volumes/你的u盘名称 ./Magic-Stick-Creator_v1.0.8_darwin_amd64   根据工具提示下载你需要的版本
+  Windows  下载Magic-Stick-Creator_v1.0.8_windows_amd64.exe.zip并移动至U盘更目录 解压后运行,根据工具提示下载你需要的版本 下载完成后即可进入安装环节  安装阶段  开机后一直按F10进入引导菜单 箭头移动光标至你的U盘 在按下回车后立马疯狂按Command(Win)+R(重要) 屏幕显示Logo读条即为成功 通过磁盘工具格式化你的硬盘 退出至主菜单,选择重新安装Mac (你选择的版本) 期间网络需保持稳定  中间会重启数次,一直选择macos installer即可 Enjoy~ :)</description>
+    </item>
+    
+    <item>
+      <title>WSL2初体验</title>
+      <link>https://max-cheng.github.io/posts/2020/02/wsl2%E5%88%9D%E4%BD%93%E9%AA%8C/</link>
+      <pubDate>Wed, 19 Feb 2020 16:00:00 +0000</pubDate>
+      
+      <guid>https://max-cheng.github.io/posts/2020/02/wsl2%E5%88%9D%E4%BD%93%E9%AA%8C/</guid>
+      <description>最近有个想法，从MacOs迁移到Windows，虽说平时也是在这两个系统来回切换，但是体验并不好，随后在笔记本上开启了Windows Insider.
+WSL2配置Clash代理 由于我使用的代理为Clash,但是好像并不能够自动完成WSL2的设置
+vim ~/.bashrc 插入以下内容
+export hostip=$(cat /etc/resolv.conf |grep -oP &#39;(?&amp;lt;=nameserver\ ).*&#39;); export https_proxy=&amp;quot;http://${hostip}:7890&amp;quot;; export http_proxy=&amp;quot;http://${hostip}:7890&amp;quot;; export all_proxy=&amp;quot;socks5://${hostip}:7891&amp;quot;; 安装Fish Shell Fish Shell是我用过的Shell中最方便也是最现代化的一个终端,有着zsh的体验和bash的速度
+sudo apt-get install fish chsh -s /usr/bin/fish 安装Oh-My-Fish curl -L https://get.oh-my.fish | fish omf install agnoster ofm theme agnoster 但是到这里WSL自带的终端会出现乱码，故使用了Windows Terminal+Cascadia Code的组合
+配置Windows Terminal 首先当然是安装微软最新的Cascadia Code,我这里使用的是CascadiaPL
+在Windows Terminal按Ctrl+,打开配置文件,我的配置文件如下
+// To view the default settings, hold &amp;quot;alt&amp;quot; while clicking on the &amp;quot;Settings&amp;quot; button. // For documentation on these settings, see: https://aka.</description>
+    </item>
+    
+    <item>
+      <title>2019LeetCode秋季全国赛3. 机器人大冒险.</title>
+      <link>https://max-cheng.github.io/posts/2019/10/2019leetcode%E7%A7%8B%E5%AD%A3%E5%85%A8%E5%9B%BD%E8%B5%9B3.-%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%A4%A7%E5%86%92%E9%99%A9./</link>
+      <pubDate>Sun, 27 Oct 2019 16:00:00 +0000</pubDate>
+      
+      <guid>https://max-cheng.github.io/posts/2019/10/2019leetcode%E7%A7%8B%E5%AD%A3%E5%85%A8%E5%9B%BD%E8%B5%9B3.-%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%A4%A7%E5%86%92%E9%99%A9./</guid>
+      <description>力扣团队买了一个可编程机器人，机器人初始位置在原点(0, 0)。小伙伴事先给机器人输入一串指令command，机器人就会无限循环这条指令的步骤进行移动。指令有两种： U: 向y轴正方向移动一格 R: 向x轴正方向移动一格。 不幸的是，在 xy 平面上还有一些障碍物，他们的坐标用obstacles表示。机器人一旦碰到障碍物就会被损毁。 给定终点坐标(x, y)，返回机器人能否完好地到达终点。如果能，返回true；否则返回false。 示例 1： 输入：command = “URR”, obstacles = [], x = 3, y = 2 输出：true 解释：U(0, 1) -&amp;gt; R(1, 1) -&amp;gt; R(2, 1) -&amp;gt; U(2, 2) -&amp;gt; R(3, 2)。 示例 2： 输入：command = “URR”, obstacles = [[2, 2]], x = 3, y = 2 输出：false 解释：机器人在到达终点前会碰到(2, 2)的障碍物。 示例 3： 输入：command = “URR”, obstacles = [[4, 2]], x = 3, y = 2 输出：true 解释：到达终点后，再碰到障碍物也不影响返回结果。 限制： 2 &amp;lt;= command的长度 &amp;lt;= 1000 command由U，R构成，且至少有一个U，至少有一个R 0 &amp;lt;= x &amp;lt;= 1e9, 0 &amp;lt;= y &amp;lt;= 1e9 0 &amp;lt;= obstacles的长度 &amp;lt;= 1000 obstacles[i]不为原点或者终点</description>
+    </item>
+    
+    <item>
+      <title>Mac下安装Tensorflow</title>
+      <link>https://max-cheng.github.io/posts/2019/06/mac%E4%B8%8B%E5%AE%89%E8%A3%85tensorflow/</link>
+      <pubDate>Fri, 21 Jun 2019 16:00:00 +0000</pubDate>
+      
+      <guid>https://max-cheng.github.io/posts/2019/06/mac%E4%B8%8B%E5%AE%89%E8%A3%85tensorflow/</guid>
+      <description>最近Anaconda清华镜像站关闭，国内许多镜像源都关闭了，导致下载TensorFlow很慢很慢，自己琢磨是不是可以通过pip镜像站来解决这个问题。
+首先新建一个Anaconda环境
+conda create -n env_name python=3.6 再将pip源设置为国内源
+cd ~ mkdir .pip vim ~/.pip/pip.conf 插入以下内容 [global] index-url = https://mirrors.aliyun.com/pypi/simple [install] trusted-host = mirrors.aliyun.com
+这里我用的是阿里源
+再次进入虚拟环境
+source activate env_name pip install tensorflow Done!
+出现tensorflow/core/platform/cpu_feature_guard.cc:140] Your CPU supports instructions that this TensorFlow binary was not compiled to use: AVX2 FMA的解决办法
+首先前往这个地址，找到适合自己的版本并下载，例如我的首先新建一个新的虚拟环境，Python版本如图所示
+conda create -n tensorflow python=3.6.5 source activate tensorflow pip install tensorflow#这一步是让他把默认的组件安装了 安装完毕之后再次执行以下命令安装支持cpu用AVX2编译的TensorFlow版本。
+pip install --ignore-installed --upgrade /co1a/donwload/tensorflow-1.13.1-cp36-cp36m-macosx_10_13_x86_64.whl --user 再实验一次试试 完美解决！</description>
+    </item>
+    
+    <item>
+      <title>WSL下Git的坑</title>
+      <link>https://max-cheng.github.io/posts/2019/05/wsl%E4%B8%8Bgit%E7%9A%84%E5%9D%91/</link>
+      <pubDate>Sat, 25 May 2019 16:00:00 +0000</pubDate>
+      
+      <guid>https://max-cheng.github.io/posts/2019/05/wsl%E4%B8%8Bgit%E7%9A%84%E5%9D%91/</guid>
+      <description>最近忙于软件杯比赛，基本上没有时间腾出来做个人项目了，周末闲着没事重装了一个系统，原因是手动升级1903后环境变量都没了甘霖娘微软，于是乎重新装了个系统，心想最近Windows Terminal和WSL2即将到来，是不是可以用WSL来生成hugo,还便于管理，殊不知一路上都是坑。。。FXXK Microsoft!
+首先去Hugo的Github上下载最新的deb版，WSL还是使用的Ubuntu(R.I.P Cent os)，在这里我的下载目录为*C:\Users\Shire\Downloads,进入WSL
+cd /mnt/c/Users/Shire/Download sudo dpkg -i hugo_0.55.6_Linux-64bit.deb 再进入之前备份好的Hugo目录下
+cd Blog hugo cd public git add . git commit -m &#39;update&#39; git push -u origin master 等等，怎么会权限不足，哦，那我用sudo不就好了(开始给自己挖坑)
+sudo git push -u origin master 什么???认证失败??? 在我折腾了半个小时之后，终于发现ssh密钥应该使用root用户的(一度怀疑自己脑子里面是不是装了屎)
+sudo su cd ~ cat .ssh/id_rsa.pub 再去Coding官网上添加SSH密钥，OK，解决。
+寻根究底还是WSL在Windows目录下权限不足，搞了半天还以为是WSL的问题(M$对不起),果然还是自己脑子进了屎。。。</description>
+    </item>
+    
+    <item>
+      <title>为Coding下的Hugo添加GitTalk</title>
+      <link>https://max-cheng.github.io/posts/2019/05/%E4%B8%BAcoding%E4%B8%8B%E7%9A%84hugo%E6%B7%BB%E5%8A%A0gittalk/</link>
+      <pubDate>Sat, 25 May 2019 16:00:00 +0000</pubDate>
+      
+      <guid>https://max-cheng.github.io/posts/2019/05/%E4%B8%BAcoding%E4%B8%8B%E7%9A%84hugo%E6%B7%BB%E5%8A%A0gittalk/</guid>
+      <description>本站之前一直使用Disqus,发现还是太臃肿，而且被某些不明力量所封禁，这次发现了一个比较好的解决办法，GitTalk
+在Google随便搜索一下都是关于Hexo的GitTalk，并且人家用的还是Github Page，这就比较尴尬了，俗话说的好，办法总比困难多，冷静分析之后发现无非就一个点需要注意
+ 存在一个GitHub项目用于保留issue从而达到保留评论  在这里我新建了一个仓库取名为max-cheng.github.io,记得勾选自动生成README文件例如下图,(我比较懒所以就不重新生成了hahaha)
+创建新的仓库后，我们申请一个GitHub Application,例如我的
+这里需要注意一下，第二个主页连接中，我们输入刚刚生成新仓库的链接，即yourusername.github.io,最后一个Authorization callback URL填写自己的域名或coding生成的域名，切记切记，然后会给你以下信息，打开config.toml按照以下格式填写即可。
+如果可以使用请评论一下(站点太冷清了)
+Tks</description>
+    </item>
+    
+    <item>
+      <title>2019LeetCode春季全国高校赛-1.易混淆数</title>
+      <link>https://max-cheng.github.io/posts/2019/03/2019leetcode%E6%98%A5%E5%AD%A3%E5%85%A8%E5%9B%BD%E9%AB%98%E6%A0%A1%E8%B5%9B-1.%E6%98%93%E6%B7%B7%E6%B7%86%E6%95%B0/</link>
+      <pubDate>Thu, 21 Mar 2019 16:00:00 +0000</pubDate>
+      
+      <guid>https://max-cheng.github.io/posts/2019/03/2019leetcode%E6%98%A5%E5%AD%A3%E5%85%A8%E5%9B%BD%E9%AB%98%E6%A0%A1%E8%B5%9B-1.%E6%98%93%E6%B7%B7%E6%B7%86%E6%95%B0/</guid>
+      <description>易混淆数 给定一个数字 N，当它满足以下条件的时候返回 true： 把原数字旋转 180° 以后得到新的数字。 如 0, 1, 6, 8, 9 旋转 180° 以后，得到了新的数字 0, 1, 9, 8, 6 。 2, 3, 4, 5, 7 旋转 180° 后,得到的不是数字。 易混淆数字 (confusing number) 就是一个数字旋转 180° 以后，得到和原来不同的数字，且新数字的每一位都是有效的。 这道题非常有意思，但是如何实现呢？  依题意可知，若 Srting 中含有 2,3,4,5,7 得到的并不是数字，既然不是数字，那么我们可以直接 return false，依照上面的思路，便有以下代码。
+func test(s int) bool { target:=strconv.Itoa(s) //将s转换为string类型 nums1:=[]byte(target) //再次转换为byte，方便后面转换成string与原字符串对比 newline :=[]byte{} nums:=[]byte{} for _,v:=range nums1 { if v==&#39;2&#39;||v==&#39;3&#39;||v==&#39;4&#39;||v==&#39;5&#39;||v==&#39;7&#39;{ //对字符串进行遍历，查看是否存在无法混淆的元素 return false }else { switch v { //对可混淆的数进行转化 case &#39;0&#39;:newline =append(newline,&#39;0&#39;) case &#39;1&#39;:newline =append(newline,&#39;1&#39;) case &#39;6&#39;:newline =append(newline,&#39;9&#39;) case &#39;9&#39;:newline =append(newline,&#39;6&#39;) case &#39;8&#39;:newline =append(newline,&#39;8&#39;) } } } for i:=len(newline)-1;i&amp;gt;=0;i-- { nums=append(nums,newline[i]) //对处理后的byte切片进行反转 } if string(nums1) == string(nums) { //与原字符串进行比较 return false } return true } 当然此算法存在一定的局限性，欢迎各位在评论区提出更好的算法，近期会将 2019 的所有题目的思路进行梳理，感谢支持</description>
+    </item>
+    
+    <item>
+      <title>2019LeetCode春季全国高校赛决赛-1. 有序数组中的缺失元素</title>
+      <link>https://max-cheng.github.io/posts/2019/03/2019leetcode%E6%98%A5%E5%AD%A3%E5%85%A8%E5%9B%BD%E9%AB%98%E6%A0%A1%E8%B5%9B%E5%86%B3%E8%B5%9B-1.-%E6%9C%89%E5%BA%8F%E6%95%B0%E7%BB%84%E4%B8%AD%E7%9A%84%E7%BC%BA%E5%A4%B1%E5%85%83%E7%B4%A0/</link>
+      <pubDate>Thu, 21 Mar 2019 16:00:00 +0000</pubDate>
+      
+      <guid>https://max-cheng.github.io/posts/2019/03/2019leetcode%E6%98%A5%E5%AD%A3%E5%85%A8%E5%9B%BD%E9%AB%98%E6%A0%A1%E8%B5%9B%E5%86%B3%E8%B5%9B-1.-%E6%9C%89%E5%BA%8F%E6%95%B0%E7%BB%84%E4%B8%AD%E7%9A%84%E7%BC%BA%E5%A4%B1%E5%85%83%E7%B4%A0/</guid>
+      <description>有序数组中的缺失元素给出一个有序数组 A，数组中的每个数字都是 独一无二的，找出从数组最左边开始的第
+K
+个缺失数字。示例 1：输入：A = [4,7,9,10], K = 1
+输出：5
+解释：
+第一个缺失数字为 5 。示例 2：输入：A = [4,7,9,10], K = 3
+输出：8
+解释：
+缺失数字有 [5,6,8,…]，因此第三个缺失数字为 8 。示例 3：输入：A = [1,2,4], K = 3
+输出：6
+解释：
+缺失数字有 [3,5,6,7,…]，因此第三个缺失数字为 6 。提示：1 &amp;lt;= A.length &amp;lt;= 500001 &amp;lt;= A[i] &amp;lt;= 1e71 &amp;lt;= K &amp;lt;= 1e8
+废话不多说，直接上代码。
+func missingElement(nums []int, k int) int { basemap:= map[int]int{} step:=0 targetnums:=0 for _,v:=range nums{ basemap[v]++ } for i:=nums[0];k!</description>
+    </item>
+    
+  </channel>
+</rss>

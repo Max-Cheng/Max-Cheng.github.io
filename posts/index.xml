@@ -1,0 +1,677 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>Posts on Co1a&#39;s Blog</title>
+        <link>https://max-cheng.github.io/posts/</link>
+        <description>Recent content in Posts on Co1a&#39;s Blog</description>
+        <generator>Hugo -- gohugo.io</generator>
+        <language>zh-cn</language>
+        <copyright>&lt;a href=&#34;https://creativecommons.org/licenses/by-nc/4.0/&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;CC BY-NC 4.0&lt;/a&gt;</copyright>
+        <lastBuildDate>Sun, 16 Aug 2020 16:00:00 +0000</lastBuildDate>
+        <atom:link href="https://max-cheng.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+        
+        <item>
+            <title>2Step为Hexo主题添加LikeCoin的赞赏键</title>
+            <link>https://max-cheng.github.io/posts/2020/08/2step%E4%B8%BAhexo%E4%B8%BB%E9%A2%98%E6%B7%BB%E5%8A%A0likecoin%E7%9A%84%E8%B5%9E%E8%B5%8F%E9%94%AE/</link>
+            <pubDate>Sun, 16 Aug 2020 16:00:00 +0000</pubDate>
+            
+            <guid>https://max-cheng.github.io/posts/2020/08/2step%E4%B8%BAhexo%E4%B8%BB%E9%A2%98%E6%B7%BB%E5%8A%A0likecoin%E7%9A%84%E8%B5%9E%E8%B5%8F%E9%94%AE/</guid>
+            <description>最近一直想切换到Hexo,但是只在本地上切换了,并没有托管至Github,闲下来之后看看能不能切换过去,很喜慌Matters这种Like Botton,想着也把这个按钮一并移植过去
+Step1.定位正文的父元素 首先打开Chrome，打开Hexo本地伺服，开启开发者控制台.
+举个例子，我想要把赞赏键添加至文章末尾
+显而易见，正文的父级为article-entry
+将整个主题文件夹拖入Visual Studio Code,使用自带的检索按钮搜寻上文中的父级标签.
+Step2. 插入对应代码 根据对Hexo主题模版分析，我们想要在content正下方插入对应LikeCoin 的贊賞鍵，所以套在最后的post.content的正下方.
+&amp;lt;% if (config.liker.enable&amp;amp;&amp;amp;!index){ %&amp;gt; &amp;lt;div&amp;gt; &amp;lt;script type=&amp;quot;text/javascript&amp;quot;&amp;gt; document.write(&amp;quot;&amp;lt;iframe scrolling=&#39;no&#39; frameborder=&#39;0&#39; style=&#39;width:100%; max-width:485px; height:240px; margin:auto; overflow:hidden; display:block;&#39;src=&#39;https://button.like.co/in/embed/&amp;quot;+&#39;&amp;lt;%- config.liker.id %&amp;gt;&#39;+&amp;quot;/button?referrer=&amp;quot; +encodeURIComponent(location.href.split(&amp;quot;?&amp;quot;)[0].split(&amp;quot;#&amp;quot;)[0]) + &amp;quot;&#39;&amp;gt;&amp;lt;/iframe&amp;gt;&amp;quot;); &amp;lt;/script&amp;gt; &amp;lt;div&amp;gt; &amp;lt;% } %&amp;gt; 在hexo的配置文件_config.yml中插入
+liker: enable: true id: Your liker id 让我们来试试效果如何.
+修改后的主题文件已上传至Github，需要的朋友可以自取
+使用方法:
+ 将主题设置为hexo-theme-ocean 在Hexo_config.yml中添加相应字段 Enjoy~  **Note:**在Ocean中,在主页也会显示赞赏键,需要在判断语句中进行更改,文中所提供的代码判断语句仅适用于Ocean,其他朋友动手需要自己研究一下.</description>
+            <content type="html"><![CDATA[<p>最近一直想切换到Hexo,但是只在本地上切换了,并没有托管至Github,闲下来之后看看能不能切换过去,很喜慌Matters这种Like Botton,想着也把这个按钮一并移植过去</p>
+<h5 id="step1定位正文的父元素">Step1.定位正文的父元素</h5>
+<p>首先打开Chrome，打开Hexo本地伺服，开启开发者控制台.</p>
+<p>举个例子，我想要把赞赏键添加至文章末尾</p>
+<p><img src="https://i.loli.net/2020/08/16/OUSezawRnhYBAk2.png" alt="截屏2020-08-15 下午11.53.16.png"></p>
+<p>显而易见，正文的父级为<code>article-entry</code></p>
+<p>将整个主题文件夹拖入Visual Studio Code,使用自带的检索按钮搜寻上文中的父级标签.</p>
+<p><img src="https://i.loli.net/2020/08/16/1KvUkwHMF5Gtg7A.png" alt="截屏2020-08-16 上午1.09.49.png"></p>
+<h5 id="step2-插入对应代码">Step2. 插入对应代码</h5>
+<p>根据对Hexo主题模版分析，我们想要在content正下方插入对应LikeCoin 的贊賞鍵，所以套在最后的post.content的正下方.</p>
+<pre><code>&lt;% if (config.liker.enable&amp;&amp;!index){ %&gt;
+                                                                            &lt;div&gt;
+                                                                                &lt;script type=&quot;text/javascript&quot;&gt;
+                                                                                  document.write(&quot;&lt;iframe scrolling='no' frameborder='0' style='width:100%; max-width:485px; height:240px; margin:auto; overflow:hidden; display:block;'src='https://button.like.co/in/embed/&quot;+'&lt;%- config.liker.id  %&gt;'+&quot;/button?referrer=&quot; +encodeURIComponent(location.href.split(&quot;?&quot;)[0].split(&quot;#&quot;)[0]) + &quot;'&gt;&lt;/iframe&gt;&quot;);
+                                                                                &lt;/script&gt;
+                                                                            &lt;div&gt;
+                                                                        &lt;% } %&gt;
+</code></pre><p>在hexo的配置文件<code>_config.yml</code>中插入</p>
+<pre><code>liker:
+  enable: true
+  id: Your liker id
+</code></pre><p>让我们来试试效果如何.</p>
+<p><img src="https://i.loli.net/2020/08/16/s4t5KAX6np9gxZj.png" alt="截屏2020-08-16 上午1.36.49.png"></p>
+<p>修改后的主题文件已上传至<a href="https://github.com/Max-Cheng/hexo-theme-ocean">Github</a>，需要的朋友可以自取</p>
+<p>使用方法:</p>
+<ol>
+<li>将主题设置为hexo-theme-ocean</li>
+<li>在Hexo<code>_config.yml</code>中添加相应字段</li>
+<li>Enjoy~</li>
+</ol>
+<p>**Note:**在Ocean中,在主页也会显示赞赏键,需要在判断语句中进行更改,文中所提供的代码判断语句仅适用于Ocean,其他朋友动手需要自己研究一下.</p>
+]]></content>
+        </item>
+        
+        <item>
+            <title>Nuc8在线安装黑苹果教程</title>
+            <link>https://max-cheng.github.io/posts/2020/03/nuc8%E5%9C%A8%E7%BA%BF%E5%AE%89%E8%A3%85%E9%BB%91%E8%8B%B9%E6%9E%9C%E6%95%99%E7%A8%8B/</link>
+            <pubDate>Mon, 30 Mar 2020 16:00:00 +0000</pubDate>
+            
+            <guid>https://max-cheng.github.io/posts/2020/03/nuc8%E5%9C%A8%E7%BA%BF%E5%AE%89%E8%A3%85%E9%BB%91%E8%8B%B9%E6%9E%9C%E6%95%99%E7%A8%8B/</guid>
+            <description>最近很多新朋友通过黑苹果了解到了Nuc8,我自己液使用了将近一年之久,闲来无事也照着维奇的轮子自己撸了一个,废话少说,直接进入教程。
+准备阶段  一个格式为Fat32的U盘(容量大等于1G) 有线连接或安装白果卡的的Nuc8 将bios中的Secure Boot,Fast Boot关闭(详见weachy的这篇博客)  下载阶段   下载EFI解压到U盘根目录(我这里没有U盘,使用文件夹演示)
+文件目录应为
+. └── EFI ├── BOOT │ └── ... ├── OC │ ├── ... | ... └── readme.txt 我这里使用的是weachy大佬维护的EFI,同时欢迎各位捐赠
+  下载Magic-Stick-Creator至根目录或使用捐赠包内附带的文件,这里默认使用Magic-Stick-Creator
+  macOS   下载Magic-Stick-Creator_v1.0.8_darwin_amd64.zip并移动至U盘更目录
+  解压后执行
+cd /Volumes/你的u盘名称 ./Magic-Stick-Creator_v1.0.8_darwin_amd64   根据工具提示下载你需要的版本
+  Windows  下载Magic-Stick-Creator_v1.0.8_windows_amd64.exe.zip并移动至U盘更目录 解压后运行,根据工具提示下载你需要的版本 下载完成后即可进入安装环节  安装阶段  开机后一直按F10进入引导菜单 箭头移动光标至你的U盘 在按下回车后立马疯狂按Command(Win)+R(重要) 屏幕显示Logo读条即为成功 通过磁盘工具格式化你的硬盘 退出至主菜单,选择重新安装Mac (你选择的版本) 期间网络需保持稳定  中间会重启数次,一直选择macos installer即可 Enjoy~ :)</description>
+            <content type="html"><![CDATA[<p>最近很多新朋友通过黑苹果了解到了Nuc8,我自己液使用了将近一年之久,闲来无事也照着维奇的轮子自己撸了一个,废话少说,直接进入教程。</p>
+<h2 id="准备阶段">准备阶段</h2>
+<ol>
+<li>一个格式为Fat32的U盘(容量大等于1G)</li>
+<li>有线连接或安装白果卡的的Nuc8</li>
+<li>将bios中的Secure Boot,Fast Boot关闭(详见weachy的<a href="https://www.jianshu.com/p/78510cfa4a64">这篇博客</a>)</li>
+</ol>
+<h2 id="下载阶段">下载阶段</h2>
+<ol>
+<li>
+<p>下载EFI解压到U盘根目录(我这里没有U盘,使用文件夹演示)</p>
+<p>文件目录应为</p>
+<pre><code>.
+└── EFI
+    ├── BOOT
+    │   └── ...
+    ├── OC
+    │   ├── ...
+    |   ...
+    └── readme.txt
+</code></pre><p>我这里使用的是<a href="https://www.jianshu.com/u/82ec04331356">weachy</a>大佬维护的EFI,同时欢迎各位<a href="https://mianbaoduo.com/o/bread/Y5mTkp8=">捐赠</a></p>
+</li>
+<li>
+<p>下载<a href="https://github.com/Max-Cheng/Magic-Stick-Creator">Magic-Stick-Creator</a>至根目录或使用捐赠包内附带的文件,这里默认使用Magic-Stick-Creator</p>
+</li>
+</ol>
+<h3 id="macos">macOS</h3>
+<ol>
+<li>
+<p>下载<a href="https://github.com/Max-Cheng/Magic-Stick-Creator/releases/download/v1.0.8/Magic-Stick-Creator_v1.0.8_darwin_amd64.zip">Magic-Stick-Creator_v1.0.8_darwin_amd64.zip</a>并移动至U盘更目录</p>
+</li>
+<li>
+<p>解压后执行</p>
+<pre><code>cd /Volumes/你的u盘名称
+./Magic-Stick-Creator_v1.0.8_darwin_amd64
+</code></pre></li>
+<li>
+<p>根据工具提示下载你需要的版本</p>
+</li>
+</ol>
+<h3 id="windows">Windows</h3>
+<ol>
+<li>下载<a href="https://github.com/Max-Cheng/Magic-Stick-Creator/releases/download/v1.0.8/Magic-Stick-Creator_v1.0.8_windows_amd64.exe.zip">Magic-Stick-Creator_v1.0.8_windows_amd64.exe.zip</a>并移动至U盘更目录</li>
+<li>解压后运行,根据工具提示下载你需要的版本</li>
+<li>下载完成后即可进入安装环节</li>
+</ol>
+<h2 id="安装阶段">安装阶段</h2>
+<ol>
+<li>开机后一直按F10进入引导菜单</li>
+<li>箭头移动光标至你的U盘</li>
+<li>在按下回车后立马疯狂按Command(Win)+R(重要)</li>
+<li>屏幕显示Logo读条即为成功</li>
+<li>通过磁盘工具格式化你的硬盘</li>
+<li>退出至主菜单,选择重新安装Mac (你选择的版本) 期间网络需保持稳定</li>
+</ol>
+<p>中间会重启数次,一直选择macos installer即可
+Enjoy~
+:)</p>
+]]></content>
+        </item>
+        
+        <item>
+            <title>WSL2初体验</title>
+            <link>https://max-cheng.github.io/posts/2020/02/wsl2%E5%88%9D%E4%BD%93%E9%AA%8C/</link>
+            <pubDate>Wed, 19 Feb 2020 16:00:00 +0000</pubDate>
+            
+            <guid>https://max-cheng.github.io/posts/2020/02/wsl2%E5%88%9D%E4%BD%93%E9%AA%8C/</guid>
+            <description>最近有个想法，从MacOs迁移到Windows，虽说平时也是在这两个系统来回切换，但是体验并不好，随后在笔记本上开启了Windows Insider.
+WSL2配置Clash代理 由于我使用的代理为Clash,但是好像并不能够自动完成WSL2的设置
+vim ~/.bashrc 插入以下内容
+export hostip=$(cat /etc/resolv.conf |grep -oP &#39;(?&amp;lt;=nameserver\ ).*&#39;); export https_proxy=&amp;quot;http://${hostip}:7890&amp;quot;; export http_proxy=&amp;quot;http://${hostip}:7890&amp;quot;; export all_proxy=&amp;quot;socks5://${hostip}:7891&amp;quot;; 安装Fish Shell Fish Shell是我用过的Shell中最方便也是最现代化的一个终端,有着zsh的体验和bash的速度
+sudo apt-get install fish chsh -s /usr/bin/fish 安装Oh-My-Fish curl -L https://get.oh-my.fish | fish omf install agnoster ofm theme agnoster 但是到这里WSL自带的终端会出现乱码，故使用了Windows Terminal+Cascadia Code的组合
+配置Windows Terminal 首先当然是安装微软最新的Cascadia Code,我这里使用的是CascadiaPL
+在Windows Terminal按Ctrl+,打开配置文件,我的配置文件如下
+// To view the default settings, hold &amp;quot;alt&amp;quot; while clicking on the &amp;quot;Settings&amp;quot; button. // For documentation on these settings, see: https://aka.</description>
+            <content type="html"><![CDATA[<p>最近有个想法，从MacOs迁移到Windows，虽说平时也是在这两个系统来回切换，但是体验并不好，随后在笔记本上开启了Windows Insider.</p>
+<h3 id="wsl2配置clash代理">WSL2配置Clash代理</h3>
+<p>由于我使用的代理为Clash,但是好像并不能够自动完成WSL2的设置</p>
+<pre><code>vim ~/.bashrc
+</code></pre><p>插入以下内容</p>
+<pre><code>export hostip=$(cat /etc/resolv.conf |grep -oP '(?&lt;=nameserver\ ).*');
+export https_proxy=&quot;http://${hostip}:7890&quot;;
+export http_proxy=&quot;http://${hostip}:7890&quot;;
+export all_proxy=&quot;socks5://${hostip}:7891&quot;;
+</code></pre><h3 id="安装fish-shell">安装Fish Shell</h3>
+<p>Fish Shell是我用过的Shell中最方便也是最现代化的一个终端,有着zsh的体验和bash的速度</p>
+<pre><code>sudo apt-get install fish
+chsh -s /usr/bin/fish 
+</code></pre><h3 id="安装oh-my-fish">安装Oh-My-Fish</h3>
+<pre><code>curl -L https://get.oh-my.fish | fish
+omf install agnoster
+ofm theme agnoster
+</code></pre><p>但是到这里WSL自带的终端会出现乱码，故使用了<a href="https://www.microsoft.com/zh-cn/p/windows-terminal-preview/9n0dx20hk701?activetab=pivot:overviewtab">Windows Terminal</a>+Cascadia Code的组合</p>
+<h3 id="配置windows-terminal">配置Windows Terminal</h3>
+<p>首先当然是安装微软最新的<a href="https://github.com/microsoft/cascadia-code/releases">Cascadia Code</a>,我这里使用的是<a href="https://github.com/microsoft/cascadia-code/releases/download/v1911.21/CascadiaPL.ttf">CascadiaPL</a></p>
+<p>在Windows Terminal按Ctrl+,打开配置文件,我的配置文件如下</p>
+<pre><code>// To view the default settings, hold &quot;alt&quot; while clicking on the &quot;Settings&quot; button.
+// For documentation on these settings, see: https://aka.ms/terminal-documentation
+
+{
+    &quot;$schema&quot;: &quot;https://aka.ms/terminal-profiles-schema&quot;,
+
+    &quot;defaultProfile&quot;: &quot;{c6eaf9f4-32a7-5fdc-b5cf-066e8a4b1e40}&quot;,
+
+    &quot;profiles&quot;:
+    {
+        &quot;defaults&quot;:
+        {
+            // Put settings here that you want to apply to all profiles
+        },
+        &quot;list&quot;:
+        [
+            {
+                // Make changes here to the powershell.exe profile
+                &quot;guid&quot;: &quot;{61c54bbd-c2c6-5271-96e7-009a87ff44bf}&quot;,
+                &quot;name&quot;: &quot;Windows PowerShell&quot;,
+                &quot;commandline&quot;: &quot;powershell.exe&quot;,
+                &quot;fontFace&quot;: &quot;Cascadia Code PL&quot;,
+                &quot;fontSize&quot;: 14,
+                &quot;hidden&quot;: false
+            },
+            {
+                // Make changes here to the cmd.exe profile
+                &quot;guid&quot;: &quot;{0caa0dad-35be-5f56-a8ff-afceeeaa6101}&quot;,
+                &quot;name&quot;: &quot;cmd&quot;,
+                &quot;commandline&quot;: &quot;cmd.exe&quot;,
+                &quot;fontFace&quot;: &quot;Cascadia Code PL&quot;,
+                &quot;fontSize&quot;: 14,
+                &quot;hidden&quot;: false
+            },
+            {
+                &quot;guid&quot;: &quot;{b453ae62-4e3d-5e58-b989-0a998ec441b8}&quot;,
+                &quot;hidden&quot;: true,
+                &quot;name&quot;: &quot;Azure Cloud Shell&quot;,
+                &quot;source&quot;: &quot;Windows.Terminal.Azure&quot;
+            },
+            {
+                &quot;guid&quot;: &quot;{c6eaf9f4-32a7-5fdc-b5cf-066e8a4b1e40}&quot;,
+                &quot;hidden&quot;: false,
+                &quot;name&quot;: &quot;Ubuntu-18.04&quot;,
+                &quot;source&quot;: &quot;Windows.Terminal.Wsl&quot;,
+                &quot;fontFace&quot;: &quot;Cascadia Code PL&quot;,
+                &quot;fontSize&quot;: 14,
+                &quot;startingDirectory&quot;: &quot;/home/co1a&quot;
+            }
+        ]
+    },
+
+    // Add custom color schemes to this array
+    &quot;schemes&quot;: [],
+
+    // Add any keybinding overrides to this array.
+    // To unbind a default keybinding, set the command to &quot;unbound&quot;
+    &quot;keybindings&quot;: [
+        {
+            &quot;command&quot; :&quot;closeTab&quot;,
+            &quot;keys&quot;: [&quot;ctrl+w&quot;]
+        },
+        {
+            &quot;command&quot;:&quot;newTab&quot;,
+            &quot;keys&quot;: [&quot;ctrl+t&quot;]
+        }
+    ]
+}
+</code></pre><h3 id="配置configfish">配置config.fish</h3>
+<pre><code>vim .config/fish/config.fish
+</code></pre><p>写入以下内容</p>
+<pre><code>set -x GOPATH /users/my-username/go
+set -x PATH $PATH /usr/local/go/bin $GOPATH/bin
+
+export PATH=&quot;$HOME/.cargo/bin:$PATH&quot;;
+set hostip (cat /etc/resolv.conf |grep -oP '(?&lt;=nameserver\ ).*');
+export https_proxy=&quot;http://$hostip:7890&quot;;
+export http_proxy=&quot;http://$hostip:7890&quot;;
+export all_proxy=&quot;socks5://$hostip:7891&quot;;
+git config --global  http.proxy  http://$hostip:7890;
+git config --global  https.proxy  http://$hostip:7890;
+</code></pre>]]></content>
+        </item>
+        
+        <item>
+            <title>2019LeetCode秋季全国赛3. 机器人大冒险.</title>
+            <link>https://max-cheng.github.io/posts/2019/10/2019leetcode%E7%A7%8B%E5%AD%A3%E5%85%A8%E5%9B%BD%E8%B5%9B3.-%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%A4%A7%E5%86%92%E9%99%A9./</link>
+            <pubDate>Sun, 27 Oct 2019 16:00:00 +0000</pubDate>
+            
+            <guid>https://max-cheng.github.io/posts/2019/10/2019leetcode%E7%A7%8B%E5%AD%A3%E5%85%A8%E5%9B%BD%E8%B5%9B3.-%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%A4%A7%E5%86%92%E9%99%A9./</guid>
+            <description>力扣团队买了一个可编程机器人，机器人初始位置在原点(0, 0)。小伙伴事先给机器人输入一串指令command，机器人就会无限循环这条指令的步骤进行移动。指令有两种： U: 向y轴正方向移动一格 R: 向x轴正方向移动一格。 不幸的是，在 xy 平面上还有一些障碍物，他们的坐标用obstacles表示。机器人一旦碰到障碍物就会被损毁。 给定终点坐标(x, y)，返回机器人能否完好地到达终点。如果能，返回true；否则返回false。 示例 1： 输入：command = “URR”, obstacles = [], x = 3, y = 2 输出：true 解释：U(0, 1) -&amp;gt; R(1, 1) -&amp;gt; R(2, 1) -&amp;gt; U(2, 2) -&amp;gt; R(3, 2)。 示例 2： 输入：command = “URR”, obstacles = [[2, 2]], x = 3, y = 2 输出：false 解释：机器人在到达终点前会碰到(2, 2)的障碍物。 示例 3： 输入：command = “URR”, obstacles = [[4, 2]], x = 3, y = 2 输出：true 解释：到达终点后，再碰到障碍物也不影响返回结果。 限制： 2 &amp;lt;= command的长度 &amp;lt;= 1000 command由U，R构成，且至少有一个U，至少有一个R 0 &amp;lt;= x &amp;lt;= 1e9, 0 &amp;lt;= y &amp;lt;= 1e9 0 &amp;lt;= obstacles的长度 &amp;lt;= 1000 obstacles[i]不为原点或者终点</description>
+            <content type="html"><![CDATA[<blockquote>
+<p>力扣团队买了一个可编程机器人，机器人初始位置在原点(0, 0)。小伙伴事先给机器人输入一串指令command，机器人就会无限循环这条指令的步骤进行移动。指令有两种：
+U: 向y轴正方向移动一格
+R: 向x轴正方向移动一格。
+不幸的是，在 xy 平面上还有一些障碍物，他们的坐标用obstacles表示。机器人一旦碰到障碍物就会被损毁。
+给定终点坐标(x, y)，返回机器人能否完好地到达终点。如果能，返回true；否则返回false。
+示例 1：
+输入：command = “URR”, obstacles = [], x = 3, y = 2
+输出：true
+解释：U(0, 1) -&gt; R(1, 1) -&gt; R(2, 1) -&gt; U(2, 2) -&gt; R(3, 2)。
+示例 2：
+输入：command = “URR”, obstacles = [[2, 2]], x = 3, y = 2
+输出：false
+解释：机器人在到达终点前会碰到(2, 2)的障碍物。
+示例 3：
+输入：command = “URR”, obstacles = [[4, 2]], x = 3, y = 2
+输出：true
+解释：到达终点后，再碰到障碍物也不影响返回结果。
+限制：
+2 &lt;= command的长度 &lt;= 1000
+command由U，R构成，且至少有一个U，至少有一个R
+0 &lt;= x &lt;= 1e9, 0 &lt;= y &lt;= 1e9
+0 &lt;= obstacles的长度 &lt;= 1000
+obstacles[i]不为原点或者终点</p>
+</blockquote>
+<p>首先我们构建第一个功能，无限循环编程指令，以及加载起点</p>
+<pre><code>func robot(command string, obstacles [][]int, x int, y int) bool {
+    rx,ry:=0,0
+    
+    for i:=0;i&lt;len(command);i++{
+        switch command[i]{
+            case 'R':rx++;break;
+            case 'U':ry++;break;
+        }
+        //Some Code
+        if i==len(command)-1{
+            i=-1
+        }
+    }
+}
+</code></pre><p>到达终点的条件为rx,ry为函数传入函数的x,y</p>
+<pre><code>func robot(command string, obstacles [][]int, x int, y int) bool {
+    rx,ry:=0,0
+    
+    for i:=0;i&lt;len(command);i++{
+        switch command[i]{
+            case 'R':rx++;break;
+            case 'U':ry++;break;
+        }
+        if rx==x&amp;&amp;ry==y{
+            return true
+        }
+        //Some Code
+        if i==len(command)-1{
+            i=-1
+        }
+    }
+}
+</code></pre><p>接下来添加对障碍物的判断</p>
+<pre><code>func robot(command string, obstacles [][]int, x int, y int) bool {
+    rx,ry:=0,0
+    
+    for i:=0;i&lt;len(command);i++{
+        switch command[i]{
+            case 'R':rx++;break;
+            case 'U':ry++;break;
+        }
+        for i:=range obstacles{
+            if rx==obstacles[i][0]&amp;&amp;ry==obstacles[i][1]{
+                return false    //即撞毁
+            }
+        }
+
+
+        if rx==x&amp;&amp;ry==y{
+            return true
+        }
+        if i==len(command)-1{
+            i=-1
+        }
+    }
+}
+</code></pre><p>其实此题的精髓并不是以上程序的构建，而是对障碍物剔除的逻辑
+举个例子，对于终点以外的障碍物我们可以置之不理</p>
+<p>即</p>
+<pre><code>if obstacles[i][0]&gt;x||obstacles[i][1]&gt;y{
+    obstacles=append(obstacles[i-1],obstacles[i+1]...)
+}
+</code></pre><p>且对于已经越过的点，若x或y小于当前坐标的障碍物一律可以剔除
+例如下图
+<img src="https://i.loli.net/2019/10/27/CsEPQjXAgxuwYqB.jpg" alt="Inkedsave _1__LI.jpg">
+当我们位于红点时，绿点的障碍物是一定不会遇到的我们只需要对其剔除，可以大大缩减程序运行时间(<del>当时在这里卡了好久</del></p>
+<pre><code>if obstacles[i][0]&gt;x||obstacles[i][1]&gt;y||(obstacles[i][0]==rx&amp;&amp;obstacles[i][1]&lt;ry)||(obstacles[i][1]==ry&amp;&amp;obstacles[i][0]&lt;rx)){
+    obstacles=append(obstacles[i-1],obstacles[i+1]...)
+}
+</code></pre><p>完整代码</p>
+<pre><code>func robot(command string, obstacles [][]int, x int, y int) bool {
+    rx,ry:=0,0
+    
+    for i:=0;i&lt;len(command);i++{
+        switch command[i]{
+            case 'R':rx++;break;
+            case 'U':ry++;break;
+        }
+        for i:=range obstacles{
+            if rx==obstacles[i][0]&amp;&amp;ry==obstacles[i][1]{
+                return false    //即撞毁
+            }
+            if obstacles[i][0]&gt;x||obstacles[i][1]&gt;y||(obstacles[i][0]==rx&amp;&amp;obstacles[i][1]&lt;ry)||(obstacles[i][1]==ry&amp;&amp;obstacles[i][0]&lt;rx)){
+                obstacles=append(obstacles[i-1],obstacles[i+1]...)
+            }
+        }
+
+        if rx==x&amp;&amp;ry==y{
+            return true
+        }
+        if i==len(command)-1{
+            i=-1
+        }
+    }
+    return false
+}
+</code></pre><p>目前这道题思路改了，不再是设置海量的障碍物，而是将目的地数值设置巨大。</p>
+]]></content>
+        </item>
+        
+        <item>
+            <title>Mac下安装Tensorflow</title>
+            <link>https://max-cheng.github.io/posts/2019/06/mac%E4%B8%8B%E5%AE%89%E8%A3%85tensorflow/</link>
+            <pubDate>Fri, 21 Jun 2019 16:00:00 +0000</pubDate>
+            
+            <guid>https://max-cheng.github.io/posts/2019/06/mac%E4%B8%8B%E5%AE%89%E8%A3%85tensorflow/</guid>
+            <description>最近Anaconda清华镜像站关闭，国内许多镜像源都关闭了，导致下载TensorFlow很慢很慢，自己琢磨是不是可以通过pip镜像站来解决这个问题。
+首先新建一个Anaconda环境
+conda create -n env_name python=3.6 再将pip源设置为国内源
+cd ~ mkdir .pip vim ~/.pip/pip.conf 插入以下内容 [global] index-url = https://mirrors.aliyun.com/pypi/simple [install] trusted-host = mirrors.aliyun.com
+这里我用的是阿里源
+再次进入虚拟环境
+source activate env_name pip install tensorflow Done!
+出现tensorflow/core/platform/cpu_feature_guard.cc:140] Your CPU supports instructions that this TensorFlow binary was not compiled to use: AVX2 FMA的解决办法
+首先前往这个地址，找到适合自己的版本并下载，例如我的首先新建一个新的虚拟环境，Python版本如图所示
+conda create -n tensorflow python=3.6.5 source activate tensorflow pip install tensorflow#这一步是让他把默认的组件安装了 安装完毕之后再次执行以下命令安装支持cpu用AVX2编译的TensorFlow版本。
+pip install --ignore-installed --upgrade /co1a/donwload/tensorflow-1.13.1-cp36-cp36m-macosx_10_13_x86_64.whl --user 再实验一次试试 完美解决！</description>
+            <content type="html"><![CDATA[<p>最近Anaconda清华镜像站关闭，国内许多镜像源都关闭了，导致下载TensorFlow很慢很慢，自己琢磨是不是可以通过pip镜像站来解决这个问题。</p>
+<p>首先新建一个Anaconda环境</p>
+<pre><code>conda create -n env_name python=3.6
+</code></pre><p>再将pip源设置为国内源</p>
+<pre><code>cd ~
+mkdir .pip
+vim ~/.pip/pip.conf
+</code></pre><p>插入以下内容
+[global]
+index-url = <a href="https://mirrors.aliyun.com/pypi/simple">https://mirrors.aliyun.com/pypi/simple</a>
+[install]
+trusted-host = mirrors.aliyun.com</p>
+<p>这里我用的是阿里源</p>
+<p>再次进入虚拟环境</p>
+<pre><code>source activate env_name
+pip install tensorflow
+</code></pre><p>Done!</p>
+<p>出现<code>tensorflow/core/platform/cpu_feature_guard.cc:140] Your CPU supports instructions that this TensorFlow binary was not compiled to use: AVX2 FMA</code>的解决办法</p>
+<p>首先前往<a href="https://github.com/lakshayg/tensorflow-build">这个</a>地址，找到适合自己的版本并下载，例如我的<img src="https://i.loli.net/2019/06/22/5d0d01063961027639.png" alt="img"></p>
+<p>首先新建一个新的虚拟环境，Python版本如图所示</p>
+<pre><code>conda create -n tensorflow python=3.6.5
+source activate tensorflow 
+pip install tensorflow#这一步是让他把默认的组件安装了
+</code></pre><p>安装完毕之后再次执行以下命令安装支持cpu用AVX2编译的TensorFlow版本。</p>
+<pre><code>pip install --ignore-installed --upgrade /co1a/donwload/tensorflow-1.13.1-cp36-cp36m-macosx_10_13_x86_64.whl --user
+</code></pre><p>再实验一次试试
+<img src="https://i.loli.net/2019/06/22/5d0d02ac5f8d584316.png" alt="img">
+完美解决！</p>
+]]></content>
+        </item>
+        
+        <item>
+            <title>WSL下Git的坑</title>
+            <link>https://max-cheng.github.io/posts/2019/05/wsl%E4%B8%8Bgit%E7%9A%84%E5%9D%91/</link>
+            <pubDate>Sat, 25 May 2019 16:00:00 +0000</pubDate>
+            
+            <guid>https://max-cheng.github.io/posts/2019/05/wsl%E4%B8%8Bgit%E7%9A%84%E5%9D%91/</guid>
+            <description>最近忙于软件杯比赛，基本上没有时间腾出来做个人项目了，周末闲着没事重装了一个系统，原因是手动升级1903后环境变量都没了甘霖娘微软，于是乎重新装了个系统，心想最近Windows Terminal和WSL2即将到来，是不是可以用WSL来生成hugo,还便于管理，殊不知一路上都是坑。。。FXXK Microsoft!
+首先去Hugo的Github上下载最新的deb版，WSL还是使用的Ubuntu(R.I.P Cent os)，在这里我的下载目录为*C:\Users\Shire\Downloads,进入WSL
+cd /mnt/c/Users/Shire/Download sudo dpkg -i hugo_0.55.6_Linux-64bit.deb 再进入之前备份好的Hugo目录下
+cd Blog hugo cd public git add . git commit -m &#39;update&#39; git push -u origin master 等等，怎么会权限不足，哦，那我用sudo不就好了(开始给自己挖坑)
+sudo git push -u origin master 什么???认证失败??? 在我折腾了半个小时之后，终于发现ssh密钥应该使用root用户的(一度怀疑自己脑子里面是不是装了屎)
+sudo su cd ~ cat .ssh/id_rsa.pub 再去Coding官网上添加SSH密钥，OK，解决。
+寻根究底还是WSL在Windows目录下权限不足，搞了半天还以为是WSL的问题(M$对不起),果然还是自己脑子进了屎。。。</description>
+            <content type="html"><![CDATA[<p>最近忙于软件杯比赛，基本上没有时间腾出来做个人项目了，周末闲着没事重装了一个系统，原因是手动升级1903后环境变量都没了甘霖娘微软，于是乎重新装了个系统，心想最近Windows Terminal和WSL2即将到来，是不是可以用WSL来生成hugo,还便于管理，殊不知一路上都是坑。。。<del>FXXK Microsoft!</del></p>
+<p>首先去Hugo的<a href="https://github.com/gohugoio/hugo/releases">Github</a>上下载最新的deb版，WSL还是使用的Ubuntu(R.I.P Cent os)，在这里我的下载目录为*C:\Users\Shire\Downloads,<em>进入WSL</em></p>
+<pre><code>cd /mnt/c/Users/Shire/Download
+sudo dpkg -i hugo_0.55.6_Linux-64bit.deb
+</code></pre><p>再进入之前备份好的Hugo目录下</p>
+<pre><code>cd Blog
+hugo
+cd public
+git add .
+git commit -m 'update'
+git push -u origin master
+</code></pre><p>等等，怎么会权限不足，哦，那我用sudo不就好了(<del>开始给自己挖坑</del>)</p>
+<pre><code>sudo git push -u origin master
+什么???认证失败???
+</code></pre><p>在我折腾了半个小时之后，终于发现ssh密钥应该使用root用户的(<del>一度怀疑自己脑子里面是不是装了屎</del>)</p>
+<pre><code>sudo su
+cd ~
+cat .ssh/id_rsa.pub
+</code></pre><p>再去Coding官网上添加SSH密钥，OK，解决。</p>
+<p>寻根究底还是WSL在Windows目录下权限不足，搞了半天还以为是WSL的问题(M$对不起),果然还是自己脑子进了屎。。。</p>
+]]></content>
+        </item>
+        
+        <item>
+            <title>为Coding下的Hugo添加GitTalk</title>
+            <link>https://max-cheng.github.io/posts/2019/05/%E4%B8%BAcoding%E4%B8%8B%E7%9A%84hugo%E6%B7%BB%E5%8A%A0gittalk/</link>
+            <pubDate>Sat, 25 May 2019 16:00:00 +0000</pubDate>
+            
+            <guid>https://max-cheng.github.io/posts/2019/05/%E4%B8%BAcoding%E4%B8%8B%E7%9A%84hugo%E6%B7%BB%E5%8A%A0gittalk/</guid>
+            <description>本站之前一直使用Disqus,发现还是太臃肿，而且被某些不明力量所封禁，这次发现了一个比较好的解决办法，GitTalk
+在Google随便搜索一下都是关于Hexo的GitTalk，并且人家用的还是Github Page，这就比较尴尬了，俗话说的好，办法总比困难多，冷静分析之后发现无非就一个点需要注意
+ 存在一个GitHub项目用于保留issue从而达到保留评论  在这里我新建了一个仓库取名为max-cheng.github.io,记得勾选自动生成README文件例如下图,(我比较懒所以就不重新生成了hahaha)
+创建新的仓库后，我们申请一个GitHub Application,例如我的
+这里需要注意一下，第二个主页连接中，我们输入刚刚生成新仓库的链接，即yourusername.github.io,最后一个Authorization callback URL填写自己的域名或coding生成的域名，切记切记，然后会给你以下信息，打开config.toml按照以下格式填写即可。
+如果可以使用请评论一下(站点太冷清了)
+Tks</description>
+            <content type="html"><![CDATA[<p>本站之前一直使用Disqus,发现还是太臃肿，而且被某些不明力量所封禁，这次发现了一个比较好的解决办法，GitTalk</p>
+<p>在Google随便搜索一下都是关于Hexo的GitTalk，并且人家用的还是Github Page，这就比较尴尬了，俗话说的好，办法总比困难多，冷静分析之后发现无非就一个点需要注意</p>
+<ul>
+<li>存在一个GitHub项目用于保留issue从而达到保留评论</li>
+</ul>
+<p>在这里我新建了一个仓库取名为max-cheng.github.io,记得勾选自动生成README文件例如下图,(我比较懒所以就不重新生成了hahaha)</p>
+<p><img src="https://i.loli.net/2019/05/25/5ce95f8a2b64a73003.png" alt="img"></p>
+<p>创建新的仓库后，我们申请一个<a href="https://github.com/settings/applications/new">GitHub Application</a>,例如我的</p>
+<p><img src="https://i.loli.net/2019/05/25/5ce960528ce3852061.png" alt="img"></p>
+<p>这里需要注意一下，第二个主页连接中，我们输入刚刚生成新仓库的链接，即<em>yourusername.github.io</em>,最后一个<em>Authorization callback</em> URL填写自己的域名或coding生成的域名，切记切记，然后会给你以下信息，打开<em>config.toml</em>按照以下格式填写即可。</p>
+<p><img src="https://i.loli.net/2019/05/25/5ce961a77f94362316.png" alt="img"></p>
+<p><img src="https://i.loli.net/2019/05/25/5ce961a714ed077551.png" alt="img"></p>
+<p>如果可以使用请评论一下(站点太冷清了)</p>
+<p>Tks</p>
+]]></content>
+        </item>
+        
+        <item>
+            <title>2019LeetCode春季全国高校赛-1.易混淆数</title>
+            <link>https://max-cheng.github.io/posts/2019/03/2019leetcode%E6%98%A5%E5%AD%A3%E5%85%A8%E5%9B%BD%E9%AB%98%E6%A0%A1%E8%B5%9B-1.%E6%98%93%E6%B7%B7%E6%B7%86%E6%95%B0/</link>
+            <pubDate>Thu, 21 Mar 2019 16:00:00 +0000</pubDate>
+            
+            <guid>https://max-cheng.github.io/posts/2019/03/2019leetcode%E6%98%A5%E5%AD%A3%E5%85%A8%E5%9B%BD%E9%AB%98%E6%A0%A1%E8%B5%9B-1.%E6%98%93%E6%B7%B7%E6%B7%86%E6%95%B0/</guid>
+            <description>易混淆数 给定一个数字 N，当它满足以下条件的时候返回 true： 把原数字旋转 180° 以后得到新的数字。 如 0, 1, 6, 8, 9 旋转 180° 以后，得到了新的数字 0, 1, 9, 8, 6 。 2, 3, 4, 5, 7 旋转 180° 后,得到的不是数字。 易混淆数字 (confusing number) 就是一个数字旋转 180° 以后，得到和原来不同的数字，且新数字的每一位都是有效的。 这道题非常有意思，但是如何实现呢？  依题意可知，若 Srting 中含有 2,3,4,5,7 得到的并不是数字，既然不是数字，那么我们可以直接 return false，依照上面的思路，便有以下代码。
+func test(s int) bool { target:=strconv.Itoa(s) //将s转换为string类型 nums1:=[]byte(target) //再次转换为byte，方便后面转换成string与原字符串对比 newline :=[]byte{} nums:=[]byte{} for _,v:=range nums1 { if v==&#39;2&#39;||v==&#39;3&#39;||v==&#39;4&#39;||v==&#39;5&#39;||v==&#39;7&#39;{ //对字符串进行遍历，查看是否存在无法混淆的元素 return false }else { switch v { //对可混淆的数进行转化 case &#39;0&#39;:newline =append(newline,&#39;0&#39;) case &#39;1&#39;:newline =append(newline,&#39;1&#39;) case &#39;6&#39;:newline =append(newline,&#39;9&#39;) case &#39;9&#39;:newline =append(newline,&#39;6&#39;) case &#39;8&#39;:newline =append(newline,&#39;8&#39;) } } } for i:=len(newline)-1;i&amp;gt;=0;i-- { nums=append(nums,newline[i]) //对处理后的byte切片进行反转 } if string(nums1) == string(nums) { //与原字符串进行比较 return false } return true } 当然此算法存在一定的局限性，欢迎各位在评论区提出更好的算法，近期会将 2019 的所有题目的思路进行梳理，感谢支持</description>
+            <content type="html"><![CDATA[<ol>
+<li>易混淆数
+给定一个数字 N，当它满足以下条件的时候返回 true：
+把原数字旋转 180° 以后得到新的数字。
+如 0, 1, 6, 8, 9 旋转 180° 以后，得到了新的数字 0, 1, 9, 8, 6 。
+2, 3, 4, 5, 7 旋转 180° 后,得到的不是数字。
+易混淆数字 (confusing number) 就是一个数字旋转 180° 以后，得到和原来不同的数字，且新数字的每一位都是有效的。 这道题非常有意思，但是如何实现呢？</li>
+</ol>
+<p>依题意可知，若 Srting 中含有 2,3,4,5,7 得到的并不是数字，既然不是数字，那么我们可以直接 return false，依照上面的思路，便有以下代码。</p>
+<pre><code>func test(s int) bool {
+target:=strconv.Itoa(s)   //将s转换为string类型
+nums1:=[]byte(target)     //再次转换为byte，方便后面转换成string与原字符串对比
+newline :=[]byte{}
+nums:=[]byte{}
+for _,v:=range nums1 {
+    if v=='2'||v=='3'||v=='4'||v=='5'||v=='7'{ //对字符串进行遍历，查看是否存在无法混淆的元素
+        return false
+    }else {
+        switch v {    //对可混淆的数进行转化
+        case '0':newline =append(newline,'0')
+        case '1':newline =append(newline,'1')
+        case '6':newline =append(newline,'9')
+        case '9':newline =append(newline,'6')
+        case '8':newline =append(newline,'8')
+        }
+    }
+}
+for i:=len(newline)-1;i&gt;=0;i-- {
+    nums=append(nums,newline[i])  //对处理后的byte切片进行反转
+}
+if string(nums1) == string(nums) { //与原字符串进行比较
+    return false
+}
+return true
+}
+</code></pre><p>当然此算法存在一定的局限性，欢迎各位在评论区提出更好的算法，近期会将 2019 的所有题目的思路进行梳理，感谢支持</p>
+]]></content>
+        </item>
+        
+        <item>
+            <title>2019LeetCode春季全国高校赛决赛-1. 有序数组中的缺失元素</title>
+            <link>https://max-cheng.github.io/posts/2019/03/2019leetcode%E6%98%A5%E5%AD%A3%E5%85%A8%E5%9B%BD%E9%AB%98%E6%A0%A1%E8%B5%9B%E5%86%B3%E8%B5%9B-1.-%E6%9C%89%E5%BA%8F%E6%95%B0%E7%BB%84%E4%B8%AD%E7%9A%84%E7%BC%BA%E5%A4%B1%E5%85%83%E7%B4%A0/</link>
+            <pubDate>Thu, 21 Mar 2019 16:00:00 +0000</pubDate>
+            
+            <guid>https://max-cheng.github.io/posts/2019/03/2019leetcode%E6%98%A5%E5%AD%A3%E5%85%A8%E5%9B%BD%E9%AB%98%E6%A0%A1%E8%B5%9B%E5%86%B3%E8%B5%9B-1.-%E6%9C%89%E5%BA%8F%E6%95%B0%E7%BB%84%E4%B8%AD%E7%9A%84%E7%BC%BA%E5%A4%B1%E5%85%83%E7%B4%A0/</guid>
+            <description>有序数组中的缺失元素给出一个有序数组 A，数组中的每个数字都是 独一无二的，找出从数组最左边开始的第
+K
+个缺失数字。示例 1：输入：A = [4,7,9,10], K = 1
+输出：5
+解释：
+第一个缺失数字为 5 。示例 2：输入：A = [4,7,9,10], K = 3
+输出：8
+解释：
+缺失数字有 [5,6,8,…]，因此第三个缺失数字为 8 。示例 3：输入：A = [1,2,4], K = 3
+输出：6
+解释：
+缺失数字有 [3,5,6,7,…]，因此第三个缺失数字为 6 。提示：1 &amp;lt;= A.length &amp;lt;= 500001 &amp;lt;= A[i] &amp;lt;= 1e71 &amp;lt;= K &amp;lt;= 1e8
+废话不多说，直接上代码。
+func missingElement(nums []int, k int) int { basemap:= map[int]int{} step:=0 targetnums:=0 for _,v:=range nums{ basemap[v]++ } for i:=nums[0];k!</description>
+            <content type="html"><![CDATA[<ol>
+<li>
+<p>有序数组中的缺失元素给出一个有序数组 A，数组中的每个数字都是 独一无二的，找出从数组最左边开始的第</p>
+<p>K</p>
+<p>个缺失数字。示例 1：输入：A = [4,7,9,10], K = 1</p>
+<p>输出：5</p>
+<p>解释：</p>
+<p>第一个缺失数字为 5 。示例 2：输入：A = [4,7,9,10], K = 3</p>
+<p>输出：8</p>
+<p>解释：</p>
+<p>缺失数字有 [5,6,8,…]，因此第三个缺失数字为 8 。示例 3：输入：A = [1,2,4], K = 3</p>
+<p>输出：6</p>
+<p>解释：</p>
+<p>缺失数字有 [3,5,6,7,…]，因此第三个缺失数字为 6 。提示：1 &lt;= A.length &lt;= 500001 &lt;= A[i] &lt;= 1e71 &lt;= K &lt;= 1e8</p>
+<p>废话不多说，直接上代码。</p>
+<pre><code>func missingElement(nums []int, k int) int {
+    basemap:= map[int]int{}
+    step:=0
+    targetnums:=0
+    for _,v:=range nums{
+        basemap[v]++
+    }
+    for i:=nums[0];k!=step;i++ {
+        if _,ok:=basemap[i];ok {
+            continue
+        }else {
+            if i&gt;nums[len(nums)-1] {
+                targetnums=nums[len(nums)-1]+k-step
+                break
+            }
+            targetnums=i
+            step++
+        }
+    }
+    return targetnums
+}
+</code></pre><p>根据题意可知，我们需要从 A[0]开始依次递增 1 至 k 次，在此设递增值为 v,此 v 并不存在于 A 中。</p>
+</li>
+</ol>
+<p>故用 Map 字典法来求 target 值，首先将 nums 改为字典。</p>
+<pre><code>for _,v:=range nums{
+    basemap[v]++
+}
+</code></pre><p>后面从 A[0]为基准依次以 1 为增量递增 i,并判断 i 是否存在于 basemap(即基准 map)中，若存在，则 i++，进入下次循环，直至我们 k 与我们的 step(递增次数相等时，便输出 targetnums.</p>
+<p>在这里，这道题有一个脑经急转弯的地方，如果没有好好处理，便会产生资源消耗过多的情况。</p>
+<p>假设我们的 i 已经超过了 A 的最后一个元素，那么我们的 k 不就是</p>
+<p>K=A[Len(A)-1]+(K-Step)</p>
+<p>于是在循环中增加判断</p>
+<pre><code>if i&gt;nums[len(nums)-1] {
+    targetnums=nums[len(nums)-1]+k-step
+    break
+}
+</code></pre><p>笔者就是在这里卡顿了将近一个小时，果然还是太菜了啊。。。。</p>
+]]></content>
+        </item>
+        
+        <item>
+            <title>使用Coding Page&#43;Hugo生成自己的博客</title>
+            <link>https://max-cheng.github.io/posts/2019/03/%E4%BD%BF%E7%94%A8coding-page-hugo%E7%94%9F%E6%88%90%E8%87%AA%E5%B7%B1%E7%9A%84%E5%8D%9A%E5%AE%A2/</link>
+            <pubDate>Sat, 16 Mar 2019 16:00:00 +0000</pubDate>
+            
+            <guid>https://max-cheng.github.io/posts/2019/03/%E4%BD%BF%E7%94%A8coding-page-hugo%E7%94%9F%E6%88%90%E8%87%AA%E5%B7%B1%E7%9A%84%E5%8D%9A%E5%AE%A2/</guid>
+            <description>本文章基于Windows10.
+首先安装Hugo，推荐大家按照以下教程完成。
+进入
+腾讯云开发者平台
+，新建一个public项目（后期会针对这里说明）
+进入刚刚自己使用Hugo新建的站点目录下（我这里使用自己的桌面，故用此作后文）
+cd C:\Users\Shire\Desktop\Blog git clone https://git.dev.tencent.com/YOURNAME/public.git cd public echo &amp;quot;# Hello World!&amp;quot; &amp;gt;&amp;gt; README.md git add README.md git commit -m &#39;first commit&#39; git push -u origin master` 初始化仓库后，返回上一级
+cd .. hugo 这时候你会发现静态页面生成在public下，这意味着我们只需要进入public目录下执行
+cd public git commit -m &#39;update&#39; git pull -u origin master 这时进入代码分页下的Pages服务开启Coding Page
+这里有个问题，因为Coding Page与Github Page有所不同，所以如果你要绑定自己域名的话请将config中bash baseURL=&amp;quot;Https://Your.domin&amp;quot;
+再绑定新域名。
+注意：如果使用HTTPS没有将config修改的话会出现资源加载错误
+享受你的Blog吧</description>
+            <content type="html"><![CDATA[<p>本文章基于Windows10.</p>
+<p>首先安装<a href="https://github.com/gohugoio/hugo/releases">Hugo</a>，推荐大家按照以下<a href="https://www.jianshu.com/p/f1b02e00f206">教程</a>完成。</p>
+<p>进入</p>
+<p><a href="https://dev.tencent.com/">腾讯云开发者平台</a></p>
+<p>，新建一个public项目（后期会针对这里说明）</p>
+<p><img src="https://max-cheng.github.io/tmp/b8f3dd66-93f3-4a0e-91f2-778a2164f8c8/d42b5cdb7484f177af63e411929d1a54acc7642b.png" alt="img"></p>
+<p>进入刚刚自己使用Hugo新建的站点目录下（我这里使用自己的桌面，故用此作后文）</p>
+<pre><code>cd C:\Users\Shire\Desktop\Blog
+git clone https://git.dev.tencent.com/YOURNAME/public.git
+cd public
+echo &quot;# Hello World!&quot; &gt;&gt; README.md
+git add README.md
+git commit -m 'first commit'
+git push -u origin master`
+</code></pre><p>初始化仓库后，返回上一级</p>
+<pre><code>cd ..
+hugo
+</code></pre><p>这时候你会发现静态页面生成在public下，这意味着我们只需要进入public目录下执行</p>
+<pre><code>cd public
+git commit -m 'update'
+git pull -u origin master
+</code></pre><p>这时进入代码分页下的<strong>Pages服务</strong>开启Coding Page</p>
+<p>这里有个问题，因为Coding Page与Github Page有所不同，所以如果你要绑定自己域名的话请将config中<code>bash baseURL=&quot;Https://Your.domin&quot;</code></p>
+<p>再绑定新域名。</p>
+<p><strong>注意</strong>：如果使用HTTPS没有将config修改的话会出现资源加载错误</p>
+<p>享受你的Blog吧</p>
+]]></content>
+        </item>
+        
+    </channel>
+</rss>
