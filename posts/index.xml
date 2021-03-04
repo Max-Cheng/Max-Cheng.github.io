@@ -6,8 +6,167 @@
         <generator>Hugo -- gohugo.io</generator>
         <language>zh-cn</language>
         <copyright>&lt;a href=&#34;https://creativecommons.org/licenses/by-nc/4.0/&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;CC BY-NC 4.0&lt;/a&gt;</copyright>
-        <lastBuildDate>Sun, 16 Aug 2020 16:00:00 +0000</lastBuildDate>
+        <lastBuildDate>Thu, 04 Mar 2021 00:11:00 +0800</lastBuildDate>
         <atom:link href="https://max-cheng.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+        
+        <item>
+            <title>PingCAP Talent Project 路径1 Project1</title>
+            <link>https://max-cheng.github.io/posts/2021/03/pingcap-talent-project-%E8%B7%AF%E5%BE%841-project1/</link>
+            <pubDate>Thu, 04 Mar 2021 00:11:00 +0800</pubDate>
+            
+            <guid>https://max-cheng.github.io/posts/2021/03/pingcap-talent-project-%E8%B7%AF%E5%BE%841-project1/</guid>
+            <description>最近从武汉迁徙到了深圳,机会没有我想象的那么多,也仔细思考过这条路该怎么走,却怎么都走不好,找了一份相关的工作,工资不高,但好在有时间去自己学习.Anyway 还是来讲讲今天的正题.
+过年那段时间看着tidb-dashboard有个挺简单的Feature,就自己做着玩玩,慢慢了解到这家公司思想和所做的事都是非常宏伟的,最近面试完了在深圳这边等着入职(大专应届像我这样的渣渣想入行还是非常困难的),下午有时间就顺着把路径1 Project1给做了,是个大坑可能会更新的比较慢,让基础的我非常的尴尬,好在相关文档还是讲的比较清晰的.
+Part1 首先是几道SQL,这里就不再赘述了,除了最后一题需要思考一下,其他的都还是非常简单的,主要还是CASE确实用的比较少,下面从评论区搞了一份答案过来讲讲思路.
+SELECT CASE WHEN P IS NULL THEN CONCAT(N, &amp;#39; Root&amp;#39;) WHEN N IN (SELECT DISTINCT P FROM BST) THEN CONCAT(N, &amp;#39; Inner&amp;#39;) ELSE CONCAT(N, &amp;#39; Leaf&amp;#39;) END FROM BST ORDER BY N ASC 只有当P col为null时,N才能为Root节点,否则的话,判断N的值是否出现在P列中,true 则为中间节点,else则为叶子结点.
+Part2 首先Clone一份代码到本地,先不用忙着Make,Project 1的案例不需要.
+从tablecodec.goL39至L70代码就可以发现一些端倪,首先我们先理解EncodeRowKeyWithHandle这个function.
+var ( tablePrefix = []byte{&amp;#39;t&amp;#39;} recordPrefixSep = []byte(&amp;#34;_r&amp;#34;) indexPrefixSep = []byte(&amp;#34;_i&amp;#34;) ) const ( idLen = 8 prefixLen = 1 + idLen /*tableID*/ + 2 // RecordRowKeyLen is public for calculating average row size.</description>
+            <content type="html"><![CDATA[<p>最近从武汉迁徙到了深圳,机会没有我想象的那么多,也仔细思考过这条路该怎么走,却怎么都走不好,找了一份相关的工作,工资不高,但好在有时间去自己学习.Anyway 还是来讲讲今天的正题.</p>
+<p>过年那段时间看着tidb-dashboard有个挺简单的Feature,就自己做着玩玩,慢慢了解到这家公司思想和所做的事都是非常宏伟的,最近面试完了在深圳这边等着入职(<del>大专</del>应届像我这样的渣渣想入行还是非常困难的),下午有时间就顺着把路径1 Project1给做了,是个大坑可能会更新的比较慢,让基础的我非常的尴尬,好在相关文档还是讲的比较清晰的.</p>
+<h4 id="part1">Part1</h4>
+<p>首先是几道SQL,这里就不再赘述了,除了最后一题需要思考一下,其他的都还是非常简单的,主要还是CASE确实用的比较少,下面从评论区搞了一份答案过来讲讲思路.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-mysql" data-lang="mysql"><span style="color:#66d9ef">SELECT</span> <span style="color:#66d9ef">CASE</span>
+	<span style="color:#66d9ef">WHEN</span> P <span style="color:#66d9ef">IS</span> <span style="color:#66d9ef">NULL</span> <span style="color:#66d9ef">THEN</span> <span style="color:#a6e22e">CONCAT</span>(N, <span style="color:#e6db74">&#39; Root&#39;</span>)
+	<span style="color:#66d9ef">WHEN</span> N <span style="color:#66d9ef">IN</span> (<span style="color:#66d9ef">SELECT</span> <span style="color:#66d9ef">DISTINCT</span> P <span style="color:#66d9ef">FROM</span> BST) <span style="color:#66d9ef">THEN</span> <span style="color:#a6e22e">CONCAT</span>(N, <span style="color:#e6db74">&#39; Inner&#39;</span>)
+	<span style="color:#66d9ef">ELSE</span> <span style="color:#a6e22e">CONCAT</span>(N, <span style="color:#e6db74">&#39; Leaf&#39;</span>)
+	END
+<span style="color:#66d9ef">FROM</span> BST
+<span style="color:#66d9ef">ORDER</span> <span style="color:#66d9ef">BY</span> N <span style="color:#66d9ef">ASC</span>
+</code></pre></div><p>只有当P col为null时,N才能为Root节点,否则的话,判断N的值是否出现在P列中,true 则为中间节点,else则为叶子结点.</p>
+<h4 id="part2">Part2</h4>
+<p>首先Clone一份代码到本地,先不用忙着Make,Project 1的案例不需要.</p>
+<p>从<code>tablecodec.go</code>L39至L70代码就可以发现一些端倪,首先我们先理解<code>EncodeRowKeyWithHandle</code>这个function.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">var</span> (
+	<span style="color:#a6e22e">tablePrefix</span>     = []<span style="color:#66d9ef">byte</span>{<span style="color:#e6db74">&#39;t&#39;</span>}
+	<span style="color:#a6e22e">recordPrefixSep</span> = []byte(<span style="color:#e6db74">&#34;_r&#34;</span>)
+	<span style="color:#a6e22e">indexPrefixSep</span>  = []byte(<span style="color:#e6db74">&#34;_i&#34;</span>)
+)
+
+<span style="color:#66d9ef">const</span> (
+	<span style="color:#a6e22e">idLen</span>     = <span style="color:#ae81ff">8</span>
+	<span style="color:#a6e22e">prefixLen</span> = <span style="color:#ae81ff">1</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">idLen</span> <span style="color:#75715e">/*tableID*/</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">2</span>
+	<span style="color:#75715e">// RecordRowKeyLen is public for calculating average row size.
+</span><span style="color:#75715e"></span>	<span style="color:#a6e22e">RecordRowKeyLen</span>       = <span style="color:#a6e22e">prefixLen</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">idLen</span> <span style="color:#75715e">/*handle*/</span>
+	<span style="color:#a6e22e">tablePrefixLength</span>     = <span style="color:#ae81ff">1</span>
+	<span style="color:#a6e22e">recordPrefixSepLength</span> = <span style="color:#ae81ff">2</span>
+)
+
+<span style="color:#75715e">// TableSplitKeyLen is the length of key &#39;t{table_id}&#39; which is used for table split.
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">TableSplitKeyLen</span> = <span style="color:#ae81ff">1</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">idLen</span>
+
+<span style="color:#75715e">// TablePrefix returns table&#39;s prefix &#39;t&#39;.
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">TablePrefix</span>() []<span style="color:#66d9ef">byte</span> {
+	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">tablePrefix</span>
+}
+
+<span style="color:#75715e">// appendTableRecordPrefix appends table record prefix  &#34;t[tableID]_r&#34;.
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">appendTableRecordPrefix</span>(<span style="color:#a6e22e">buf</span> []<span style="color:#66d9ef">byte</span>, <span style="color:#a6e22e">tableID</span> <span style="color:#66d9ef">int64</span>) []<span style="color:#66d9ef">byte</span> {
+	<span style="color:#a6e22e">buf</span> = append(<span style="color:#a6e22e">buf</span>, <span style="color:#a6e22e">tablePrefix</span><span style="color:#f92672">...</span>)				<span style="color:#75715e">//实际上将&#39;t&#39;插入到slice head.
+</span><span style="color:#75715e"></span>	<span style="color:#a6e22e">buf</span> = <span style="color:#a6e22e">codec</span>.<span style="color:#a6e22e">EncodeInt</span>(<span style="color:#a6e22e">buf</span>, <span style="color:#a6e22e">tableID</span>)				<span style="color:#75715e">//对Tableid序列化插入到t后面.
+</span><span style="color:#75715e"></span>	<span style="color:#a6e22e">buf</span> = append(<span style="color:#a6e22e">buf</span>, <span style="color:#a6e22e">recordPrefixSep</span><span style="color:#f92672">...</span>)			<span style="color:#75715e">//插入recordPrefixSep标识符&#34;_r&#34;
+</span><span style="color:#75715e"></span>	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">buf</span>
+}
+
+<span style="color:#75715e">// EncodeRowKeyWithHandle encodes the table id, row handle into a kv.Key
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">EncodeRowKeyWithHandle</span>(<span style="color:#a6e22e">tableID</span> <span style="color:#66d9ef">int64</span>, <span style="color:#a6e22e">handle</span> <span style="color:#66d9ef">int64</span>) <span style="color:#a6e22e">kv</span>.<span style="color:#a6e22e">Key</span> {
+	<span style="color:#a6e22e">buf</span> <span style="color:#f92672">:=</span> make([]<span style="color:#66d9ef">byte</span>, <span style="color:#ae81ff">0</span>, <span style="color:#a6e22e">RecordRowKeyLen</span>)			<span style="color:#75715e">//创建一个byte Slice,其len为0,cap为(prefixLen + idLen)=8+1+8+2=19.
+</span><span style="color:#75715e"></span>	<span style="color:#a6e22e">buf</span> = <span style="color:#a6e22e">appendTableRecordPrefix</span>(<span style="color:#a6e22e">buf</span>, <span style="color:#a6e22e">tableID</span>)		<span style="color:#75715e">//将空slice和tableID传入appendTableRecordPrefix.跳转到25行
+</span><span style="color:#75715e"></span>	<span style="color:#a6e22e">buf</span> = <span style="color:#a6e22e">codec</span>.<span style="color:#a6e22e">EncodeInt</span>(<span style="color:#a6e22e">buf</span>, <span style="color:#a6e22e">handle</span>)
+	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">buf</span>
+}
+</code></pre></div><p>让我们来看看<code>codec.EncodeInt</code>究竟对我们的TableID进行了什么操作</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">var</span> (
+	<span style="color:#a6e22e">tablePrefix</span>     = []<span style="color:#66d9ef">byte</span>{<span style="color:#e6db74">&#39;t&#39;</span>}
+	<span style="color:#a6e22e">recordPrefixSep</span> = []byte(<span style="color:#e6db74">&#34;_r&#34;</span>)
+	<span style="color:#a6e22e">indexPrefixSep</span>  = []byte(<span style="color:#e6db74">&#34;_i&#34;</span>)
+)
+
+<span style="color:#66d9ef">const</span> (
+	<span style="color:#a6e22e">idLen</span>     = <span style="color:#ae81ff">8</span>
+	<span style="color:#a6e22e">prefixLen</span> = <span style="color:#ae81ff">1</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">idLen</span> <span style="color:#75715e">/*tableID*/</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">2</span>
+	<span style="color:#75715e">// RecordRowKeyLen is public for calculating average row size.
+</span><span style="color:#75715e"></span>	<span style="color:#a6e22e">RecordRowKeyLen</span>       = <span style="color:#a6e22e">prefixLen</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">idLen</span> <span style="color:#75715e">/*handle*/</span>
+	<span style="color:#a6e22e">tablePrefixLength</span>     = <span style="color:#ae81ff">1</span>
+	<span style="color:#a6e22e">recordPrefixSepLength</span> = <span style="color:#ae81ff">2</span>
+)
+
+<span style="color:#75715e">// TableSplitKeyLen is the length of key &#39;t{table_id}&#39; which is used for table split.
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">TableSplitKeyLen</span> = <span style="color:#ae81ff">1</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">idLen</span>
+
+<span style="color:#75715e">// TablePrefix returns table&#39;s prefix &#39;t&#39;.
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">TablePrefix</span>() []<span style="color:#66d9ef">byte</span> {
+	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">tablePrefix</span>
+}
+
+<span style="color:#75715e">// appendTableRecordPrefix appends table record prefix  &#34;t[tableID]_r&#34;.
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">appendTableRecordPrefix</span>(<span style="color:#a6e22e">buf</span> []<span style="color:#66d9ef">byte</span>, <span style="color:#a6e22e">tableID</span> <span style="color:#66d9ef">int64</span>) []<span style="color:#66d9ef">byte</span> {
+	<span style="color:#a6e22e">buf</span> = append(<span style="color:#a6e22e">buf</span>, <span style="color:#a6e22e">tablePrefix</span><span style="color:#f92672">...</span>)				<span style="color:#75715e">//实际上将&#39;t&#39;插入到slice head.
+</span><span style="color:#75715e"></span>	<span style="color:#a6e22e">buf</span> = <span style="color:#a6e22e">codec</span>.<span style="color:#a6e22e">EncodeInt</span>(<span style="color:#a6e22e">buf</span>, <span style="color:#a6e22e">tableID</span>)				<span style="color:#75715e">//对Tableid序列化插入到t后面.
+</span><span style="color:#75715e"></span>	<span style="color:#a6e22e">buf</span> = append(<span style="color:#a6e22e">buf</span>, <span style="color:#a6e22e">recordPrefixSep</span><span style="color:#f92672">...</span>)			<span style="color:#75715e">//插入recordPrefixSep标识符&#34;_r&#34;
+</span><span style="color:#75715e"></span>	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">buf</span>
+}
+
+<span style="color:#75715e">// EncodeRowKeyWithHandle encodes the table id, row handle into a kv.Key
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">EncodeRowKeyWithHandle</span>(<span style="color:#a6e22e">tableID</span> <span style="color:#66d9ef">int64</span>, <span style="color:#a6e22e">handle</span> <span style="color:#66d9ef">int64</span>) <span style="color:#a6e22e">kv</span>.<span style="color:#a6e22e">Key</span> {
+	<span style="color:#a6e22e">buf</span> <span style="color:#f92672">:=</span> make([]<span style="color:#66d9ef">byte</span>, <span style="color:#ae81ff">0</span>, <span style="color:#a6e22e">RecordRowKeyLen</span>)			<span style="color:#75715e">//创建一个byte Slice,其len为0,cap为(prefixLen + idLen)=8+1+8+2=19.
+</span><span style="color:#75715e"></span>	<span style="color:#a6e22e">buf</span> = <span style="color:#a6e22e">appendTableRecordPrefix</span>(<span style="color:#a6e22e">buf</span>, <span style="color:#a6e22e">tableID</span>)		<span style="color:#75715e">//将空slice和tableID传入appendTableRecordPrefix.跳转到25行
+</span><span style="color:#75715e"></span>	<span style="color:#a6e22e">buf</span> = <span style="color:#a6e22e">codec</span>.<span style="color:#a6e22e">EncodeInt</span>(<span style="color:#a6e22e">buf</span>, <span style="color:#a6e22e">handle</span>)
+	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">buf</span>
+}
+<span style="color:#66d9ef">func</span> <span style="color:#a6e22e">EncodeInt</span>(<span style="color:#a6e22e">b</span> []<span style="color:#66d9ef">byte</span>, <span style="color:#a6e22e">v</span> <span style="color:#66d9ef">int64</span>) []<span style="color:#66d9ef">byte</span> {
+	<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">data</span> [<span style="color:#ae81ff">8</span>]<span style="color:#66d9ef">byte</span>								<span style="color:#75715e">//生成一个长度为8的Array
+</span><span style="color:#75715e"></span>	<span style="color:#a6e22e">u</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">EncodeIntToCmpUint</span>(<span style="color:#a6e22e">v</span>)						<span style="color:#75715e">//跳转到第50行
+</span><span style="color:#75715e"></span>	<span style="color:#a6e22e">binary</span>.<span style="color:#a6e22e">BigEndian</span>.<span style="color:#a6e22e">PutUint64</span>(<span style="color:#a6e22e">data</span>[:], <span style="color:#a6e22e">u</span>)			<span style="color:#75715e">//根据u来generate TableID
+</span><span style="color:#75715e"></span>	<span style="color:#66d9ef">return</span> append(<span style="color:#a6e22e">b</span>, <span style="color:#a6e22e">data</span>[:]<span style="color:#f92672">...</span>)					<span style="color:#75715e">//世界线收束
+</span><span style="color:#75715e"></span>}
+
+<span style="color:#66d9ef">const</span> <span style="color:#a6e22e">signMask</span> <span style="color:#66d9ef">uint64</span> = <span style="color:#ae81ff">0x8000000000000000</span>
+
+<span style="color:#75715e">// EncodeIntToCmpUint make int v to comparable uint type
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">EncodeIntToCmpUint</span>(<span style="color:#a6e22e">v</span> <span style="color:#66d9ef">int64</span>) <span style="color:#66d9ef">uint64</span> {
+	<span style="color:#66d9ef">return</span> uint64(<span style="color:#a6e22e">v</span>) ^ <span style="color:#a6e22e">signMask</span>						<span style="color:#75715e">//进行一次异或操作
+</span><span style="color:#75715e"></span>}
+<span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">bigEndian</span>) <span style="color:#a6e22e">PutUint64</span>(<span style="color:#a6e22e">b</span> []<span style="color:#66d9ef">byte</span>, <span style="color:#a6e22e">v</span> <span style="color:#66d9ef">uint64</span>) {
+	<span style="color:#a6e22e">_</span> = <span style="color:#a6e22e">b</span>[<span style="color:#ae81ff">7</span>] <span style="color:#75715e">// early bounds check to guarantee safety of writes below
+</span><span style="color:#75715e"></span>	<span style="color:#a6e22e">b</span>[<span style="color:#ae81ff">0</span>] = byte(<span style="color:#a6e22e">v</span> <span style="color:#f92672">&gt;&gt;</span> <span style="color:#ae81ff">56</span>)
+	<span style="color:#a6e22e">b</span>[<span style="color:#ae81ff">1</span>] = byte(<span style="color:#a6e22e">v</span> <span style="color:#f92672">&gt;&gt;</span> <span style="color:#ae81ff">48</span>)
+	<span style="color:#a6e22e">b</span>[<span style="color:#ae81ff">2</span>] = byte(<span style="color:#a6e22e">v</span> <span style="color:#f92672">&gt;&gt;</span> <span style="color:#ae81ff">40</span>)
+	<span style="color:#a6e22e">b</span>[<span style="color:#ae81ff">3</span>] = byte(<span style="color:#a6e22e">v</span> <span style="color:#f92672">&gt;&gt;</span> <span style="color:#ae81ff">32</span>)
+	<span style="color:#a6e22e">b</span>[<span style="color:#ae81ff">4</span>] = byte(<span style="color:#a6e22e">v</span> <span style="color:#f92672">&gt;&gt;</span> <span style="color:#ae81ff">24</span>)
+	<span style="color:#a6e22e">b</span>[<span style="color:#ae81ff">5</span>] = byte(<span style="color:#a6e22e">v</span> <span style="color:#f92672">&gt;&gt;</span> <span style="color:#ae81ff">16</span>)
+	<span style="color:#a6e22e">b</span>[<span style="color:#ae81ff">6</span>] = byte(<span style="color:#a6e22e">v</span> <span style="color:#f92672">&gt;&gt;</span> <span style="color:#ae81ff">8</span>)
+	<span style="color:#a6e22e">b</span>[<span style="color:#ae81ff">7</span>] = byte(<span style="color:#a6e22e">v</span>)
+}
+<span style="color:#75715e">//进行一次位移操作
+</span></code></pre></div><p>这时,我们的TableID看起来应该是这样</p>
+<p><code>&quot;t{TableId}_r{rowhandle}&quot;</code></p>
+<p>这下子Decode就非常简单了,因为序列化后的长度我们是已知的为8:对于t后的slice进行一次还原操作,以及对r后的slice进行一次还原,就可以得到tableID和handle.</p>
+<p>这里处理前需要做个判断,如果len(key)≠prefixLen + idLen,那么这个table是非法的.</p>
+<p>咱们再来看看<code>DecodeIndexKeyPrefix</code></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#75715e">// appendTableIndexPrefix appends table index prefix  &#34;t[tableID]_i&#34;.
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">appendTableIndexPrefix</span>(<span style="color:#a6e22e">buf</span> []<span style="color:#66d9ef">byte</span>, <span style="color:#a6e22e">tableID</span> <span style="color:#66d9ef">int64</span>) []<span style="color:#66d9ef">byte</span> {
+	<span style="color:#a6e22e">buf</span> = append(<span style="color:#a6e22e">buf</span>, <span style="color:#a6e22e">tablePrefix</span><span style="color:#f92672">...</span>)
+	<span style="color:#a6e22e">buf</span> = <span style="color:#a6e22e">codec</span>.<span style="color:#a6e22e">EncodeInt</span>(<span style="color:#a6e22e">buf</span>, <span style="color:#a6e22e">tableID</span>)
+	<span style="color:#a6e22e">buf</span> = append(<span style="color:#a6e22e">buf</span>, <span style="color:#a6e22e">indexPrefixSep</span><span style="color:#f92672">...</span>)
+	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">buf</span>
+}
+
+<span style="color:#75715e">// EncodeIndexSeekKey encodes an index value to kv.Key.
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">EncodeIndexSeekKey</span>(<span style="color:#a6e22e">tableID</span> <span style="color:#66d9ef">int64</span>, <span style="color:#a6e22e">idxID</span> <span style="color:#66d9ef">int64</span>, <span style="color:#a6e22e">encodedValue</span> []<span style="color:#66d9ef">byte</span>) <span style="color:#a6e22e">kv</span>.<span style="color:#a6e22e">Key</span> {
+	<span style="color:#a6e22e">key</span> <span style="color:#f92672">:=</span> make([]<span style="color:#66d9ef">byte</span>, <span style="color:#ae81ff">0</span>, <span style="color:#a6e22e">prefixLen</span><span style="color:#f92672">+</span><span style="color:#a6e22e">idLen</span><span style="color:#f92672">+</span>len(<span style="color:#a6e22e">encodedValue</span>))
+	<span style="color:#a6e22e">key</span> = <span style="color:#a6e22e">appendTableIndexPrefix</span>(<span style="color:#a6e22e">key</span>, <span style="color:#a6e22e">tableID</span>)
+	<span style="color:#a6e22e">key</span> = <span style="color:#a6e22e">codec</span>.<span style="color:#a6e22e">EncodeInt</span>(<span style="color:#a6e22e">key</span>, <span style="color:#a6e22e">idxID</span>)
+	<span style="color:#a6e22e">key</span> = append(<span style="color:#a6e22e">key</span>, <span style="color:#a6e22e">encodedValue</span><span style="color:#f92672">...</span>)
+	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">key</span>
+}
+
+</code></pre></div><p>其实大同小异,无非是添加了一个encodedValue,这里留给大家思考</p>
+<p>具体的解码在<code>codec.DecodeInt</code>这个函数中,PingCAP的老师们已经帮忙写好了,非常的银杏化哈哈</p>
+<p>算是开了个大坑,有机会的话所有路径全部都做一遍,算是对自己的锻炼吧</p>
+<p>拜拜👋</p>
+]]></content>
+        </item>
         
         <item>
             <title>2Step为Hexo主题添加LikeCoin的赞赏键</title>

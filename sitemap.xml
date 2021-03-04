@@ -3,22 +3,37 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>https://max-cheng.github.io/</loc>
+    <lastmod>2021-03-04T00:11:00+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://max-cheng.github.io/posts/2021/03/pingcap-talent-project-%E8%B7%AF%E5%BE%841-project1/</loc>
+    <lastmod>2021-03-04T00:11:00+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://max-cheng.github.io/posts/</loc>
+    <lastmod>2021-03-04T00:11:00+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://max-cheng.github.io/tags/</loc>
+    <lastmod>2021-03-04T00:11:00+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://max-cheng.github.io/tags/%E5%AD%A6%E4%B9%A0/</loc>
+    <lastmod>2021-03-04T00:11:00+08:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://max-cheng.github.io/about/</loc>
     <lastmod>2020-12-15T20:46:25+08:00</lastmod>
   </url>
   
   <url>
     <loc>https://max-cheng.github.io/posts/2020/08/2step%E4%B8%BAhexo%E4%B8%BB%E9%A2%98%E6%B7%BB%E5%8A%A0likecoin%E7%9A%84%E8%B5%9E%E8%B5%8F%E9%94%AE/</loc>
-    <lastmod>2020-08-16T16:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://max-cheng.github.io/</loc>
-    <lastmod>2020-08-16T16:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://max-cheng.github.io/posts/</loc>
     <lastmod>2020-08-16T16:00:00+00:00</lastmod>
   </url>
   
@@ -73,10 +88,6 @@
   
   <url>
     <loc>https://max-cheng.github.io/series/</loc>
-  </url>
-  
-  <url>
-    <loc>https://max-cheng.github.io/tags/</loc>
   </url>
   
 </urlset>

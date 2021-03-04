@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>学习 on Co1a&#39;s Blog</title>
+    <link>https://max-cheng.github.io/tags/%E5%AD%A6%E4%B9%A0/</link>
+    <description>Recent content in 学习 on Co1a&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <copyright>&lt;a href=&#34;https://creativecommons.org/licenses/by-nc/4.0/&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;CC BY-NC 4.0&lt;/a&gt;</copyright>
+    <lastBuildDate>Thu, 04 Mar 2021 00:11:00 +0800</lastBuildDate><atom:link href="https://max-cheng.github.io/tags/%E5%AD%A6%E4%B9%A0/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>PingCAP Talent Project 路径1 Project1</title>
+      <link>https://max-cheng.github.io/posts/2021/03/pingcap-talent-project-%E8%B7%AF%E5%BE%841-project1/</link>
+      <pubDate>Thu, 04 Mar 2021 00:11:00 +0800</pubDate>
+      
+      <guid>https://max-cheng.github.io/posts/2021/03/pingcap-talent-project-%E8%B7%AF%E5%BE%841-project1/</guid>
+      <description>最近从武汉迁徙到了深圳,机会没有我想象的那么多,也仔细思考过这条路该怎么走,却怎么都走不好,找了一份相关的工作,工资不高,但好在有时间去自己学习.Anyway 还是来讲讲今天的正题.
+过年那段时间看着tidb-dashboard有个挺简单的Feature,就自己做着玩玩,慢慢了解到这家公司思想和所做的事都是非常宏伟的,最近面试完了在深圳这边等着入职(大专应届像我这样的渣渣想入行还是非常困难的),下午有时间就顺着把路径1 Project1给做了,是个大坑可能会更新的比较慢,让基础的我非常的尴尬,好在相关文档还是讲的比较清晰的.
+Part1 首先是几道SQL,这里就不再赘述了,除了最后一题需要思考一下,其他的都还是非常简单的,主要还是CASE确实用的比较少,下面从评论区搞了一份答案过来讲讲思路.
+SELECT CASE WHEN P IS NULL THEN CONCAT(N, &amp;#39; Root&amp;#39;) WHEN N IN (SELECT DISTINCT P FROM BST) THEN CONCAT(N, &amp;#39; Inner&amp;#39;) ELSE CONCAT(N, &amp;#39; Leaf&amp;#39;) END FROM BST ORDER BY N ASC 只有当P col为null时,N才能为Root节点,否则的话,判断N的值是否出现在P列中,true 则为中间节点,else则为叶子结点.
+Part2 首先Clone一份代码到本地,先不用忙着Make,Project 1的案例不需要.
+从tablecodec.goL39至L70代码就可以发现一些端倪,首先我们先理解EncodeRowKeyWithHandle这个function.
+var ( tablePrefix = []byte{&amp;#39;t&amp;#39;} recordPrefixSep = []byte(&amp;#34;_r&amp;#34;) indexPrefixSep = []byte(&amp;#34;_i&amp;#34;) ) const ( idLen = 8 prefixLen = 1 + idLen /*tableID*/ + 2 // RecordRowKeyLen is public for calculating average row size.</description>
+    </item>
+    
+  </channel>
+</rss>

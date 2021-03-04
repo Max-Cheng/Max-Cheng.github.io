@@ -7,7 +7,22 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <copyright>&lt;a href=&#34;https://creativecommons.org/licenses/by-nc/4.0/&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;CC BY-NC 4.0&lt;/a&gt;</copyright>
-    <lastBuildDate>Sun, 16 Aug 2020 16:00:00 +0000</lastBuildDate><atom:link href="https://max-cheng.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 04 Mar 2021 00:11:00 +0800</lastBuildDate><atom:link href="https://max-cheng.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>PingCAP Talent Project 路径1 Project1</title>
+      <link>https://max-cheng.github.io/posts/2021/03/pingcap-talent-project-%E8%B7%AF%E5%BE%841-project1/</link>
+      <pubDate>Thu, 04 Mar 2021 00:11:00 +0800</pubDate>
+      
+      <guid>https://max-cheng.github.io/posts/2021/03/pingcap-talent-project-%E8%B7%AF%E5%BE%841-project1/</guid>
+      <description>最近从武汉迁徙到了深圳,机会没有我想象的那么多,也仔细思考过这条路该怎么走,却怎么都走不好,找了一份相关的工作,工资不高,但好在有时间去自己学习.Anyway 还是来讲讲今天的正题.
+过年那段时间看着tidb-dashboard有个挺简单的Feature,就自己做着玩玩,慢慢了解到这家公司思想和所做的事都是非常宏伟的,最近面试完了在深圳这边等着入职(大专应届像我这样的渣渣想入行还是非常困难的),下午有时间就顺着把路径1 Project1给做了,是个大坑可能会更新的比较慢,让基础的我非常的尴尬,好在相关文档还是讲的比较清晰的.
+Part1 首先是几道SQL,这里就不再赘述了,除了最后一题需要思考一下,其他的都还是非常简单的,主要还是CASE确实用的比较少,下面从评论区搞了一份答案过来讲讲思路.
+SELECT CASE WHEN P IS NULL THEN CONCAT(N, &amp;#39; Root&amp;#39;) WHEN N IN (SELECT DISTINCT P FROM BST) THEN CONCAT(N, &amp;#39; Inner&amp;#39;) ELSE CONCAT(N, &amp;#39; Leaf&amp;#39;) END FROM BST ORDER BY N ASC 只有当P col为null时,N才能为Root节点,否则的话,判断N的值是否出现在P列中,true 则为中间节点,else则为叶子结点.
+Part2 首先Clone一份代码到本地,先不用忙着Make,Project 1的案例不需要.
+从tablecodec.goL39至L70代码就可以发现一些端倪,首先我们先理解EncodeRowKeyWithHandle这个function.
+var ( tablePrefix = []byte{&amp;#39;t&amp;#39;} recordPrefixSep = []byte(&amp;#34;_r&amp;#34;) indexPrefixSep = []byte(&amp;#34;_i&amp;#34;) ) const ( idLen = 8 prefixLen = 1 + idLen /*tableID*/ + 2 // RecordRowKeyLen is public for calculating average row size.</description>
+    </item>
+    
     <item>
       <title>About</title>
       <link>https://max-cheng.github.io/about/</link>
@@ -135,28 +150,6 @@ Tks</description>
       <guid>https://max-cheng.github.io/posts/2019/03/2019leetcode%E6%98%A5%E5%AD%A3%E5%85%A8%E5%9B%BD%E9%AB%98%E6%A0%A1%E8%B5%9B-1.%E6%98%93%E6%B7%B7%E6%B7%86%E6%95%B0/</guid>
       <description>易混淆数 给定一个数字 N，当它满足以下条件的时候返回 true： 把原数字旋转 180° 以后得到新的数字。 如 0, 1, 6, 8, 9 旋转 180° 以后，得到了新的数字 0, 1, 9, 8, 6 。 2, 3, 4, 5, 7 旋转 180° 后,得到的不是数字。 易混淆数字 (confusing number) 就是一个数字旋转 180° 以后，得到和原来不同的数字，且新数字的每一位都是有效的。 这道题非常有意思，但是如何实现呢？  依题意可知，若 Srting 中含有 2,3,4,5,7 得到的并不是数字，既然不是数字，那么我们可以直接 return false，依照上面的思路，便有以下代码。
 func test(s int) bool { target:=strconv.Itoa(s) //将s转换为string类型 nums1:=[]byte(target) //再次转换为byte，方便后面转换成string与原字符串对比 newline :=[]byte{} nums:=[]byte{} for _,v:=range nums1 { if v==&#39;2&#39;||v==&#39;3&#39;||v==&#39;4&#39;||v==&#39;5&#39;||v==&#39;7&#39;{ //对字符串进行遍历，查看是否存在无法混淆的元素 return false }else { switch v { //对可混淆的数进行转化 case &#39;0&#39;:newline =append(newline,&#39;0&#39;) case &#39;1&#39;:newline =append(newline,&#39;1&#39;) case &#39;6&#39;:newline =append(newline,&#39;9&#39;) case &#39;9&#39;:newline =append(newline,&#39;6&#39;) case &#39;8&#39;:newline =append(newline,&#39;8&#39;) } } } for i:=len(newline)-1;i&amp;gt;=0;i-- { nums=append(nums,newline[i]) //对处理后的byte切片进行反转 } if string(nums1) == string(nums) { //与原字符串进行比较 return false } return true } 当然此算法存在一定的局限性，欢迎各位在评论区提出更好的算法，近期会将 2019 的所有题目的思路进行梳理，感谢支持</description>
-    </item>
-    
-    <item>
-      <title>2019LeetCode春季全国高校赛决赛-1. 有序数组中的缺失元素</title>
-      <link>https://max-cheng.github.io/posts/2019/03/2019leetcode%E6%98%A5%E5%AD%A3%E5%85%A8%E5%9B%BD%E9%AB%98%E6%A0%A1%E8%B5%9B%E5%86%B3%E8%B5%9B-1.-%E6%9C%89%E5%BA%8F%E6%95%B0%E7%BB%84%E4%B8%AD%E7%9A%84%E7%BC%BA%E5%A4%B1%E5%85%83%E7%B4%A0/</link>
-      <pubDate>Thu, 21 Mar 2019 16:00:00 +0000</pubDate>
-      
-      <guid>https://max-cheng.github.io/posts/2019/03/2019leetcode%E6%98%A5%E5%AD%A3%E5%85%A8%E5%9B%BD%E9%AB%98%E6%A0%A1%E8%B5%9B%E5%86%B3%E8%B5%9B-1.-%E6%9C%89%E5%BA%8F%E6%95%B0%E7%BB%84%E4%B8%AD%E7%9A%84%E7%BC%BA%E5%A4%B1%E5%85%83%E7%B4%A0/</guid>
-      <description>有序数组中的缺失元素给出一个有序数组 A，数组中的每个数字都是 独一无二的，找出从数组最左边开始的第
-K
-个缺失数字。示例 1：输入：A = [4,7,9,10], K = 1
-输出：5
-解释：
-第一个缺失数字为 5 。示例 2：输入：A = [4,7,9,10], K = 3
-输出：8
-解释：
-缺失数字有 [5,6,8,…]，因此第三个缺失数字为 8 。示例 3：输入：A = [1,2,4], K = 3
-输出：6
-解释：
-缺失数字有 [3,5,6,7,…]，因此第三个缺失数字为 6 。提示：1 &amp;lt;= A.length &amp;lt;= 500001 &amp;lt;= A[i] &amp;lt;= 1e71 &amp;lt;= K &amp;lt;= 1e8
-废话不多说，直接上代码。
-func missingElement(nums []int, k int) int { basemap:= map[int]int{} step:=0 targetnums:=0 for _,v:=range nums{ basemap[v]++ } for i:=nums[0];k!</description>
     </item>
     
   </channel>
