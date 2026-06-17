@@ -1,89 +1,349 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
-	<channel>
-		<title>Co1a&#39;s Blog</title>
-		<link>https://co1a.me/</link>
-		<description>Recent content on Co1a&#39;s Blog</description>
-		<generator>Hugo</generator>
-		<language>zh-cn</language>
-		
-		
-		
-			<copyright>&lt;a href=&#34;https://creativecommons.org/licenses/by-nc/4.0/&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;CC BY-NC 4.0&lt;/a&gt;</copyright>
-		
-		
-			<lastBuildDate>Thu, 04 Mar 2021 00:11:00 +0800</lastBuildDate>
-		
-			<atom:link href="https://co1a.me/index.xml" rel="self" type="application/rss+xml" />
-			<item>
-				<title>PingCAP Talent Project 路径1 Project1</title>
-				<link>https://co1a.me/posts/2021/03/pingcap-talent-project-%E8%B7%AF%E5%BE%841-project1/</link>
-				<pubDate>Thu, 04 Mar 2021 00:11:00 +0800</pubDate>
-				<guid>https://co1a.me/posts/2021/03/pingcap-talent-project-%E8%B7%AF%E5%BE%841-project1/</guid>
-				<description>&lt;p&gt;最近从武汉迁徙到了深圳,机会没有我想象的那么多,也仔细思考过这条路该怎么走,却怎么都走不好,找了一份相关的工作,工资不高,但好在有时间去自己学习.Anyway 还是来讲讲今天的正题.&lt;/p&gt;&#xA;&lt;p&gt;过年那段时间看着tidb-dashboard有个挺简单的Feature,就自己做着玩玩,慢慢了解到这家公司思想和所做的事都是非常宏伟的,最近面试完了在深圳这边等着入职(&lt;del&gt;大专&lt;/del&gt;应届像我这样的渣渣想入行还是非常困难的),下午有时间就顺着把路径1 Project1给做了,是个大坑可能会更新的比较慢,让基础的我非常的尴尬,好在相关文档还是讲的比较清晰的.&lt;/p&gt;&#xA;&lt;h4 id=&#34;part1&#34;&gt;Part1&lt;/h4&gt;&#xA;&lt;p&gt;首先是几道SQL,这里就不再赘述了,除了最后一题需要思考一下,其他的都还是非常简单的,主要还是CASE确实用的比较少,下面从评论区搞了一份答案过来讲讲思路.&lt;/p&gt;&#xA;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;&#34;&gt;&lt;code class=&#34;language-mysql&#34; data-lang=&#34;mysql&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;SELECT&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;CASE&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&#x9;&lt;span style=&#34;color:#66d9ef&#34;&gt;WHEN&lt;/span&gt; P &lt;span style=&#34;color:#66d9ef&#34;&gt;IS&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;NULL&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;THEN&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;CONCAT&lt;/span&gt;(N, &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39; Root&amp;#39;&lt;/span&gt;)&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&#x9;&lt;span style=&#34;color:#66d9ef&#34;&gt;WHEN&lt;/span&gt; N &lt;span style=&#34;color:#66d9ef&#34;&gt;IN&lt;/span&gt; (&lt;span style=&#34;color:#66d9ef&#34;&gt;SELECT&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;DISTINCT&lt;/span&gt; P &lt;span style=&#34;color:#66d9ef&#34;&gt;FROM&lt;/span&gt; BST) &lt;span style=&#34;color:#66d9ef&#34;&gt;THEN&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;CONCAT&lt;/span&gt;(N, &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39; Inner&amp;#39;&lt;/span&gt;)&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&#x9;&lt;span style=&#34;color:#66d9ef&#34;&gt;ELSE&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;CONCAT&lt;/span&gt;(N, &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39; Leaf&amp;#39;&lt;/span&gt;)&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&#x9;END&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;FROM&lt;/span&gt; BST&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;ORDER&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;BY&lt;/span&gt; N &lt;span style=&#34;color:#66d9ef&#34;&gt;ASC&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;只有当P col为null时,N才能为Root节点,否则的话,判断N的值是否出现在P列中,true 则为中间节点,else则为叶子结点.&lt;/p&gt;&#xA;&lt;h4 id=&#34;part2&#34;&gt;Part2&lt;/h4&gt;&#xA;&lt;p&gt;首先Clone一份代码到本地,先不用忙着Make,Project 1的案例不需要.&lt;/p&gt;&#xA;&lt;p&gt;从&lt;code&gt;tablecodec.go&lt;/code&gt;L39至L70代码就可以发现一些端倪,首先我们先理解&lt;code&gt;EncodeRowKeyWithHandle&lt;/code&gt;这个function.&lt;/p&gt;&#xA;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;&#34;&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;var&lt;/span&gt; (&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&#x9;&lt;span style=&#34;color:#a6e22e&#34;&gt;tablePrefix&lt;/span&gt;     = []&lt;span style=&#34;color:#66d9ef&#34;&gt;byte&lt;/span&gt;{&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;t&amp;#39;&lt;/span&gt;}&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&#x9;&lt;span style=&#34;color:#a6e22e&#34;&gt;recordPrefixSep&lt;/span&gt; = []byte(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;_r&amp;#34;&lt;/span&gt;)&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&#x9;&lt;span style=&#34;color:#a6e22e&#34;&gt;indexPrefixSep&lt;/span&gt;  = []byte(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;_i&amp;#34;&lt;/span&gt;)&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;)&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; (&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&#x9;&lt;span style=&#34;color:#a6e22e&#34;&gt;idLen&lt;/span&gt;     = &lt;span style=&#34;color:#ae81ff&#34;&gt;8&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&#x9;&lt;span style=&#34;color:#a6e22e&#34;&gt;prefixLen&lt;/span&gt; = &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;idLen&lt;/span&gt; &lt;span style=&#34;color:#75715e&#34;&gt;/*tableID*/&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&#x9;&lt;span style=&#34;color:#75715e&#34;&gt;// RecordRowKeyLen is public for calculating average row size.&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&#x9;&lt;span style=&#34;color:#a6e22e&#34;&gt;RecordRowKeyLen&lt;/span&gt;       = &lt;span style=&#34;color:#a6e22e&#34;&gt;prefixLen&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;idLen&lt;/span&gt; &lt;span style=&#34;color:#75715e&#34;&gt;/*handle*/&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&#x9;&lt;span style=&#34;color:#a6e22e&#34;&gt;tablePrefixLength&lt;/span&gt;     = &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&#x9;&lt;span style=&#34;color:#a6e22e&#34;&gt;recordPrefixSepLength&lt;/span&gt; = &lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;)&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;// TableSplitKeyLen is the length of key &amp;#39;t{table_id}&amp;#39; which is used for table split.&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;TableSplitKeyLen&lt;/span&gt; = &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;idLen&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;// TablePrefix returns table&amp;#39;s prefix &amp;#39;t&amp;#39;.&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;func&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;TablePrefix&lt;/span&gt;() []&lt;span style=&#34;color:#66d9ef&#34;&gt;byte&lt;/span&gt; {&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&#x9;&lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;tablePrefix&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;// appendTableRecordPrefix appends table record prefix  &amp;#34;t[tableID]_r&amp;#34;.&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;func&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;appendTableRecordPrefix&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;buf&lt;/span&gt; []&lt;span style=&#34;color:#66d9ef&#34;&gt;byte&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;tableID&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;int64&lt;/span&gt;) []&lt;span style=&#34;color:#66d9ef&#34;&gt;byte&lt;/span&gt; {&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&#x9;&lt;span style=&#34;color:#a6e22e&#34;&gt;buf&lt;/span&gt; = append(&lt;span style=&#34;color:#a6e22e&#34;&gt;buf&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;tablePrefix&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;...&lt;/span&gt;)&#x9;&#x9;&#x9;&#x9;&lt;span style=&#34;color:#75715e&#34;&gt;//实际上将&amp;#39;t&amp;#39;插入到slice head.&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&#x9;&lt;span style=&#34;color:#a6e22e&#34;&gt;buf&lt;/span&gt; = &lt;span style=&#34;color:#a6e22e&#34;&gt;codec&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;EncodeInt&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;buf&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;tableID&lt;/span&gt;)&#x9;&#x9;&#x9;&#x9;&lt;span style=&#34;color:#75715e&#34;&gt;//对Tableid序列化插入到t后面.&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&#x9;&lt;span style=&#34;color:#a6e22e&#34;&gt;buf&lt;/span&gt; = append(&lt;span style=&#34;color:#a6e22e&#34;&gt;buf&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;recordPrefixSep&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;...&lt;/span&gt;)&#x9;&#x9;&#x9;&lt;span style=&#34;color:#75715e&#34;&gt;//插入recordPrefixSep标识符&amp;#34;_r&amp;#34;&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&#x9;&lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;buf&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;// EncodeRowKeyWithHandle encodes the table id, row handle into a kv.Key&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;func&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;EncodeRowKeyWithHandle&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;tableID&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;int64&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;handle&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;int64&lt;/span&gt;) &lt;span style=&#34;color:#a6e22e&#34;&gt;kv&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Key&lt;/span&gt; {&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&#x9;&lt;span style=&#34;color:#a6e22e&#34;&gt;buf&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;:=&lt;/span&gt; make([]&lt;span style=&#34;color:#66d9ef&#34;&gt;byte&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;RecordRowKeyLen&lt;/span&gt;)&#x9;&#x9;&#x9;&lt;span style=&#34;color:#75715e&#34;&gt;//创建一个byte Slice,其len为0,cap为(prefixLen + idLen)=8+1+8+2=19.&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&#x9;&lt;span style=&#34;color:#a6e22e&#34;&gt;buf&lt;/span&gt; = &lt;span style=&#34;color:#a6e22e&#34;&gt;appendTableRecordPrefix&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;buf&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;tableID&lt;/span&gt;)&#x9;&#x9;&lt;span style=&#34;color:#75715e&#34;&gt;//将空slice和tableID传入appendTableRecordPrefix.跳转到25行&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&#x9;&lt;span style=&#34;color:#a6e22e&#34;&gt;buf&lt;/span&gt; = &lt;span style=&#34;color:#a6e22e&#34;&gt;codec&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;EncodeInt&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;buf&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;handle&lt;/span&gt;)&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&#x9;&lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;buf&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;让我们来看看&lt;code&gt;codec.EncodeInt&lt;/code&gt;究竟对我们的TableID进行了什么操作&lt;/p&gt;</description>
-			</item>
-			<item>
-				<title>About</title>
-				<link>https://co1a.me/about/</link>
-				<pubDate>Tue, 15 Dec 2020 20:46:25 +0800</pubDate>
-				<guid>https://co1a.me/about/</guid>
-				<description>&lt;p&gt;Null&lt;/p&gt;</description>
-			</item>
-			<item>
-				<title>2Step为Hexo主题添加LikeCoin的赞赏键</title>
-				<link>https://co1a.me/posts/2020/08/2step%E4%B8%BAhexo%E4%B8%BB%E9%A2%98%E6%B7%BB%E5%8A%A0likecoin%E7%9A%84%E8%B5%9E%E8%B5%8F%E9%94%AE/</link>
-				<pubDate>Sun, 16 Aug 2020 16:00:00 +0000</pubDate>
-				<guid>https://co1a.me/posts/2020/08/2step%E4%B8%BAhexo%E4%B8%BB%E9%A2%98%E6%B7%BB%E5%8A%A0likecoin%E7%9A%84%E8%B5%9E%E8%B5%8F%E9%94%AE/</guid>
-				<description>&lt;p&gt;最近一直想切换到Hexo,但是只在本地上切换了,并没有托管至Github,闲下来之后看看能不能切换过去,很喜慌Matters这种Like Botton,想着也把这个按钮一并移植过去&lt;/p&gt;&#xA;&lt;h5 id=&#34;step1定位正文的父元素&#34;&gt;Step1.定位正文的父元素&lt;/h5&gt;&#xA;&lt;p&gt;首先打开Chrome，打开Hexo本地伺服，开启开发者控制台.&lt;/p&gt;&#xA;&lt;p&gt;举个例子，我想要把赞赏键添加至文章末尾&lt;/p&gt;&#xA;&lt;p&gt;&lt;img src=&#34;https://i.loli.net/2020/08/16/OUSezawRnhYBAk2.png&#34; alt=&#34;截屏2020-08-15 下午11.53.16.png&#34;&gt;&lt;/p&gt;&#xA;&lt;p&gt;显而易见，正文的父级为&lt;code&gt;article-entry&lt;/code&gt;&lt;/p&gt;&#xA;&lt;p&gt;将整个主题文件夹拖入Visual Studio Code,使用自带的检索按钮搜寻上文中的父级标签.&lt;/p&gt;&#xA;&lt;p&gt;&lt;img src=&#34;https://i.loli.net/2020/08/16/1KvUkwHMF5Gtg7A.png&#34; alt=&#34;截屏2020-08-16 上午1.09.49.png&#34;&gt;&lt;/p&gt;&#xA;&lt;h5 id=&#34;step2-插入对应代码&#34;&gt;Step2. 插入对应代码&lt;/h5&gt;&#xA;&lt;p&gt;根据对Hexo主题模版分析，我们想要在content正下方插入对应LikeCoin 的贊賞鍵，所以套在最后的post.content的正下方.&lt;/p&gt;&#xA;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;&amp;lt;% if (config.liker.enable&amp;amp;&amp;amp;!index){ %&amp;gt;&#xA;                                                                            &amp;lt;div&amp;gt;&#xA;                                                                                &amp;lt;script type=&amp;#34;text/javascript&amp;#34;&amp;gt;&#xA;                                                                                  document.write(&amp;#34;&amp;lt;iframe scrolling=&amp;#39;no&amp;#39; frameborder=&amp;#39;0&amp;#39; style=&amp;#39;width:100%; max-width:485px; height:240px; margin:auto; overflow:hidden; display:block;&amp;#39;src=&amp;#39;https://button.like.co/in/embed/&amp;#34;+&amp;#39;&amp;lt;%- config.liker.id  %&amp;gt;&amp;#39;+&amp;#34;/button?referrer=&amp;#34; +encodeURIComponent(location.href.split(&amp;#34;?&amp;#34;)[0].split(&amp;#34;#&amp;#34;)[0]) + &amp;#34;&amp;#39;&amp;gt;&amp;lt;/iframe&amp;gt;&amp;#34;);&#xA;                                                                                &amp;lt;/script&amp;gt;&#xA;                                                                            &amp;lt;div&amp;gt;&#xA;                                                                        &amp;lt;% } %&amp;gt;&#xA;&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;在hexo的配置文件&lt;code&gt;_config.yml&lt;/code&gt;中插入&lt;/p&gt;&#xA;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;liker:&#xA;  enable: true&#xA;  id: Your liker id&#xA;&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;让我们来试试效果如何.&lt;/p&gt;&#xA;&lt;p&gt;&lt;img src=&#34;https://i.loli.net/2020/08/16/s4t5KAX6np9gxZj.png&#34; alt=&#34;截屏2020-08-16 上午1.36.49.png&#34;&gt;&lt;/p&gt;&#xA;&lt;p&gt;修改后的主题文件已上传至&lt;a href=&#34;https://github.com/Max-Cheng/hexo-theme-ocean&#34;&gt;Github&lt;/a&gt;，需要的朋友可以自取&lt;/p&gt;&#xA;&lt;p&gt;使用方法:&lt;/p&gt;&#xA;&lt;ol&gt;&#xA;&lt;li&gt;将主题设置为hexo-theme-ocean&lt;/li&gt;&#xA;&lt;li&gt;在Hexo&lt;code&gt;_config.yml&lt;/code&gt;中添加相应字段&lt;/li&gt;&#xA;&lt;li&gt;Enjoy~&lt;/li&gt;&#xA;&lt;/ol&gt;&#xA;&lt;p&gt;**Note:**在Ocean中,在主页也会显示赞赏键,需要在判断语句中进行更改,文中所提供的代码判断语句仅适用于Ocean,其他朋友动手需要自己研究一下.&lt;/p&gt;</description>
-			</item>
-			<item>
-				<title>Nuc8在线安装黑苹果教程</title>
-				<link>https://co1a.me/posts/2020/03/nuc8%E5%9C%A8%E7%BA%BF%E5%AE%89%E8%A3%85%E9%BB%91%E8%8B%B9%E6%9E%9C%E6%95%99%E7%A8%8B/</link>
-				<pubDate>Mon, 30 Mar 2020 16:00:00 +0000</pubDate>
-				<guid>https://co1a.me/posts/2020/03/nuc8%E5%9C%A8%E7%BA%BF%E5%AE%89%E8%A3%85%E9%BB%91%E8%8B%B9%E6%9E%9C%E6%95%99%E7%A8%8B/</guid>
-				<description>&lt;p&gt;最近很多新朋友通过黑苹果了解到了Nuc8,我自己液使用了将近一年之久,闲来无事也照着维奇的轮子自己撸了一个,废话少说,直接进入教程。&lt;/p&gt;&#xA;&lt;h2 id=&#34;准备阶段&#34;&gt;准备阶段&lt;/h2&gt;&#xA;&lt;ol&gt;&#xA;&lt;li&gt;一个格式为Fat32的U盘(容量大等于1G)&lt;/li&gt;&#xA;&lt;li&gt;有线连接或安装白果卡的的Nuc8&lt;/li&gt;&#xA;&lt;li&gt;将bios中的Secure Boot,Fast Boot关闭(详见weachy的&lt;a href=&#34;https://www.jianshu.com/p/78510cfa4a64&#34;&gt;这篇博客&lt;/a&gt;)&lt;/li&gt;&#xA;&lt;/ol&gt;&#xA;&lt;h2 id=&#34;下载阶段&#34;&gt;下载阶段&lt;/h2&gt;&#xA;&lt;ol&gt;&#xA;&lt;li&gt;&#xA;&lt;p&gt;下载EFI解压到U盘根目录(我这里没有U盘,使用文件夹演示)&lt;/p&gt;&#xA;&lt;p&gt;文件目录应为&lt;/p&gt;&#xA;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;.&#xA;└── EFI&#xA;    ├── BOOT&#xA;    │   └── ...&#xA;    ├── OC&#xA;    │   ├── ...&#xA;    |   ...&#xA;    └── readme.txt&#xA;&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;我这里使用的是&lt;a href=&#34;https://www.jianshu.com/u/82ec04331356&#34;&gt;weachy&lt;/a&gt;大佬维护的EFI,同时欢迎各位&lt;a href=&#34;https://mianbaoduo.com/o/bread/Y5mTkp8=&#34;&gt;捐赠&lt;/a&gt;&lt;/p&gt;&#xA;&lt;/li&gt;&#xA;&lt;li&gt;&#xA;&lt;p&gt;下载&lt;a href=&#34;https://github.com/Max-Cheng/Magic-Stick-Creator&#34;&gt;Magic-Stick-Creator&lt;/a&gt;至根目录或使用捐赠包内附带的文件,这里默认使用Magic-Stick-Creator&lt;/p&gt;&#xA;&lt;/li&gt;&#xA;&lt;/ol&gt;&#xA;&lt;h3 id=&#34;macos&#34;&gt;macOS&lt;/h3&gt;&#xA;&lt;ol&gt;&#xA;&lt;li&gt;&#xA;&lt;p&gt;下载&lt;a href=&#34;https://github.com/Max-Cheng/Magic-Stick-Creator/releases/download/v1.0.8/Magic-Stick-Creator_v1.0.8_darwin_amd64.zip&#34;&gt;Magic-Stick-Creator_v1.0.8_darwin_amd64.zip&lt;/a&gt;并移动至U盘更目录&lt;/p&gt;&#xA;&lt;/li&gt;&#xA;&lt;li&gt;&#xA;&lt;p&gt;解压后执行&lt;/p&gt;&#xA;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;cd /Volumes/你的u盘名称&#xA;./Magic-Stick-Creator_v1.0.8_darwin_amd64&#xA;&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;&#xA;&lt;li&gt;&#xA;&lt;p&gt;根据工具提示下载你需要的版本&lt;/p&gt;&#xA;&lt;/li&gt;&#xA;&lt;/ol&gt;&#xA;&lt;h3 id=&#34;windows&#34;&gt;Windows&lt;/h3&gt;&#xA;&lt;ol&gt;&#xA;&lt;li&gt;下载&lt;a href=&#34;https://github.com/Max-Cheng/Magic-Stick-Creator/releases/download/v1.0.8/Magic-Stick-Creator_v1.0.8_windows_amd64.exe.zip&#34;&gt;Magic-Stick-Creator_v1.0.8_windows_amd64.exe.zip&lt;/a&gt;并移动至U盘更目录&lt;/li&gt;&#xA;&lt;li&gt;解压后运行,根据工具提示下载你需要的版本&lt;/li&gt;&#xA;&lt;li&gt;下载完成后即可进入安装环节&lt;/li&gt;&#xA;&lt;/ol&gt;&#xA;&lt;h2 id=&#34;安装阶段&#34;&gt;安装阶段&lt;/h2&gt;&#xA;&lt;ol&gt;&#xA;&lt;li&gt;开机后一直按F10进入引导菜单&lt;/li&gt;&#xA;&lt;li&gt;箭头移动光标至你的U盘&lt;/li&gt;&#xA;&lt;li&gt;在按下回车后立马疯狂按Command(Win)+R(重要)&lt;/li&gt;&#xA;&lt;li&gt;屏幕显示Logo读条即为成功&lt;/li&gt;&#xA;&lt;li&gt;通过磁盘工具格式化你的硬盘&lt;/li&gt;&#xA;&lt;li&gt;退出至主菜单,选择重新安装Mac (你选择的版本) 期间网络需保持稳定&lt;/li&gt;&#xA;&lt;/ol&gt;&#xA;&lt;p&gt;中间会重启数次,一直选择macos installer即可&#xA;Enjoy~&#xA;:)&lt;/p&gt;</description>
-			</item>
-			<item>
-				<title>WSL2初体验</title>
-				<link>https://co1a.me/posts/2020/02/wsl2%E5%88%9D%E4%BD%93%E9%AA%8C/</link>
-				<pubDate>Wed, 19 Feb 2020 16:00:00 +0000</pubDate>
-				<guid>https://co1a.me/posts/2020/02/wsl2%E5%88%9D%E4%BD%93%E9%AA%8C/</guid>
-				<description>&lt;p&gt;最近有个想法，从MacOs迁移到Windows，虽说平时也是在这两个系统来回切换，但是体验并不好，随后在笔记本上开启了Windows Insider.&lt;/p&gt;&#xA;&lt;h3 id=&#34;wsl2配置clash代理&#34;&gt;WSL2配置Clash代理&lt;/h3&gt;&#xA;&lt;p&gt;由于我使用的代理为Clash,但是好像并不能够自动完成WSL2的设置&lt;/p&gt;&#xA;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;vim ~/.bashrc&#xA;&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;插入以下内容&lt;/p&gt;&#xA;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;export hostip=$(cat /etc/resolv.conf |grep -oP &amp;#39;(?&amp;lt;=nameserver\ ).*&amp;#39;);&#xA;export https_proxy=&amp;#34;http://${hostip}:7890&amp;#34;;&#xA;export http_proxy=&amp;#34;http://${hostip}:7890&amp;#34;;&#xA;export all_proxy=&amp;#34;socks5://${hostip}:7891&amp;#34;;&#xA;&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;安装fish-shell&#34;&gt;安装Fish Shell&lt;/h3&gt;&#xA;&lt;p&gt;Fish Shell是我用过的Shell中最方便也是最现代化的一个终端,有着zsh的体验和bash的速度&lt;/p&gt;&#xA;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;sudo apt-get install fish&#xA;chsh -s /usr/bin/fish &#xA;&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;安装oh-my-fish&#34;&gt;安装Oh-My-Fish&lt;/h3&gt;&#xA;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;curl -L https://get.oh-my.fish | fish&#xA;omf install agnoster&#xA;ofm theme agnoster&#xA;&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;但是到这里WSL自带的终端会出现乱码，故使用了&lt;a href=&#34;https://www.microsoft.com/zh-cn/p/windows-terminal-preview/9n0dx20hk701?activetab=pivot:overviewtab&#34;&gt;Windows Terminal&lt;/a&gt;+Cascadia Code的组合&lt;/p&gt;&#xA;&lt;h3 id=&#34;配置windows-terminal&#34;&gt;配置Windows Terminal&lt;/h3&gt;&#xA;&lt;p&gt;首先当然是安装微软最新的&lt;a href=&#34;https://github.com/microsoft/cascadia-code/releases&#34;&gt;Cascadia Code&lt;/a&gt;,我这里使用的是&lt;a href=&#34;https://github.com/microsoft/cascadia-code/releases/download/v1911.21/CascadiaPL.ttf&#34;&gt;CascadiaPL&lt;/a&gt;&lt;/p&gt;&#xA;&lt;p&gt;在Windows Terminal按Ctrl+,打开配置文件,我的配置文件如下&lt;/p&gt;&#xA;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;// To view the default settings, hold &amp;#34;alt&amp;#34; while clicking on the &amp;#34;Settings&amp;#34; button.&#xA;// For documentation on these settings, see: https://aka.ms/terminal-documentation&#xA;&#xA;{&#xA;    &amp;#34;$schema&amp;#34;: &amp;#34;https://aka.ms/terminal-profiles-schema&amp;#34;,&#xA;&#xA;    &amp;#34;defaultProfile&amp;#34;: &amp;#34;{c6eaf9f4-32a7-5fdc-b5cf-066e8a4b1e40}&amp;#34;,&#xA;&#xA;    &amp;#34;profiles&amp;#34;:&#xA;    {&#xA;        &amp;#34;defaults&amp;#34;:&#xA;        {&#xA;            // Put settings here that you want to apply to all profiles&#xA;        },&#xA;        &amp;#34;list&amp;#34;:&#xA;        [&#xA;            {&#xA;                // Make changes here to the powershell.exe profile&#xA;                &amp;#34;guid&amp;#34;: &amp;#34;{61c54bbd-c2c6-5271-96e7-009a87ff44bf}&amp;#34;,&#xA;                &amp;#34;name&amp;#34;: &amp;#34;Windows PowerShell&amp;#34;,&#xA;                &amp;#34;commandline&amp;#34;: &amp;#34;powershell.exe&amp;#34;,&#xA;                &amp;#34;fontFace&amp;#34;: &amp;#34;Cascadia Code PL&amp;#34;,&#xA;                &amp;#34;fontSize&amp;#34;: 14,&#xA;                &amp;#34;hidden&amp;#34;: false&#xA;            },&#xA;            {&#xA;                // Make changes here to the cmd.exe profile&#xA;                &amp;#34;guid&amp;#34;: &amp;#34;{0caa0dad-35be-5f56-a8ff-afceeeaa6101}&amp;#34;,&#xA;                &amp;#34;name&amp;#34;: &amp;#34;cmd&amp;#34;,&#xA;                &amp;#34;commandline&amp;#34;: &amp;#34;cmd.exe&amp;#34;,&#xA;                &amp;#34;fontFace&amp;#34;: &amp;#34;Cascadia Code PL&amp;#34;,&#xA;                &amp;#34;fontSize&amp;#34;: 14,&#xA;                &amp;#34;hidden&amp;#34;: false&#xA;            },&#xA;            {&#xA;                &amp;#34;guid&amp;#34;: &amp;#34;{b453ae62-4e3d-5e58-b989-0a998ec441b8}&amp;#34;,&#xA;                &amp;#34;hidden&amp;#34;: true,&#xA;                &amp;#34;name&amp;#34;: &amp;#34;Azure Cloud Shell&amp;#34;,&#xA;                &amp;#34;source&amp;#34;: &amp;#34;Windows.Terminal.Azure&amp;#34;&#xA;            },&#xA;            {&#xA;                &amp;#34;guid&amp;#34;: &amp;#34;{c6eaf9f4-32a7-5fdc-b5cf-066e8a4b1e40}&amp;#34;,&#xA;                &amp;#34;hidden&amp;#34;: false,&#xA;                &amp;#34;name&amp;#34;: &amp;#34;Ubuntu-18.04&amp;#34;,&#xA;                &amp;#34;source&amp;#34;: &amp;#34;Windows.Terminal.Wsl&amp;#34;,&#xA;                &amp;#34;fontFace&amp;#34;: &amp;#34;Cascadia Code PL&amp;#34;,&#xA;                &amp;#34;fontSize&amp;#34;: 14,&#xA;                &amp;#34;startingDirectory&amp;#34;: &amp;#34;/home/co1a&amp;#34;&#xA;            }&#xA;        ]&#xA;    },&#xA;&#xA;    // Add custom color schemes to this array&#xA;    &amp;#34;schemes&amp;#34;: [],&#xA;&#xA;    // Add any keybinding overrides to this array.&#xA;    // To unbind a default keybinding, set the command to &amp;#34;unbound&amp;#34;&#xA;    &amp;#34;keybindings&amp;#34;: [&#xA;        {&#xA;            &amp;#34;command&amp;#34; :&amp;#34;closeTab&amp;#34;,&#xA;            &amp;#34;keys&amp;#34;: [&amp;#34;ctrl+w&amp;#34;]&#xA;        },&#xA;        {&#xA;            &amp;#34;command&amp;#34;:&amp;#34;newTab&amp;#34;,&#xA;            &amp;#34;keys&amp;#34;: [&amp;#34;ctrl+t&amp;#34;]&#xA;        }&#xA;    ]&#xA;}&#xA;&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;配置configfish&#34;&gt;配置config.fish&lt;/h3&gt;&#xA;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;vim .config/fish/config.fish&#xA;&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;写入以下内容&lt;/p&gt;</description>
-			</item>
-			<item>
-				<title>2019LeetCode秋季全国赛3. 机器人大冒险.</title>
-				<link>https://co1a.me/posts/2019/10/2019leetcode%E7%A7%8B%E5%AD%A3%E5%85%A8%E5%9B%BD%E8%B5%9B3.-%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%A4%A7%E5%86%92%E9%99%A9./</link>
-				<pubDate>Sun, 27 Oct 2019 16:00:00 +0000</pubDate>
-				<guid>https://co1a.me/posts/2019/10/2019leetcode%E7%A7%8B%E5%AD%A3%E5%85%A8%E5%9B%BD%E8%B5%9B3.-%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%A4%A7%E5%86%92%E9%99%A9./</guid>
-				<description>&lt;blockquote&gt;&#xA;&lt;p&gt;力扣团队买了一个可编程机器人，机器人初始位置在原点(0, 0)。小伙伴事先给机器人输入一串指令command，机器人就会无限循环这条指令的步骤进行移动。指令有两种：&#xA;U: 向y轴正方向移动一格&#xA;R: 向x轴正方向移动一格。&#xA;不幸的是，在 xy 平面上还有一些障碍物，他们的坐标用obstacles表示。机器人一旦碰到障碍物就会被损毁。&#xA;给定终点坐标(x, y)，返回机器人能否完好地到达终点。如果能，返回true；否则返回false。&#xA;示例 1：&#xA;输入：command = “URR”, obstacles = [], x = 3, y = 2&#xA;输出：true&#xA;解释：U(0, 1) -&amp;gt; R(1, 1) -&amp;gt; R(2, 1) -&amp;gt; U(2, 2) -&amp;gt; R(3, 2)。&#xA;示例 2：&#xA;输入：command = “URR”, obstacles = [[2, 2]], x = 3, y = 2&#xA;输出：false&#xA;解释：机器人在到达终点前会碰到(2, 2)的障碍物。&#xA;示例 3：&#xA;输入：command = “URR”, obstacles = [[4, 2]], x = 3, y = 2&#xA;输出：true&#xA;解释：到达终点后，再碰到障碍物也不影响返回结果。&#xA;限制：&#xA;2 &amp;lt;= command的长度 &amp;lt;= 1000&#xA;command由U，R构成，且至少有一个U，至少有一个R&#xA;0 &amp;lt;= x &amp;lt;= 1e9, 0 &amp;lt;= y &amp;lt;= 1e9&#xA;0 &amp;lt;= obstacles的长度 &amp;lt;= 1000&#xA;obstacles[i]不为原点或者终点&lt;/p&gt;</description>
-			</item>
-			<item>
-				<title>Mac下安装Tensorflow</title>
-				<link>https://co1a.me/posts/2019/06/mac%E4%B8%8B%E5%AE%89%E8%A3%85tensorflow/</link>
-				<pubDate>Fri, 21 Jun 2019 16:00:00 +0000</pubDate>
-				<guid>https://co1a.me/posts/2019/06/mac%E4%B8%8B%E5%AE%89%E8%A3%85tensorflow/</guid>
-				<description>&lt;p&gt;最近Anaconda清华镜像站关闭，国内许多镜像源都关闭了，导致下载TensorFlow很慢很慢，自己琢磨是不是可以通过pip镜像站来解决这个问题。&lt;/p&gt;&#xA;&lt;p&gt;首先新建一个Anaconda环境&lt;/p&gt;&#xA;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;conda create -n env_name python=3.6&#xA;&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;再将pip源设置为国内源&lt;/p&gt;&#xA;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;cd ~&#xA;mkdir .pip&#xA;vim ~/.pip/pip.conf&#xA;&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;插入以下内容&#xA;[global]&#xA;index-url = &lt;a href=&#34;https://mirrors.aliyun.com/pypi/simple&#34;&gt;https://mirrors.aliyun.com/pypi/simple&lt;/a&gt;&#xA;[install]&#xA;trusted-host = mirrors.aliyun.com&lt;/p&gt;&#xA;&lt;p&gt;这里我用的是阿里源&lt;/p&gt;&#xA;&lt;p&gt;再次进入虚拟环境&lt;/p&gt;&#xA;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;source activate env_name&#xA;pip install tensorflow&#xA;&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Done!&lt;/p&gt;&#xA;&lt;p&gt;出现&lt;code&gt;tensorflow/core/platform/cpu_feature_guard.cc:140] Your CPU supports instructions that this TensorFlow binary was not compiled to use: AVX2 FMA&lt;/code&gt;的解决办法&lt;/p&gt;&#xA;&lt;p&gt;首先前往&lt;a href=&#34;https://github.com/lakshayg/tensorflow-build&#34;&gt;这个&lt;/a&gt;地址，找到适合自己的版本并下载，例如我的&lt;img src=&#34;https://i.loli.net/2019/06/22/5d0d01063961027639.png&#34; alt=&#34;img&#34;&gt;&lt;/p&gt;&#xA;&lt;p&gt;首先新建一个新的虚拟环境，Python版本如图所示&lt;/p&gt;&#xA;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;conda create -n tensorflow python=3.6.5&#xA;source activate tensorflow &#xA;pip install tensorflow#这一步是让他把默认的组件安装了&#xA;&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;安装完毕之后再次执行以下命令安装支持cpu用AVX2编译的TensorFlow版本。&lt;/p&gt;&#xA;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;pip install --ignore-installed --upgrade /co1a/donwload/tensorflow-1.13.1-cp36-cp36m-macosx_10_13_x86_64.whl --user&#xA;&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;再实验一次试试&#xA;&lt;img src=&#34;https://i.loli.net/2019/06/22/5d0d02ac5f8d584316.png&#34; alt=&#34;img&#34;&gt;&#xA;完美解决！&lt;/p&gt;</description>
-			</item>
-			<item>
-				<title>WSL下Git的坑</title>
-				<link>https://co1a.me/posts/2019/05/wsl%E4%B8%8Bgit%E7%9A%84%E5%9D%91/</link>
-				<pubDate>Sat, 25 May 2019 16:00:00 +0000</pubDate>
-				<guid>https://co1a.me/posts/2019/05/wsl%E4%B8%8Bgit%E7%9A%84%E5%9D%91/</guid>
-				<description>&lt;p&gt;最近忙于软件杯比赛，基本上没有时间腾出来做个人项目了，周末闲着没事重装了一个系统，原因是手动升级1903后环境变量都没了甘霖娘微软，于是乎重新装了个系统，心想最近Windows Terminal和WSL2即将到来，是不是可以用WSL来生成hugo,还便于管理，殊不知一路上都是坑。。。&lt;del&gt;FXXK Microsoft!&lt;/del&gt;&lt;/p&gt;&#xA;&lt;p&gt;首先去Hugo的&lt;a href=&#34;https://github.com/gohugoio/hugo/releases&#34;&gt;Github&lt;/a&gt;上下载最新的deb版，WSL还是使用的Ubuntu(R.I.P Cent os)，在这里我的下载目录为*C:\Users\Shire\Downloads,&lt;em&gt;进入WSL&lt;/em&gt;&lt;/p&gt;&#xA;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;cd /mnt/c/Users/Shire/Download&#xA;sudo dpkg -i hugo_0.55.6_Linux-64bit.deb&#xA;&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;再进入之前备份好的Hugo目录下&lt;/p&gt;&#xA;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;cd Blog&#xA;hugo&#xA;cd public&#xA;git add .&#xA;git commit -m &amp;#39;update&amp;#39;&#xA;git push -u origin master&#xA;&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;等等，怎么会权限不足，哦，那我用sudo不就好了(&lt;del&gt;开始给自己挖坑&lt;/del&gt;)&lt;/p&gt;&#xA;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;sudo git push -u origin master&#xA;什么???认证失败???&#xA;&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;在我折腾了半个小时之后，终于发现ssh密钥应该使用root用户的(&lt;del&gt;一度怀疑自己脑子里面是不是装了屎&lt;/del&gt;)&lt;/p&gt;&#xA;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;sudo su&#xA;cd ~&#xA;cat .ssh/id_rsa.pub&#xA;&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;再去Coding官网上添加SSH密钥，OK，解决。&lt;/p&gt;&#xA;&lt;p&gt;寻根究底还是WSL在Windows目录下权限不足，搞了半天还以为是WSL的问题(M$对不起),果然还是自己脑子进了屎。。。&lt;/p&gt;</description>
-			</item>
-			<item>
-				<title>为Coding下的Hugo添加GitTalk</title>
-				<link>https://co1a.me/posts/2019/05/%E4%B8%BAcoding%E4%B8%8B%E7%9A%84hugo%E6%B7%BB%E5%8A%A0gittalk/</link>
-				<pubDate>Sat, 25 May 2019 16:00:00 +0000</pubDate>
-				<guid>https://co1a.me/posts/2019/05/%E4%B8%BAcoding%E4%B8%8B%E7%9A%84hugo%E6%B7%BB%E5%8A%A0gittalk/</guid>
-				<description>&lt;p&gt;本站之前一直使用Disqus,发现还是太臃肿，而且被某些不明力量所封禁，这次发现了一个比较好的解决办法，GitTalk&lt;/p&gt;&#xA;&lt;p&gt;在Google随便搜索一下都是关于Hexo的GitTalk，并且人家用的还是Github Page，这就比较尴尬了，俗话说的好，办法总比困难多，冷静分析之后发现无非就一个点需要注意&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;存在一个GitHub项目用于保留issue从而达到保留评论&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;在这里我新建了一个仓库取名为max-cheng.github.io,记得勾选自动生成README文件例如下图,(我比较懒所以就不重新生成了hahaha)&lt;/p&gt;&#xA;&lt;p&gt;&lt;img src=&#34;https://i.loli.net/2019/05/25/5ce95f8a2b64a73003.png&#34; alt=&#34;img&#34;&gt;&lt;/p&gt;&#xA;&lt;p&gt;创建新的仓库后，我们申请一个&lt;a href=&#34;https://github.com/settings/applications/new&#34;&gt;GitHub Application&lt;/a&gt;,例如我的&lt;/p&gt;&#xA;&lt;p&gt;&lt;img src=&#34;https://i.loli.net/2019/05/25/5ce960528ce3852061.png&#34; alt=&#34;img&#34;&gt;&lt;/p&gt;&#xA;&lt;p&gt;这里需要注意一下，第二个主页连接中，我们输入刚刚生成新仓库的链接，即&lt;em&gt;yourusername.github.io&lt;/em&gt;,最后一个&lt;em&gt;Authorization callback&lt;/em&gt; URL填写自己的域名或coding生成的域名，切记切记，然后会给你以下信息，打开&lt;em&gt;config.toml&lt;/em&gt;按照以下格式填写即可。&lt;/p&gt;&#xA;&lt;p&gt;&lt;img src=&#34;https://i.loli.net/2019/05/25/5ce961a77f94362316.png&#34; alt=&#34;img&#34;&gt;&lt;/p&gt;&#xA;&lt;p&gt;&lt;img src=&#34;https://i.loli.net/2019/05/25/5ce961a714ed077551.png&#34; alt=&#34;img&#34;&gt;&lt;/p&gt;&#xA;&lt;p&gt;如果可以使用请评论一下(站点太冷清了)&lt;/p&gt;&#xA;&lt;p&gt;Tks&lt;/p&gt;</description>
-			</item>
-			<item>
-				<title>2019LeetCode春季全国高校赛-1.易混淆数</title>
-				<link>https://co1a.me/posts/2019/03/2019leetcode%E6%98%A5%E5%AD%A3%E5%85%A8%E5%9B%BD%E9%AB%98%E6%A0%A1%E8%B5%9B-1.%E6%98%93%E6%B7%B7%E6%B7%86%E6%95%B0/</link>
-				<pubDate>Thu, 21 Mar 2019 16:00:00 +0000</pubDate>
-				<guid>https://co1a.me/posts/2019/03/2019leetcode%E6%98%A5%E5%AD%A3%E5%85%A8%E5%9B%BD%E9%AB%98%E6%A0%A1%E8%B5%9B-1.%E6%98%93%E6%B7%B7%E6%B7%86%E6%95%B0/</guid>
-				<description>&lt;ol&gt;&#xA;&lt;li&gt;易混淆数&#xA;给定一个数字 N，当它满足以下条件的时候返回 true：&#xA;把原数字旋转 180° 以后得到新的数字。&#xA;如 0, 1, 6, 8, 9 旋转 180° 以后，得到了新的数字 0, 1, 9, 8, 6 。&#xA;2, 3, 4, 5, 7 旋转 180° 后,得到的不是数字。&#xA;易混淆数字 (confusing number) 就是一个数字旋转 180° 以后，得到和原来不同的数字，且新数字的每一位都是有效的。 这道题非常有意思，但是如何实现呢？&lt;/li&gt;&#xA;&lt;/ol&gt;&#xA;&lt;p&gt;依题意可知，若 Srting 中含有 2,3,4,5,7 得到的并不是数字，既然不是数字，那么我们可以直接 return false，依照上面的思路，便有以下代码。&lt;/p&gt;&#xA;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;func test(s int) bool {&#xA;target:=strconv.Itoa(s)   //将s转换为string类型&#xA;nums1:=[]byte(target)     //再次转换为byte，方便后面转换成string与原字符串对比&#xA;newline :=[]byte{}&#xA;nums:=[]byte{}&#xA;for _,v:=range nums1 {&#xA;    if v==&amp;#39;2&amp;#39;||v==&amp;#39;3&amp;#39;||v==&amp;#39;4&amp;#39;||v==&amp;#39;5&amp;#39;||v==&amp;#39;7&amp;#39;{ //对字符串进行遍历，查看是否存在无法混淆的元素&#xA;        return false&#xA;    }else {&#xA;        switch v {    //对可混淆的数进行转化&#xA;        case &amp;#39;0&amp;#39;:newline =append(newline,&amp;#39;0&amp;#39;)&#xA;        case &amp;#39;1&amp;#39;:newline =append(newline,&amp;#39;1&amp;#39;)&#xA;        case &amp;#39;6&amp;#39;:newline =append(newline,&amp;#39;9&amp;#39;)&#xA;        case &amp;#39;9&amp;#39;:newline =append(newline,&amp;#39;6&amp;#39;)&#xA;        case &amp;#39;8&amp;#39;:newline =append(newline,&amp;#39;8&amp;#39;)&#xA;        }&#xA;    }&#xA;}&#xA;for i:=len(newline)-1;i&amp;gt;=0;i-- {&#xA;    nums=append(nums,newline[i])  //对处理后的byte切片进行反转&#xA;}&#xA;if string(nums1) == string(nums) { //与原字符串进行比较&#xA;    return false&#xA;}&#xA;return true&#xA;}&#xA;&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;当然此算法存在一定的局限性，欢迎各位在评论区提出更好的算法，近期会将 2019 的所有题目的思路进行梳理，感谢支持&lt;/p&gt;</description>
-			</item>
-	</channel>
-</rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Co1a's Blog</title><link>https://co1a.me/</link><description>Recent content on Co1a's Blog</description><generator>Hugo</generator><language>zh-cn</language><copyright>&lt;a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener"&gt;CC BY-NC 4.0&lt;/a&gt;</copyright><lastBuildDate>Thu, 04 Mar 2021 00:11:00 +0800</lastBuildDate><atom:link href="https://co1a.me/index.xml" rel="self" type="application/rss+xml"/><item><title>PingCAP Talent Project 路径1 Project1</title><link>https://co1a.me/posts/2021/03/pingcap-talent-project-%E8%B7%AF%E5%BE%841-project1/</link><pubDate>Thu, 04 Mar 2021 00:11:00 +0800</pubDate><guid>https://co1a.me/posts/2021/03/pingcap-talent-project-%E8%B7%AF%E5%BE%841-project1/</guid><description>&lt;p&gt;最近从武汉迁徙到了深圳,机会没有我想象的那么多,也仔细思考过这条路该怎么走,却怎么都走不好,找了一份相关的工作,工资不高,但好在有时间去自己学习.Anyway 还是来讲讲今天的正题.&lt;/p&gt;
+&lt;p&gt;过年那段时间看着tidb-dashboard有个挺简单的Feature,就自己做着玩玩,慢慢了解到这家公司思想和所做的事都是非常宏伟的,最近面试完了在深圳这边等着入职(&lt;del&gt;大专&lt;/del&gt;应届像我这样的渣渣想入行还是非常困难的),下午有时间就顺着把路径1 Project1给做了,是个大坑可能会更新的比较慢,让基础的我非常的尴尬,好在相关文档还是讲的比较清晰的.&lt;/p&gt;
+&lt;h4 id="part1"&gt;Part1&lt;/h4&gt;
+&lt;p&gt;首先是几道SQL,这里就不再赘述了,除了最后一题需要思考一下,其他的都还是非常简单的,主要还是CASE确实用的比较少,下面从评论区搞了一份答案过来讲讲思路.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-mysql" data-lang="mysql"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;SELECT&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;CASE&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;	&lt;span style="color:#66d9ef"&gt;WHEN&lt;/span&gt; P &lt;span style="color:#66d9ef"&gt;IS&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;NULL&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;THEN&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;CONCAT&lt;/span&gt;(N, &lt;span style="color:#e6db74"&gt;&amp;#39; Root&amp;#39;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;	&lt;span style="color:#66d9ef"&gt;WHEN&lt;/span&gt; N &lt;span style="color:#66d9ef"&gt;IN&lt;/span&gt; (&lt;span style="color:#66d9ef"&gt;SELECT&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;DISTINCT&lt;/span&gt; P &lt;span style="color:#66d9ef"&gt;FROM&lt;/span&gt; BST) &lt;span style="color:#66d9ef"&gt;THEN&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;CONCAT&lt;/span&gt;(N, &lt;span style="color:#e6db74"&gt;&amp;#39; Inner&amp;#39;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;	&lt;span style="color:#66d9ef"&gt;ELSE&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;CONCAT&lt;/span&gt;(N, &lt;span style="color:#e6db74"&gt;&amp;#39; Leaf&amp;#39;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;	END
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;FROM&lt;/span&gt; BST
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;ORDER&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;BY&lt;/span&gt; N &lt;span style="color:#66d9ef"&gt;ASC&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;只有当P col为null时,N才能为Root节点,否则的话,判断N的值是否出现在P列中,true 则为中间节点,else则为叶子结点.&lt;/p&gt;
+&lt;h4 id="part2"&gt;Part2&lt;/h4&gt;
+&lt;p&gt;首先Clone一份代码到本地,先不用忙着Make,Project 1的案例不需要.&lt;/p&gt;
+&lt;p&gt;从&lt;code&gt;tablecodec.go&lt;/code&gt;L39至L70代码就可以发现一些端倪,首先我们先理解&lt;code&gt;EncodeRowKeyWithHandle&lt;/code&gt;这个function.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;var&lt;/span&gt; (
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;	&lt;span style="color:#a6e22e"&gt;tablePrefix&lt;/span&gt; = []&lt;span style="color:#66d9ef"&gt;byte&lt;/span&gt;{&lt;span style="color:#e6db74"&gt;&amp;#39;t&amp;#39;&lt;/span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;	&lt;span style="color:#a6e22e"&gt;recordPrefixSep&lt;/span&gt; = []byte(&lt;span style="color:#e6db74"&gt;&amp;#34;_r&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;	&lt;span style="color:#a6e22e"&gt;indexPrefixSep&lt;/span&gt; = []byte(&lt;span style="color:#e6db74"&gt;&amp;#34;_i&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;const&lt;/span&gt; (
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;	&lt;span style="color:#a6e22e"&gt;idLen&lt;/span&gt; = &lt;span style="color:#ae81ff"&gt;8&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;	&lt;span style="color:#a6e22e"&gt;prefixLen&lt;/span&gt; = &lt;span style="color:#ae81ff"&gt;1&lt;/span&gt; &lt;span style="color:#f92672"&gt;+&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;idLen&lt;/span&gt; &lt;span style="color:#75715e"&gt;/*tableID*/&lt;/span&gt; &lt;span style="color:#f92672"&gt;+&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;2&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;	&lt;span style="color:#75715e"&gt;// RecordRowKeyLen is public for calculating average row size.&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;	&lt;span style="color:#a6e22e"&gt;RecordRowKeyLen&lt;/span&gt; = &lt;span style="color:#a6e22e"&gt;prefixLen&lt;/span&gt; &lt;span style="color:#f92672"&gt;+&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;idLen&lt;/span&gt; &lt;span style="color:#75715e"&gt;/*handle*/&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;	&lt;span style="color:#a6e22e"&gt;tablePrefixLength&lt;/span&gt; = &lt;span style="color:#ae81ff"&gt;1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;	&lt;span style="color:#a6e22e"&gt;recordPrefixSepLength&lt;/span&gt; = &lt;span style="color:#ae81ff"&gt;2&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;// TableSplitKeyLen is the length of key &amp;#39;t{table_id}&amp;#39; which is used for table split.&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;const&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;TableSplitKeyLen&lt;/span&gt; = &lt;span style="color:#ae81ff"&gt;1&lt;/span&gt; &lt;span style="color:#f92672"&gt;+&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;idLen&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;// TablePrefix returns table&amp;#39;s prefix &amp;#39;t&amp;#39;.&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;func&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;TablePrefix&lt;/span&gt;() []&lt;span style="color:#66d9ef"&gt;byte&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;	&lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;tablePrefix&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;// appendTableRecordPrefix appends table record prefix &amp;#34;t[tableID]_r&amp;#34;.&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;func&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;appendTableRecordPrefix&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;buf&lt;/span&gt; []&lt;span style="color:#66d9ef"&gt;byte&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;tableID&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;int64&lt;/span&gt;) []&lt;span style="color:#66d9ef"&gt;byte&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;	&lt;span style="color:#a6e22e"&gt;buf&lt;/span&gt; = append(&lt;span style="color:#a6e22e"&gt;buf&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;tablePrefix&lt;/span&gt;&lt;span style="color:#f92672"&gt;...&lt;/span&gt;)				&lt;span style="color:#75715e"&gt;//实际上将&amp;#39;t&amp;#39;插入到slice head.&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;	&lt;span style="color:#a6e22e"&gt;buf&lt;/span&gt; = &lt;span style="color:#a6e22e"&gt;codec&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;EncodeInt&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;buf&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;tableID&lt;/span&gt;)				&lt;span style="color:#75715e"&gt;//对Tableid序列化插入到t后面.&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;	&lt;span style="color:#a6e22e"&gt;buf&lt;/span&gt; = append(&lt;span style="color:#a6e22e"&gt;buf&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;recordPrefixSep&lt;/span&gt;&lt;span style="color:#f92672"&gt;...&lt;/span&gt;)			&lt;span style="color:#75715e"&gt;//插入recordPrefixSep标识符&amp;#34;_r&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;	&lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;buf&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;// EncodeRowKeyWithHandle encodes the table id, row handle into a kv.Key&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;func&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;EncodeRowKeyWithHandle&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;tableID&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;int64&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;handle&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;int64&lt;/span&gt;) &lt;span style="color:#a6e22e"&gt;kv&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Key&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;	&lt;span style="color:#a6e22e"&gt;buf&lt;/span&gt; &lt;span style="color:#f92672"&gt;:=&lt;/span&gt; make([]&lt;span style="color:#66d9ef"&gt;byte&lt;/span&gt;, &lt;span style="color:#ae81ff"&gt;0&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;RecordRowKeyLen&lt;/span&gt;)			&lt;span style="color:#75715e"&gt;//创建一个byte Slice,其len为0,cap为(prefixLen + idLen)=8+1+8+2=19.&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;	&lt;span style="color:#a6e22e"&gt;buf&lt;/span&gt; = &lt;span style="color:#a6e22e"&gt;appendTableRecordPrefix&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;buf&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;tableID&lt;/span&gt;)		&lt;span style="color:#75715e"&gt;//将空slice和tableID传入appendTableRecordPrefix.跳转到25行&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;	&lt;span style="color:#a6e22e"&gt;buf&lt;/span&gt; = &lt;span style="color:#a6e22e"&gt;codec&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;EncodeInt&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;buf&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;handle&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;	&lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;buf&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;让我们来看看&lt;code&gt;codec.EncodeInt&lt;/code&gt;究竟对我们的TableID进行了什么操作&lt;/p&gt;</description></item><item><title>About</title><link>https://co1a.me/about/</link><pubDate>Tue, 15 Dec 2020 20:46:25 +0800</pubDate><guid>https://co1a.me/about/</guid><description>&lt;p&gt;Null&lt;/p&gt;</description></item><item><title>2Step为Hexo主题添加LikeCoin的赞赏键</title><link>https://co1a.me/posts/2020/08/2step%E4%B8%BAhexo%E4%B8%BB%E9%A2%98%E6%B7%BB%E5%8A%A0likecoin%E7%9A%84%E8%B5%9E%E8%B5%8F%E9%94%AE/</link><pubDate>Sun, 16 Aug 2020 16:00:00 +0000</pubDate><guid>https://co1a.me/posts/2020/08/2step%E4%B8%BAhexo%E4%B8%BB%E9%A2%98%E6%B7%BB%E5%8A%A0likecoin%E7%9A%84%E8%B5%9E%E8%B5%8F%E9%94%AE/</guid><description>&lt;p&gt;最近一直想切换到Hexo,但是只在本地上切换了,并没有托管至Github,闲下来之后看看能不能切换过去,很喜慌Matters这种Like Botton,想着也把这个按钮一并移植过去&lt;/p&gt;
+&lt;h5 id="step1定位正文的父元素"&gt;Step1.定位正文的父元素&lt;/h5&gt;
+&lt;p&gt;首先打开Chrome，打开Hexo本地伺服，开启开发者控制台.&lt;/p&gt;
+&lt;p&gt;举个例子，我想要把赞赏键添加至文章末尾&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://i.loli.net/2020/08/16/OUSezawRnhYBAk2.png" alt="截屏2020-08-15 下午11.53.16.png"&gt;&lt;/p&gt;
+&lt;p&gt;显而易见，正文的父级为&lt;code&gt;article-entry&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;将整个主题文件夹拖入Visual Studio Code,使用自带的检索按钮搜寻上文中的父级标签.&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://i.loli.net/2020/08/16/1KvUkwHMF5Gtg7A.png" alt="截屏2020-08-16 上午1.09.49.png"&gt;&lt;/p&gt;
+&lt;h5 id="step2-插入对应代码"&gt;Step2. 插入对应代码&lt;/h5&gt;
+&lt;p&gt;根据对Hexo主题模版分析，我们想要在content正下方插入对应LikeCoin 的贊賞鍵，所以套在最后的post.content的正下方.&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;&amp;lt;% if (config.liker.enable&amp;amp;&amp;amp;!index){ %&amp;gt;
+ &amp;lt;div&amp;gt;
+ &amp;lt;script type=&amp;#34;text/javascript&amp;#34;&amp;gt;
+ document.write(&amp;#34;&amp;lt;iframe scrolling=&amp;#39;no&amp;#39; frameborder=&amp;#39;0&amp;#39; style=&amp;#39;width:100%; max-width:485px; height:240px; margin:auto; overflow:hidden; display:block;&amp;#39;src=&amp;#39;https://button.like.co/in/embed/&amp;#34;+&amp;#39;&amp;lt;%- config.liker.id %&amp;gt;&amp;#39;+&amp;#34;/button?referrer=&amp;#34; +encodeURIComponent(location.href.split(&amp;#34;?&amp;#34;)[0].split(&amp;#34;#&amp;#34;)[0]) + &amp;#34;&amp;#39;&amp;gt;&amp;lt;/iframe&amp;gt;&amp;#34;);
+ &amp;lt;/script&amp;gt;
+ &amp;lt;div&amp;gt;
+ &amp;lt;% } %&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;在hexo的配置文件&lt;code&gt;_config.yml&lt;/code&gt;中插入&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;liker:
+ enable: true
+ id: Your liker id
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;让我们来试试效果如何.&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://i.loli.net/2020/08/16/s4t5KAX6np9gxZj.png" alt="截屏2020-08-16 上午1.36.49.png"&gt;&lt;/p&gt;
+&lt;p&gt;修改后的主题文件已上传至&lt;a href="https://github.com/Max-Cheng/hexo-theme-ocean"&gt;Github&lt;/a&gt;，需要的朋友可以自取&lt;/p&gt;
+&lt;p&gt;使用方法:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;将主题设置为hexo-theme-ocean&lt;/li&gt;
+&lt;li&gt;在Hexo&lt;code&gt;_config.yml&lt;/code&gt;中添加相应字段&lt;/li&gt;
+&lt;li&gt;Enjoy~&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;**Note:**在Ocean中,在主页也会显示赞赏键,需要在判断语句中进行更改,文中所提供的代码判断语句仅适用于Ocean,其他朋友动手需要自己研究一下.&lt;/p&gt;</description></item><item><title>Nuc8在线安装黑苹果教程</title><link>https://co1a.me/posts/2020/03/nuc8%E5%9C%A8%E7%BA%BF%E5%AE%89%E8%A3%85%E9%BB%91%E8%8B%B9%E6%9E%9C%E6%95%99%E7%A8%8B/</link><pubDate>Mon, 30 Mar 2020 16:00:00 +0000</pubDate><guid>https://co1a.me/posts/2020/03/nuc8%E5%9C%A8%E7%BA%BF%E5%AE%89%E8%A3%85%E9%BB%91%E8%8B%B9%E6%9E%9C%E6%95%99%E7%A8%8B/</guid><description>&lt;p&gt;最近很多新朋友通过黑苹果了解到了Nuc8,我自己液使用了将近一年之久,闲来无事也照着维奇的轮子自己撸了一个,废话少说,直接进入教程。&lt;/p&gt;
+&lt;h2 id="准备阶段"&gt;准备阶段&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;一个格式为Fat32的U盘(容量大等于1G)&lt;/li&gt;
+&lt;li&gt;有线连接或安装白果卡的的Nuc8&lt;/li&gt;
+&lt;li&gt;将bios中的Secure Boot,Fast Boot关闭(详见weachy的&lt;a href="https://www.jianshu.com/p/78510cfa4a64"&gt;这篇博客&lt;/a&gt;)&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id="下载阶段"&gt;下载阶段&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;下载EFI解压到U盘根目录(我这里没有U盘,使用文件夹演示)&lt;/p&gt;
+&lt;p&gt;文件目录应为&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;.
+└── EFI
+ ├── BOOT
+ │ └── ...
+ ├── OC
+ │ ├── ...
+ | ...
+ └── readme.txt
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;我这里使用的是&lt;a href="https://www.jianshu.com/u/82ec04331356"&gt;weachy&lt;/a&gt;大佬维护的EFI,同时欢迎各位&lt;a href="https://mianbaoduo.com/o/bread/Y5mTkp8="&gt;捐赠&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;下载&lt;a href="https://github.com/Max-Cheng/Magic-Stick-Creator"&gt;Magic-Stick-Creator&lt;/a&gt;至根目录或使用捐赠包内附带的文件,这里默认使用Magic-Stick-Creator&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id="macos"&gt;macOS&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;下载&lt;a href="https://github.com/Max-Cheng/Magic-Stick-Creator/releases/download/v1.0.8/Magic-Stick-Creator_v1.0.8_darwin_amd64.zip"&gt;Magic-Stick-Creator_v1.0.8_darwin_amd64.zip&lt;/a&gt;并移动至U盘更目录&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;解压后执行&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;cd /Volumes/你的u盘名称
+./Magic-Stick-Creator_v1.0.8_darwin_amd64
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;根据工具提示下载你需要的版本&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id="windows"&gt;Windows&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;下载&lt;a href="https://github.com/Max-Cheng/Magic-Stick-Creator/releases/download/v1.0.8/Magic-Stick-Creator_v1.0.8_windows_amd64.exe.zip"&gt;Magic-Stick-Creator_v1.0.8_windows_amd64.exe.zip&lt;/a&gt;并移动至U盘更目录&lt;/li&gt;
+&lt;li&gt;解压后运行,根据工具提示下载你需要的版本&lt;/li&gt;
+&lt;li&gt;下载完成后即可进入安装环节&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id="安装阶段"&gt;安装阶段&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;开机后一直按F10进入引导菜单&lt;/li&gt;
+&lt;li&gt;箭头移动光标至你的U盘&lt;/li&gt;
+&lt;li&gt;在按下回车后立马疯狂按Command(Win)+R(重要)&lt;/li&gt;
+&lt;li&gt;屏幕显示Logo读条即为成功&lt;/li&gt;
+&lt;li&gt;通过磁盘工具格式化你的硬盘&lt;/li&gt;
+&lt;li&gt;退出至主菜单,选择重新安装Mac (你选择的版本) 期间网络需保持稳定&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;中间会重启数次,一直选择macos installer即可
+Enjoy~
+:)&lt;/p&gt;</description></item><item><title>WSL2初体验</title><link>https://co1a.me/posts/2020/02/wsl2%E5%88%9D%E4%BD%93%E9%AA%8C/</link><pubDate>Wed, 19 Feb 2020 16:00:00 +0000</pubDate><guid>https://co1a.me/posts/2020/02/wsl2%E5%88%9D%E4%BD%93%E9%AA%8C/</guid><description>&lt;p&gt;最近有个想法，从MacOs迁移到Windows，虽说平时也是在这两个系统来回切换，但是体验并不好，随后在笔记本上开启了Windows Insider.&lt;/p&gt;
+&lt;h3 id="wsl2配置clash代理"&gt;WSL2配置Clash代理&lt;/h3&gt;
+&lt;p&gt;由于我使用的代理为Clash,但是好像并不能够自动完成WSL2的设置&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;vim ~/.bashrc
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;插入以下内容&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;export hostip=$(cat /etc/resolv.conf |grep -oP &amp;#39;(?&amp;lt;=nameserver\ ).*&amp;#39;);
+export https_proxy=&amp;#34;http://${hostip}:7890&amp;#34;;
+export http_proxy=&amp;#34;http://${hostip}:7890&amp;#34;;
+export all_proxy=&amp;#34;socks5://${hostip}:7891&amp;#34;;
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id="安装fish-shell"&gt;安装Fish Shell&lt;/h3&gt;
+&lt;p&gt;Fish Shell是我用过的Shell中最方便也是最现代化的一个终端,有着zsh的体验和bash的速度&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;sudo apt-get install fish
+chsh -s /usr/bin/fish 
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id="安装oh-my-fish"&gt;安装Oh-My-Fish&lt;/h3&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;curl -L https://get.oh-my.fish | fish
+omf install agnoster
+ofm theme agnoster
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;但是到这里WSL自带的终端会出现乱码，故使用了&lt;a href="https://www.microsoft.com/zh-cn/p/windows-terminal-preview/9n0dx20hk701?activetab=pivot:overviewtab"&gt;Windows Terminal&lt;/a&gt;+Cascadia Code的组合&lt;/p&gt;
+&lt;h3 id="配置windows-terminal"&gt;配置Windows Terminal&lt;/h3&gt;
+&lt;p&gt;首先当然是安装微软最新的&lt;a href="https://github.com/microsoft/cascadia-code/releases"&gt;Cascadia Code&lt;/a&gt;,我这里使用的是&lt;a href="https://github.com/microsoft/cascadia-code/releases/download/v1911.21/CascadiaPL.ttf"&gt;CascadiaPL&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;在Windows Terminal按Ctrl+,打开配置文件,我的配置文件如下&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;// To view the default settings, hold &amp;#34;alt&amp;#34; while clicking on the &amp;#34;Settings&amp;#34; button.
+// For documentation on these settings, see: https://aka.ms/terminal-documentation
+
+{
+ &amp;#34;$schema&amp;#34;: &amp;#34;https://aka.ms/terminal-profiles-schema&amp;#34;,
+
+ &amp;#34;defaultProfile&amp;#34;: &amp;#34;{c6eaf9f4-32a7-5fdc-b5cf-066e8a4b1e40}&amp;#34;,
+
+ &amp;#34;profiles&amp;#34;:
+ {
+ &amp;#34;defaults&amp;#34;:
+ {
+ // Put settings here that you want to apply to all profiles
+ },
+ &amp;#34;list&amp;#34;:
+ [
+ {
+ // Make changes here to the powershell.exe profile
+ &amp;#34;guid&amp;#34;: &amp;#34;{61c54bbd-c2c6-5271-96e7-009a87ff44bf}&amp;#34;,
+ &amp;#34;name&amp;#34;: &amp;#34;Windows PowerShell&amp;#34;,
+ &amp;#34;commandline&amp;#34;: &amp;#34;powershell.exe&amp;#34;,
+ &amp;#34;fontFace&amp;#34;: &amp;#34;Cascadia Code PL&amp;#34;,
+ &amp;#34;fontSize&amp;#34;: 14,
+ &amp;#34;hidden&amp;#34;: false
+ },
+ {
+ // Make changes here to the cmd.exe profile
+ &amp;#34;guid&amp;#34;: &amp;#34;{0caa0dad-35be-5f56-a8ff-afceeeaa6101}&amp;#34;,
+ &amp;#34;name&amp;#34;: &amp;#34;cmd&amp;#34;,
+ &amp;#34;commandline&amp;#34;: &amp;#34;cmd.exe&amp;#34;,
+ &amp;#34;fontFace&amp;#34;: &amp;#34;Cascadia Code PL&amp;#34;,
+ &amp;#34;fontSize&amp;#34;: 14,
+ &amp;#34;hidden&amp;#34;: false
+ },
+ {
+ &amp;#34;guid&amp;#34;: &amp;#34;{b453ae62-4e3d-5e58-b989-0a998ec441b8}&amp;#34;,
+ &amp;#34;hidden&amp;#34;: true,
+ &amp;#34;name&amp;#34;: &amp;#34;Azure Cloud Shell&amp;#34;,
+ &amp;#34;source&amp;#34;: &amp;#34;Windows.Terminal.Azure&amp;#34;
+ },
+ {
+ &amp;#34;guid&amp;#34;: &amp;#34;{c6eaf9f4-32a7-5fdc-b5cf-066e8a4b1e40}&amp;#34;,
+ &amp;#34;hidden&amp;#34;: false,
+ &amp;#34;name&amp;#34;: &amp;#34;Ubuntu-18.04&amp;#34;,
+ &amp;#34;source&amp;#34;: &amp;#34;Windows.Terminal.Wsl&amp;#34;,
+ &amp;#34;fontFace&amp;#34;: &amp;#34;Cascadia Code PL&amp;#34;,
+ &amp;#34;fontSize&amp;#34;: 14,
+ &amp;#34;startingDirectory&amp;#34;: &amp;#34;/home/co1a&amp;#34;
+ }
+ ]
+ },
+
+ // Add custom color schemes to this array
+ &amp;#34;schemes&amp;#34;: [],
+
+ // Add any keybinding overrides to this array.
+ // To unbind a default keybinding, set the command to &amp;#34;unbound&amp;#34;
+ &amp;#34;keybindings&amp;#34;: [
+ {
+ &amp;#34;command&amp;#34; :&amp;#34;closeTab&amp;#34;,
+ &amp;#34;keys&amp;#34;: [&amp;#34;ctrl+w&amp;#34;]
+ },
+ {
+ &amp;#34;command&amp;#34;:&amp;#34;newTab&amp;#34;,
+ &amp;#34;keys&amp;#34;: [&amp;#34;ctrl+t&amp;#34;]
+ }
+ ]
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id="配置configfish"&gt;配置config.fish&lt;/h3&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;vim .config/fish/config.fish
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;写入以下内容&lt;/p&gt;</description></item><item><title>2019LeetCode秋季全国赛3. 机器人大冒险.</title><link>https://co1a.me/posts/2019/10/2019leetcode%E7%A7%8B%E5%AD%A3%E5%85%A8%E5%9B%BD%E8%B5%9B3.-%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%A4%A7%E5%86%92%E9%99%A9./</link><pubDate>Sun, 27 Oct 2019 16:00:00 +0000</pubDate><guid>https://co1a.me/posts/2019/10/2019leetcode%E7%A7%8B%E5%AD%A3%E5%85%A8%E5%9B%BD%E8%B5%9B3.-%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%A4%A7%E5%86%92%E9%99%A9./</guid><description>&lt;blockquote&gt;
+&lt;p&gt;力扣团队买了一个可编程机器人，机器人初始位置在原点(0, 0)。小伙伴事先给机器人输入一串指令command，机器人就会无限循环这条指令的步骤进行移动。指令有两种：
+U: 向y轴正方向移动一格
+R: 向x轴正方向移动一格。
+不幸的是，在 xy 平面上还有一些障碍物，他们的坐标用obstacles表示。机器人一旦碰到障碍物就会被损毁。
+给定终点坐标(x, y)，返回机器人能否完好地到达终点。如果能，返回true；否则返回false。
+示例 1：
+输入：command = “URR”, obstacles = [], x = 3, y = 2
+输出：true
+解释：U(0, 1) -&amp;gt; R(1, 1) -&amp;gt; R(2, 1) -&amp;gt; U(2, 2) -&amp;gt; R(3, 2)。
+示例 2：
+输入：command = “URR”, obstacles = [[2, 2]], x = 3, y = 2
+输出：false
+解释：机器人在到达终点前会碰到(2, 2)的障碍物。
+示例 3：
+输入：command = “URR”, obstacles = [[4, 2]], x = 3, y = 2
+输出：true
+解释：到达终点后，再碰到障碍物也不影响返回结果。
+限制：
+2 &amp;lt;= command的长度 &amp;lt;= 1000
+command由U，R构成，且至少有一个U，至少有一个R
+0 &amp;lt;= x &amp;lt;= 1e9, 0 &amp;lt;= y &amp;lt;= 1e9
+0 &amp;lt;= obstacles的长度 &amp;lt;= 1000
+obstacles[i]不为原点或者终点&lt;/p&gt;</description></item><item><title>Mac下安装Tensorflow</title><link>https://co1a.me/posts/2019/06/mac%E4%B8%8B%E5%AE%89%E8%A3%85tensorflow/</link><pubDate>Fri, 21 Jun 2019 16:00:00 +0000</pubDate><guid>https://co1a.me/posts/2019/06/mac%E4%B8%8B%E5%AE%89%E8%A3%85tensorflow/</guid><description>&lt;p&gt;最近Anaconda清华镜像站关闭，国内许多镜像源都关闭了，导致下载TensorFlow很慢很慢，自己琢磨是不是可以通过pip镜像站来解决这个问题。&lt;/p&gt;
+&lt;p&gt;首先新建一个Anaconda环境&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;conda create -n env_name python=3.6
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;再将pip源设置为国内源&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;cd ~
+mkdir .pip
+vim ~/.pip/pip.conf
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;插入以下内容
+[global]
+index-url = &lt;a href="https://mirrors.aliyun.com/pypi/simple"&gt;https://mirrors.aliyun.com/pypi/simple&lt;/a&gt;
+[install]
+trusted-host = mirrors.aliyun.com&lt;/p&gt;
+&lt;p&gt;这里我用的是阿里源&lt;/p&gt;
+&lt;p&gt;再次进入虚拟环境&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;source activate env_name
+pip install tensorflow
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Done!&lt;/p&gt;
+&lt;p&gt;出现&lt;code&gt;tensorflow/core/platform/cpu_feature_guard.cc:140] Your CPU supports instructions that this TensorFlow binary was not compiled to use: AVX2 FMA&lt;/code&gt;的解决办法&lt;/p&gt;
+&lt;p&gt;首先前往&lt;a href="https://github.com/lakshayg/tensorflow-build"&gt;这个&lt;/a&gt;地址，找到适合自己的版本并下载，例如我的&lt;img src="https://i.loli.net/2019/06/22/5d0d01063961027639.png" alt="img"&gt;&lt;/p&gt;
+&lt;p&gt;首先新建一个新的虚拟环境，Python版本如图所示&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;conda create -n tensorflow python=3.6.5
+source activate tensorflow 
+pip install tensorflow#这一步是让他把默认的组件安装了
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;安装完毕之后再次执行以下命令安装支持cpu用AVX2编译的TensorFlow版本。&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;pip install --ignore-installed --upgrade /co1a/donwload/tensorflow-1.13.1-cp36-cp36m-macosx_10_13_x86_64.whl --user
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;再实验一次试试
+&lt;img src="https://i.loli.net/2019/06/22/5d0d02ac5f8d584316.png" alt="img"&gt;
+完美解决！&lt;/p&gt;</description></item><item><title>WSL下Git的坑</title><link>https://co1a.me/posts/2019/05/wsl%E4%B8%8Bgit%E7%9A%84%E5%9D%91/</link><pubDate>Sat, 25 May 2019 16:00:00 +0000</pubDate><guid>https://co1a.me/posts/2019/05/wsl%E4%B8%8Bgit%E7%9A%84%E5%9D%91/</guid><description>&lt;p&gt;最近忙于软件杯比赛，基本上没有时间腾出来做个人项目了，周末闲着没事重装了一个系统，原因是手动升级1903后环境变量都没了甘霖娘微软，于是乎重新装了个系统，心想最近Windows Terminal和WSL2即将到来，是不是可以用WSL来生成hugo,还便于管理，殊不知一路上都是坑。。。&lt;del&gt;FXXK Microsoft!&lt;/del&gt;&lt;/p&gt;
+&lt;p&gt;首先去Hugo的&lt;a href="https://github.com/gohugoio/hugo/releases"&gt;Github&lt;/a&gt;上下载最新的deb版，WSL还是使用的Ubuntu(R.I.P Cent os)，在这里我的下载目录为*C:\Users\Shire\Downloads,&lt;em&gt;进入WSL&lt;/em&gt;&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;cd /mnt/c/Users/Shire/Download
+sudo dpkg -i hugo_0.55.6_Linux-64bit.deb
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;再进入之前备份好的Hugo目录下&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;cd Blog
+hugo
+cd public
+git add .
+git commit -m &amp;#39;update&amp;#39;
+git push -u origin master
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;等等，怎么会权限不足，哦，那我用sudo不就好了(&lt;del&gt;开始给自己挖坑&lt;/del&gt;)&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;sudo git push -u origin master
+什么???认证失败???
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;在我折腾了半个小时之后，终于发现ssh密钥应该使用root用户的(&lt;del&gt;一度怀疑自己脑子里面是不是装了屎&lt;/del&gt;)&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;sudo su
+cd ~
+cat .ssh/id_rsa.pub
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;再去Coding官网上添加SSH密钥，OK，解决。&lt;/p&gt;
+&lt;p&gt;寻根究底还是WSL在Windows目录下权限不足，搞了半天还以为是WSL的问题(M$对不起),果然还是自己脑子进了屎。。。&lt;/p&gt;</description></item><item><title>为Coding下的Hugo添加GitTalk</title><link>https://co1a.me/posts/2019/05/%E4%B8%BAcoding%E4%B8%8B%E7%9A%84hugo%E6%B7%BB%E5%8A%A0gittalk/</link><pubDate>Sat, 25 May 2019 16:00:00 +0000</pubDate><guid>https://co1a.me/posts/2019/05/%E4%B8%BAcoding%E4%B8%8B%E7%9A%84hugo%E6%B7%BB%E5%8A%A0gittalk/</guid><description>&lt;p&gt;本站之前一直使用Disqus,发现还是太臃肿，而且被某些不明力量所封禁，这次发现了一个比较好的解决办法，GitTalk&lt;/p&gt;
+&lt;p&gt;在Google随便搜索一下都是关于Hexo的GitTalk，并且人家用的还是Github Page，这就比较尴尬了，俗话说的好，办法总比困难多，冷静分析之后发现无非就一个点需要注意&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;存在一个GitHub项目用于保留issue从而达到保留评论&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;在这里我新建了一个仓库取名为max-cheng.github.io,记得勾选自动生成README文件例如下图,(我比较懒所以就不重新生成了hahaha)&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://i.loli.net/2019/05/25/5ce95f8a2b64a73003.png" alt="img"&gt;&lt;/p&gt;
+&lt;p&gt;创建新的仓库后，我们申请一个&lt;a href="https://github.com/settings/applications/new"&gt;GitHub Application&lt;/a&gt;,例如我的&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://i.loli.net/2019/05/25/5ce960528ce3852061.png" alt="img"&gt;&lt;/p&gt;
+&lt;p&gt;这里需要注意一下，第二个主页连接中，我们输入刚刚生成新仓库的链接，即&lt;em&gt;yourusername.github.io&lt;/em&gt;,最后一个&lt;em&gt;Authorization callback&lt;/em&gt; URL填写自己的域名或coding生成的域名，切记切记，然后会给你以下信息，打开&lt;em&gt;config.toml&lt;/em&gt;按照以下格式填写即可。&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://i.loli.net/2019/05/25/5ce961a77f94362316.png" alt="img"&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://i.loli.net/2019/05/25/5ce961a714ed077551.png" alt="img"&gt;&lt;/p&gt;
+&lt;p&gt;如果可以使用请评论一下(站点太冷清了)&lt;/p&gt;
+&lt;p&gt;Tks&lt;/p&gt;</description></item><item><title>2019LeetCode春季全国高校赛-1.易混淆数</title><link>https://co1a.me/posts/2019/03/2019leetcode%E6%98%A5%E5%AD%A3%E5%85%A8%E5%9B%BD%E9%AB%98%E6%A0%A1%E8%B5%9B-1.%E6%98%93%E6%B7%B7%E6%B7%86%E6%95%B0/</link><pubDate>Thu, 21 Mar 2019 16:00:00 +0000</pubDate><guid>https://co1a.me/posts/2019/03/2019leetcode%E6%98%A5%E5%AD%A3%E5%85%A8%E5%9B%BD%E9%AB%98%E6%A0%A1%E8%B5%9B-1.%E6%98%93%E6%B7%B7%E6%B7%86%E6%95%B0/</guid><description>&lt;ol&gt;
+&lt;li&gt;易混淆数
+给定一个数字 N，当它满足以下条件的时候返回 true：
+把原数字旋转 180° 以后得到新的数字。
+如 0, 1, 6, 8, 9 旋转 180° 以后，得到了新的数字 0, 1, 9, 8, 6 。
+2, 3, 4, 5, 7 旋转 180° 后,得到的不是数字。
+易混淆数字 (confusing number) 就是一个数字旋转 180° 以后，得到和原来不同的数字，且新数字的每一位都是有效的。 这道题非常有意思，但是如何实现呢？&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;依题意可知，若 Srting 中含有 2,3,4,5,7 得到的并不是数字，既然不是数字，那么我们可以直接 return false，依照上面的思路，便有以下代码。&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;func test(s int) bool {
+target:=strconv.Itoa(s) //将s转换为string类型
+nums1:=[]byte(target) //再次转换为byte，方便后面转换成string与原字符串对比
+newline :=[]byte{}
+nums:=[]byte{}
+for _,v:=range nums1 {
+ if v==&amp;#39;2&amp;#39;||v==&amp;#39;3&amp;#39;||v==&amp;#39;4&amp;#39;||v==&amp;#39;5&amp;#39;||v==&amp;#39;7&amp;#39;{ //对字符串进行遍历，查看是否存在无法混淆的元素
+ return false
+ }else {
+ switch v { //对可混淆的数进行转化
+ case &amp;#39;0&amp;#39;:newline =append(newline,&amp;#39;0&amp;#39;)
+ case &amp;#39;1&amp;#39;:newline =append(newline,&amp;#39;1&amp;#39;)
+ case &amp;#39;6&amp;#39;:newline =append(newline,&amp;#39;9&amp;#39;)
+ case &amp;#39;9&amp;#39;:newline =append(newline,&amp;#39;6&amp;#39;)
+ case &amp;#39;8&amp;#39;:newline =append(newline,&amp;#39;8&amp;#39;)
+ }
+ }
+}
+for i:=len(newline)-1;i&amp;gt;=0;i-- {
+ nums=append(nums,newline[i]) //对处理后的byte切片进行反转
+}
+if string(nums1) == string(nums) { //与原字符串进行比较
+ return false
+}
+return true
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;当然此算法存在一定的局限性，欢迎各位在评论区提出更好的算法，近期会将 2019 的所有题目的思路进行梳理，感谢支持&lt;/p&gt;</description></item></channel></rss>

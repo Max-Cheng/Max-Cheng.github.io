@@ -1,528 +1,162 @@
-<!DOCTYPE html>
-<html lang="zh-cn">
-    <head>
-        <meta charset="UTF-8">
-<meta http-equiv="X-UA-Compatible" content="ie=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-<meta name="author" content="Co1a">
-<meta name="description" content="最近从武汉迁徙到了深圳,机会没有我想象的那么多,也仔细思考过这条路该怎么走,却怎么都走不好,找了一份相关的工作,工资不高,但好在有时间去自己学习.Anyway 还是来讲讲今天的正题.
+<!doctype html><html lang=zh-cn><head><meta charset=UTF-8><meta http-equiv=X-UA-Compatible content="ie=edge"><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=author content="Co1a"><meta name=description content="最近从武汉迁徙到了深圳,机会没有我想象的那么多,也仔细思考过这条路该怎么走,却怎么都走不好,找了一份相关的工作,工资不高,但好在有时间去自己学习.Anyway 还是来讲讲今天的正题.
 过年那段时间看着tidb-dashboard有个挺简单的Feature,就自己做着玩玩,慢慢了解到这家公司思想和所做的事都是非常宏伟的,最近面试完了在深圳这边等着入职(大专应届像我这样的渣渣想入行还是非常困难的),下午有时间就顺着把路径1 Project1给做了,是个大坑可能会更新的比较慢,让基础的我非常的尴尬,好在相关文档还是讲的比较清晰的.
 Part1 首先是几道SQL,这里就不再赘述了,除了最后一题需要思考一下,其他的都还是非常简单的,主要还是CASE确实用的比较少,下面从评论区搞了一份答案过来讲讲思路.
-SELECT CASE WHEN P IS NULL THEN CONCAT(N, &#39; Root&#39;) WHEN N IN (SELECT DISTINCT P FROM BST) THEN CONCAT(N, &#39; Inner&#39;) ELSE CONCAT(N, &#39; Leaf&#39;) END FROM BST ORDER BY N ASC 只有当P col为null时,N才能为Root节点,否则的话,判断N的值是否出现在P列中,true 则为中间节点,else则为叶子结点.
+SELECT CASE WHEN P IS NULL THEN CONCAT(N, ' Root') WHEN N IN (SELECT DISTINCT P FROM BST) THEN CONCAT(N, ' Inner') ELSE CONCAT(N, ' Leaf') END FROM BST ORDER BY N ASC 只有当P col为null时,N才能为Root节点,否则的话,判断N的值是否出现在P列中,true 则为中间节点,else则为叶子结点.
 Part2 首先Clone一份代码到本地,先不用忙着Make,Project 1的案例不需要.
 从tablecodec.goL39至L70代码就可以发现一些端倪,首先我们先理解EncodeRowKeyWithHandle这个function.
-var ( tablePrefix = []byte{&#39;t&#39;} recordPrefixSep = []byte(&#34;_r&#34;) indexPrefixSep = []byte(&#34;_i&#34;) ) const ( idLen = 8 prefixLen = 1 &#43; idLen /*tableID*/ &#43; 2 // RecordRowKeyLen is public for calculating average row size. RecordRowKeyLen = prefixLen &#43; idLen /*handle*/ tablePrefixLength = 1 recordPrefixSepLength = 2 ) // TableSplitKeyLen is the length of key &#39;t{table_id}&#39; which is used for table split. const TableSplitKeyLen = 1 &#43; idLen // TablePrefix returns table&#39;s prefix &#39;t&#39;. func TablePrefix() []byte { return tablePrefix } // appendTableRecordPrefix appends table record prefix &#34;t[tableID]_r&#34;. func appendTableRecordPrefix(buf []byte, tableID int64) []byte { buf = append(buf, tablePrefix...)	//实际上将&#39;t&#39;插入到slice head. buf = codec.EncodeInt(buf, tableID)	//对Tableid序列化插入到t后面. buf = append(buf, recordPrefixSep...)	//插入recordPrefixSep标识符&#34;_r&#34; return buf } // EncodeRowKeyWithHandle encodes the table id, row handle into a kv.Key func EncodeRowKeyWithHandle(tableID int64, handle int64) kv.Key { buf := make([]byte, 0, RecordRowKeyLen)	//创建一个byte Slice,其len为0,cap为(prefixLen &#43; idLen)=8&#43;1&#43;8&#43;2=19. buf = appendTableRecordPrefix(buf, tableID)	//将空slice和tableID传入appendTableRecordPrefix.跳转到25行 buf = codec.EncodeInt(buf, handle) return buf } 让我们来看看codec.EncodeInt究竟对我们的TableID进行了什么操作
-" />
-<meta name="keywords" content=", 学习" />
-<meta name="robots" content="noodp" />
-<meta name="theme-color" content="#252627" />
-<link rel="canonical" href="https://co1a.me/posts/2021/03/pingcap-talent-project-%E8%B7%AF%E5%BE%841-project1/" />
-
-
-    <title>
-        
-            PingCAP Talent Project 路径1 Project1 :: Co1a&#39;s Blog 
-        
-    </title>
-
-
-
-<link href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/css/flag-icon.min.css" rel="stylesheet"
-    type="text/css">
-
-
-
-<link rel="stylesheet" href="https://co1a.me/main.393856bf2c430bb6c01d7af07c6fe966e7cce8073435cfbbc46e590bab7405ef.css">
-
-
-
-
-    <link rel="apple-touch-icon" sizes="180x180" href="https://co1a.me/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="https://co1a.me/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="https://co1a.me/favicon-16x16.png">
-    <link rel="manifest" href="https://co1a.me/site.webmanifest">
-    <link rel="mask-icon" href="https://co1a.me/safari-pinned-tab.svg" color="#252627">
-    <link rel="shortcut icon" href="https://co1a.me/favicon.ico">
-    <meta name="msapplication-TileColor" content="#252627">
-    <meta name="theme-color" content="#252627">
-
-
-
-
-	<meta itemprop="name" content="PingCAP Talent Project 路径1 Project1">
-	<meta itemprop="description" content="最近从武汉迁徙到了深圳,机会没有我想象的那么多,也仔细思考过这条路该怎么走,却怎么都走不好,找了一份相关的工作,工资不高,但好在有时间去自己学习.Anyway 还是来讲讲今天的正题.
+var ( tablePrefix = []byte{'t'} recordPrefixSep = []byte(&#34;_r&#34;) indexPrefixSep = []byte(&#34;_i&#34;) ) const ( idLen = 8 prefixLen = 1 + idLen /*tableID*/ + 2 // RecordRowKeyLen is public for calculating average row size. RecordRowKeyLen = prefixLen + idLen /*handle*/ tablePrefixLength = 1 recordPrefixSepLength = 2 ) // TableSplitKeyLen is the length of key 't{table_id}' which is used for table split. const TableSplitKeyLen = 1 + idLen // TablePrefix returns table's prefix 't'. func TablePrefix() []byte { return tablePrefix } // appendTableRecordPrefix appends table record prefix &#34;t[tableID]_r&#34;. func appendTableRecordPrefix(buf []byte, tableID int64) []byte { buf = append(buf, tablePrefix...)	//实际上将't'插入到slice head. buf = codec.EncodeInt(buf, tableID)	//对Tableid序列化插入到t后面. buf = append(buf, recordPrefixSep...)	//插入recordPrefixSep标识符&#34;_r&#34; return buf } // EncodeRowKeyWithHandle encodes the table id, row handle into a kv.Key func EncodeRowKeyWithHandle(tableID int64, handle int64) kv.Key { buf := make([]byte, 0, RecordRowKeyLen)	//创建一个byte Slice,其len为0,cap为(prefixLen + idLen)=8+1+8+2=19. buf = appendTableRecordPrefix(buf, tableID)	//将空slice和tableID传入appendTableRecordPrefix.跳转到25行 buf = codec.EncodeInt(buf, handle) return buf } 让我们来看看codec.EncodeInt究竟对我们的TableID进行了什么操作
+"><meta name=keywords content=",学习"><meta name=robots content="noodp"><meta name=theme-color content="#252627"><link rel=canonical href=https://co1a.me/posts/2021/03/pingcap-talent-project-%E8%B7%AF%E5%BE%841-project1/><title>PingCAP Talent Project 路径1 Project1 :: Co1a's Blog</title><link href=https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/css/flag-icon.min.css rel=stylesheet type=text/css><link rel=stylesheet href=https://co1a.me/main.393856bf2c430bb6c01d7af07c6fe966e7cce8073435cfbbc46e590bab7405ef.css><link rel=apple-touch-icon sizes=180x180 href=https://co1a.me/apple-touch-icon.png><link rel=icon type=image/png sizes=32x32 href=https://co1a.me/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=https://co1a.me/favicon-16x16.png><link rel=manifest href=https://co1a.me/site.webmanifest><link rel=mask-icon href=https://co1a.me/safari-pinned-tab.svg color=#252627><link rel="shortcut icon" href=https://co1a.me/favicon.ico><meta name=msapplication-TileColor content="#252627"><meta name=theme-color content="#252627"><meta itemprop=name content="PingCAP Talent Project 路径1 Project1"><meta itemprop=description content="最近从武汉迁徙到了深圳,机会没有我想象的那么多,也仔细思考过这条路该怎么走,却怎么都走不好,找了一份相关的工作,工资不高,但好在有时间去自己学习.Anyway 还是来讲讲今天的正题.
 过年那段时间看着tidb-dashboard有个挺简单的Feature,就自己做着玩玩,慢慢了解到这家公司思想和所做的事都是非常宏伟的,最近面试完了在深圳这边等着入职(大专应届像我这样的渣渣想入行还是非常困难的),下午有时间就顺着把路径1 Project1给做了,是个大坑可能会更新的比较慢,让基础的我非常的尴尬,好在相关文档还是讲的比较清晰的.
 Part1 首先是几道SQL,这里就不再赘述了,除了最后一题需要思考一下,其他的都还是非常简单的,主要还是CASE确实用的比较少,下面从评论区搞了一份答案过来讲讲思路.
-SELECT CASE WHEN P IS NULL THEN CONCAT(N, &#39; Root&#39;) WHEN N IN (SELECT DISTINCT P FROM BST) THEN CONCAT(N, &#39; Inner&#39;) ELSE CONCAT(N, &#39; Leaf&#39;) END FROM BST ORDER BY N ASC 只有当P col为null时,N才能为Root节点,否则的话,判断N的值是否出现在P列中,true 则为中间节点,else则为叶子结点.
+SELECT CASE WHEN P IS NULL THEN CONCAT(N, ' Root') WHEN N IN (SELECT DISTINCT P FROM BST) THEN CONCAT(N, ' Inner') ELSE CONCAT(N, ' Leaf') END FROM BST ORDER BY N ASC 只有当P col为null时,N才能为Root节点,否则的话,判断N的值是否出现在P列中,true 则为中间节点,else则为叶子结点.
 Part2 首先Clone一份代码到本地,先不用忙着Make,Project 1的案例不需要.
 从tablecodec.goL39至L70代码就可以发现一些端倪,首先我们先理解EncodeRowKeyWithHandle这个function.
-var ( tablePrefix = []byte{&#39;t&#39;} recordPrefixSep = []byte(&#34;_r&#34;) indexPrefixSep = []byte(&#34;_i&#34;) ) const ( idLen = 8 prefixLen = 1 &#43; idLen /*tableID*/ &#43; 2 // RecordRowKeyLen is public for calculating average row size. RecordRowKeyLen = prefixLen &#43; idLen /*handle*/ tablePrefixLength = 1 recordPrefixSepLength = 2 ) // TableSplitKeyLen is the length of key &#39;t{table_id}&#39; which is used for table split. const TableSplitKeyLen = 1 &#43; idLen // TablePrefix returns table&#39;s prefix &#39;t&#39;. func TablePrefix() []byte { return tablePrefix } // appendTableRecordPrefix appends table record prefix &#34;t[tableID]_r&#34;. func appendTableRecordPrefix(buf []byte, tableID int64) []byte { buf = append(buf, tablePrefix...)	//实际上将&#39;t&#39;插入到slice head. buf = codec.EncodeInt(buf, tableID)	//对Tableid序列化插入到t后面. buf = append(buf, recordPrefixSep...)	//插入recordPrefixSep标识符&#34;_r&#34; return buf } // EncodeRowKeyWithHandle encodes the table id, row handle into a kv.Key func EncodeRowKeyWithHandle(tableID int64, handle int64) kv.Key { buf := make([]byte, 0, RecordRowKeyLen)	//创建一个byte Slice,其len为0,cap为(prefixLen &#43; idLen)=8&#43;1&#43;8&#43;2=19. buf = appendTableRecordPrefix(buf, tableID)	//将空slice和tableID传入appendTableRecordPrefix.跳转到25行 buf = codec.EncodeInt(buf, handle) return buf } 让我们来看看codec.EncodeInt究竟对我们的TableID进行了什么操作">
-	<meta itemprop="datePublished" content="2021-03-04T00:11:00+08:00">
-	<meta itemprop="dateModified" content="2021-03-04T00:11:00+08:00">
-	<meta itemprop="wordCount" content="537">
-	<meta itemprop="image" content="https://co1a.me/">
-	<meta itemprop="keywords" content="学习">
-
-	<meta name="twitter:card" content="summary_large_image">
-	<meta name="twitter:image" content="https://co1a.me/">
-	<meta name="twitter:title" content="PingCAP Talent Project 路径1 Project1">
-	<meta name="twitter:description" content="最近从武汉迁徙到了深圳,机会没有我想象的那么多,也仔细思考过这条路该怎么走,却怎么都走不好,找了一份相关的工作,工资不高,但好在有时间去自己学习.Anyway 还是来讲讲今天的正题.
+var ( tablePrefix = []byte{'t'} recordPrefixSep = []byte(&#34;_r&#34;) indexPrefixSep = []byte(&#34;_i&#34;) ) const ( idLen = 8 prefixLen = 1 + idLen /*tableID*/ + 2 // RecordRowKeyLen is public for calculating average row size. RecordRowKeyLen = prefixLen + idLen /*handle*/ tablePrefixLength = 1 recordPrefixSepLength = 2 ) // TableSplitKeyLen is the length of key 't{table_id}' which is used for table split. const TableSplitKeyLen = 1 + idLen // TablePrefix returns table's prefix 't'. func TablePrefix() []byte { return tablePrefix } // appendTableRecordPrefix appends table record prefix &#34;t[tableID]_r&#34;. func appendTableRecordPrefix(buf []byte, tableID int64) []byte { buf = append(buf, tablePrefix...)	//实际上将't'插入到slice head. buf = codec.EncodeInt(buf, tableID)	//对Tableid序列化插入到t后面. buf = append(buf, recordPrefixSep...)	//插入recordPrefixSep标识符&#34;_r&#34; return buf } // EncodeRowKeyWithHandle encodes the table id, row handle into a kv.Key func EncodeRowKeyWithHandle(tableID int64, handle int64) kv.Key { buf := make([]byte, 0, RecordRowKeyLen)	//创建一个byte Slice,其len为0,cap为(prefixLen + idLen)=8+1+8+2=19. buf = appendTableRecordPrefix(buf, tableID)	//将空slice和tableID传入appendTableRecordPrefix.跳转到25行 buf = codec.EncodeInt(buf, handle) return buf } 让我们来看看codec.EncodeInt究竟对我们的TableID进行了什么操作"><meta itemprop=datePublished content="2021-03-04T00:11:00+08:00"><meta itemprop=dateModified content="2021-03-04T00:11:00+08:00"><meta itemprop=wordCount content="537"><meta itemprop=image content="https://co1a.me/"><meta itemprop=keywords content="学习"><meta name=twitter:card content="summary_large_image"><meta name=twitter:image content="https://co1a.me/"><meta name=twitter:title content="PingCAP Talent Project 路径1 Project1"><meta name=twitter:description content="最近从武汉迁徙到了深圳,机会没有我想象的那么多,也仔细思考过这条路该怎么走,却怎么都走不好,找了一份相关的工作,工资不高,但好在有时间去自己学习.Anyway 还是来讲讲今天的正题.
 过年那段时间看着tidb-dashboard有个挺简单的Feature,就自己做着玩玩,慢慢了解到这家公司思想和所做的事都是非常宏伟的,最近面试完了在深圳这边等着入职(大专应届像我这样的渣渣想入行还是非常困难的),下午有时间就顺着把路径1 Project1给做了,是个大坑可能会更新的比较慢,让基础的我非常的尴尬,好在相关文档还是讲的比较清晰的.
 Part1 首先是几道SQL,这里就不再赘述了,除了最后一题需要思考一下,其他的都还是非常简单的,主要还是CASE确实用的比较少,下面从评论区搞了一份答案过来讲讲思路.
-SELECT CASE WHEN P IS NULL THEN CONCAT(N, &#39; Root&#39;) WHEN N IN (SELECT DISTINCT P FROM BST) THEN CONCAT(N, &#39; Inner&#39;) ELSE CONCAT(N, &#39; Leaf&#39;) END FROM BST ORDER BY N ASC 只有当P col为null时,N才能为Root节点,否则的话,判断N的值是否出现在P列中,true 则为中间节点,else则为叶子结点.
+SELECT CASE WHEN P IS NULL THEN CONCAT(N, ' Root') WHEN N IN (SELECT DISTINCT P FROM BST) THEN CONCAT(N, ' Inner') ELSE CONCAT(N, ' Leaf') END FROM BST ORDER BY N ASC 只有当P col为null时,N才能为Root节点,否则的话,判断N的值是否出现在P列中,true 则为中间节点,else则为叶子结点.
 Part2 首先Clone一份代码到本地,先不用忙着Make,Project 1的案例不需要.
 从tablecodec.goL39至L70代码就可以发现一些端倪,首先我们先理解EncodeRowKeyWithHandle这个function.
-var ( tablePrefix = []byte{&#39;t&#39;} recordPrefixSep = []byte(&#34;_r&#34;) indexPrefixSep = []byte(&#34;_i&#34;) ) const ( idLen = 8 prefixLen = 1 &#43; idLen /*tableID*/ &#43; 2 // RecordRowKeyLen is public for calculating average row size. RecordRowKeyLen = prefixLen &#43; idLen /*handle*/ tablePrefixLength = 1 recordPrefixSepLength = 2 ) // TableSplitKeyLen is the length of key &#39;t{table_id}&#39; which is used for table split. const TableSplitKeyLen = 1 &#43; idLen // TablePrefix returns table&#39;s prefix &#39;t&#39;. func TablePrefix() []byte { return tablePrefix } // appendTableRecordPrefix appends table record prefix &#34;t[tableID]_r&#34;. func appendTableRecordPrefix(buf []byte, tableID int64) []byte { buf = append(buf, tablePrefix...)	//实际上将&#39;t&#39;插入到slice head. buf = codec.EncodeInt(buf, tableID)	//对Tableid序列化插入到t后面. buf = append(buf, recordPrefixSep...)	//插入recordPrefixSep标识符&#34;_r&#34; return buf } // EncodeRowKeyWithHandle encodes the table id, row handle into a kv.Key func EncodeRowKeyWithHandle(tableID int64, handle int64) kv.Key { buf := make([]byte, 0, RecordRowKeyLen)	//创建一个byte Slice,其len为0,cap为(prefixLen &#43; idLen)=8&#43;1&#43;8&#43;2=19. buf = appendTableRecordPrefix(buf, tableID)	//将空slice和tableID传入appendTableRecordPrefix.跳转到25行 buf = codec.EncodeInt(buf, handle) return buf } 让我们来看看codec.EncodeInt究竟对我们的TableID进行了什么操作">
-
-
-
-    <meta property="og:url" content="https://co1a.me/posts/2021/03/pingcap-talent-project-%E8%B7%AF%E5%BE%841-project1/">
-	<meta property="og:site_name" content="Co1a&#39;s Blog">
-	<meta property="og:title" content="PingCAP Talent Project 路径1 Project1">
-	<meta property="og:description" content="最近从武汉迁徙到了深圳,机会没有我想象的那么多,也仔细思考过这条路该怎么走,却怎么都走不好,找了一份相关的工作,工资不高,但好在有时间去自己学习.Anyway 还是来讲讲今天的正题.
+var ( tablePrefix = []byte{'t'} recordPrefixSep = []byte(&#34;_r&#34;) indexPrefixSep = []byte(&#34;_i&#34;) ) const ( idLen = 8 prefixLen = 1 + idLen /*tableID*/ + 2 // RecordRowKeyLen is public for calculating average row size. RecordRowKeyLen = prefixLen + idLen /*handle*/ tablePrefixLength = 1 recordPrefixSepLength = 2 ) // TableSplitKeyLen is the length of key 't{table_id}' which is used for table split. const TableSplitKeyLen = 1 + idLen // TablePrefix returns table's prefix 't'. func TablePrefix() []byte { return tablePrefix } // appendTableRecordPrefix appends table record prefix &#34;t[tableID]_r&#34;. func appendTableRecordPrefix(buf []byte, tableID int64) []byte { buf = append(buf, tablePrefix...)	//实际上将't'插入到slice head. buf = codec.EncodeInt(buf, tableID)	//对Tableid序列化插入到t后面. buf = append(buf, recordPrefixSep...)	//插入recordPrefixSep标识符&#34;_r&#34; return buf } // EncodeRowKeyWithHandle encodes the table id, row handle into a kv.Key func EncodeRowKeyWithHandle(tableID int64, handle int64) kv.Key { buf := make([]byte, 0, RecordRowKeyLen)	//创建一个byte Slice,其len为0,cap为(prefixLen + idLen)=8+1+8+2=19. buf = appendTableRecordPrefix(buf, tableID)	//将空slice和tableID传入appendTableRecordPrefix.跳转到25行 buf = codec.EncodeInt(buf, handle) return buf } 让我们来看看codec.EncodeInt究竟对我们的TableID进行了什么操作"><meta property="og:url" content="https://co1a.me/posts/2021/03/pingcap-talent-project-%E8%B7%AF%E5%BE%841-project1/"><meta property="og:site_name" content="Co1a's Blog"><meta property="og:title" content="PingCAP Talent Project 路径1 Project1"><meta property="og:description" content="最近从武汉迁徙到了深圳,机会没有我想象的那么多,也仔细思考过这条路该怎么走,却怎么都走不好,找了一份相关的工作,工资不高,但好在有时间去自己学习.Anyway 还是来讲讲今天的正题.
 过年那段时间看着tidb-dashboard有个挺简单的Feature,就自己做着玩玩,慢慢了解到这家公司思想和所做的事都是非常宏伟的,最近面试完了在深圳这边等着入职(大专应届像我这样的渣渣想入行还是非常困难的),下午有时间就顺着把路径1 Project1给做了,是个大坑可能会更新的比较慢,让基础的我非常的尴尬,好在相关文档还是讲的比较清晰的.
 Part1 首先是几道SQL,这里就不再赘述了,除了最后一题需要思考一下,其他的都还是非常简单的,主要还是CASE确实用的比较少,下面从评论区搞了一份答案过来讲讲思路.
-SELECT CASE WHEN P IS NULL THEN CONCAT(N, &#39; Root&#39;) WHEN N IN (SELECT DISTINCT P FROM BST) THEN CONCAT(N, &#39; Inner&#39;) ELSE CONCAT(N, &#39; Leaf&#39;) END FROM BST ORDER BY N ASC 只有当P col为null时,N才能为Root节点,否则的话,判断N的值是否出现在P列中,true 则为中间节点,else则为叶子结点.
+SELECT CASE WHEN P IS NULL THEN CONCAT(N, ' Root') WHEN N IN (SELECT DISTINCT P FROM BST) THEN CONCAT(N, ' Inner') ELSE CONCAT(N, ' Leaf') END FROM BST ORDER BY N ASC 只有当P col为null时,N才能为Root节点,否则的话,判断N的值是否出现在P列中,true 则为中间节点,else则为叶子结点.
 Part2 首先Clone一份代码到本地,先不用忙着Make,Project 1的案例不需要.
 从tablecodec.goL39至L70代码就可以发现一些端倪,首先我们先理解EncodeRowKeyWithHandle这个function.
-var ( tablePrefix = []byte{&#39;t&#39;} recordPrefixSep = []byte(&#34;_r&#34;) indexPrefixSep = []byte(&#34;_i&#34;) ) const ( idLen = 8 prefixLen = 1 &#43; idLen /*tableID*/ &#43; 2 // RecordRowKeyLen is public for calculating average row size. RecordRowKeyLen = prefixLen &#43; idLen /*handle*/ tablePrefixLength = 1 recordPrefixSepLength = 2 ) // TableSplitKeyLen is the length of key &#39;t{table_id}&#39; which is used for table split. const TableSplitKeyLen = 1 &#43; idLen // TablePrefix returns table&#39;s prefix &#39;t&#39;. func TablePrefix() []byte { return tablePrefix } // appendTableRecordPrefix appends table record prefix &#34;t[tableID]_r&#34;. func appendTableRecordPrefix(buf []byte, tableID int64) []byte { buf = append(buf, tablePrefix...)	//实际上将&#39;t&#39;插入到slice head. buf = codec.EncodeInt(buf, tableID)	//对Tableid序列化插入到t后面. buf = append(buf, recordPrefixSep...)	//插入recordPrefixSep标识符&#34;_r&#34; return buf } // EncodeRowKeyWithHandle encodes the table id, row handle into a kv.Key func EncodeRowKeyWithHandle(tableID int64, handle int64) kv.Key { buf := make([]byte, 0, RecordRowKeyLen)	//创建一个byte Slice,其len为0,cap为(prefixLen &#43; idLen)=8&#43;1&#43;8&#43;2=19. buf = appendTableRecordPrefix(buf, tableID)	//将空slice和tableID传入appendTableRecordPrefix.跳转到25行 buf = codec.EncodeInt(buf, handle) return buf } 让我们来看看codec.EncodeInt究竟对我们的TableID进行了什么操作">
-	<meta property="og:locale" content="zh_cn">
-	<meta property="og:type" content="article">
-		<meta property="article:section" content="posts">
-		<meta property="article:published_time" content="2021-03-04T00:11:00+08:00">
-		<meta property="article:modified_time" content="2021-03-04T00:11:00+08:00">
-		<meta property="article:tag" content="学习">
-		<meta property="og:image" content="https://co1a.me/">
-
-
-
-
-
-
-    <meta property="article:published_time" content="2021-03-04 00:11:00 &#43;0800 CST" />
-
-
-
-
-
-
-
-
-    </head>
-
-    <body class="">
-        <div class="container">
-            <header class="header">
-    <span class="header__inner">
-        <a href="https://co1a.me/" style="text-decoration: none;">
-    <div class="logo">
-        
-            <span class="logo__mark">></span>
-            <span class="logo__text">Please Enter...</span>
-            <span class="logo__cursor" style=
-                  "
-                   
-                   ">
-            </span>
-        
-    </div>
-</a>
-
-
-        <span class="header__right">
-            
-                <nav class="menu">
-    <ul class="menu__inner"><li><a href="https://co1a.me/about/">About</a></li><li><a href="https://co1a.me/posts/">Posts</a></li>
-    </ul>
-</nav>
-
-                <span class="menu-trigger">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                        <path d="M0 0h24v24H0z" fill="none"/>
-                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
-                    </svg>
-                </span>
-            
-
-            <span class="theme-toggle unselectable"><svg class="theme-toggler" width="24" height="24" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <path d="M22 41C32.4934 41 41 32.4934 41 22C41 11.5066 32.4934 3 22
-  3C11.5066 3 3 11.5066 3 22C3 32.4934 11.5066 41 22 41ZM7 22C7
-  13.7157 13.7157 7 22 7V37C13.7157 37 7 30.2843 7 22Z"/>
-</svg>
-</span>
-        </span>
-    </span>
-</header>
-
-
-            <div class="content">
-                
-  <main class="post">
-
-    <div class="post-info">
-      <p>
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-clock">
-          <circle cx="12" cy="12" r="10"></circle>
-          <polyline points="12 6 12 12 16 14"></polyline>
-        </svg>
-        3分钟
-
-        
-      </p>
-    </div>
-
-    <article>
-      <h1 class="post-title">
-        <a href="https://co1a.me/posts/2021/03/pingcap-talent-project-%E8%B7%AF%E5%BE%841-project1/">PingCAP Talent Project 路径1 Project1</a>
-      </h1>
-
-      
-
-      <div class="post-content">
-        <p>最近从武汉迁徙到了深圳,机会没有我想象的那么多,也仔细思考过这条路该怎么走,却怎么都走不好,找了一份相关的工作,工资不高,但好在有时间去自己学习.Anyway 还是来讲讲今天的正题.</p>
-<p>过年那段时间看着tidb-dashboard有个挺简单的Feature,就自己做着玩玩,慢慢了解到这家公司思想和所做的事都是非常宏伟的,最近面试完了在深圳这边等着入职(<del>大专</del>应届像我这样的渣渣想入行还是非常困难的),下午有时间就顺着把路径1 Project1给做了,是个大坑可能会更新的比较慢,让基础的我非常的尴尬,好在相关文档还是讲的比较清晰的.</p>
-<h4 id="part1">Part1</h4>
-<p>首先是几道SQL,这里就不再赘述了,除了最后一题需要思考一下,其他的都还是非常简单的,主要还是CASE确实用的比较少,下面从评论区搞了一份答案过来讲讲思路.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-mysql" data-lang="mysql"><span style="display:flex;"><span><span style="color:#66d9ef">SELECT</span> <span style="color:#66d9ef">CASE</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">WHEN</span> P <span style="color:#66d9ef">IS</span> <span style="color:#66d9ef">NULL</span> <span style="color:#66d9ef">THEN</span> <span style="color:#a6e22e">CONCAT</span>(N, <span style="color:#e6db74">&#39; Root&#39;</span>)
-</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">WHEN</span> N <span style="color:#66d9ef">IN</span> (<span style="color:#66d9ef">SELECT</span> <span style="color:#66d9ef">DISTINCT</span> P <span style="color:#66d9ef">FROM</span> BST) <span style="color:#66d9ef">THEN</span> <span style="color:#a6e22e">CONCAT</span>(N, <span style="color:#e6db74">&#39; Inner&#39;</span>)
-</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">ELSE</span> <span style="color:#a6e22e">CONCAT</span>(N, <span style="color:#e6db74">&#39; Leaf&#39;</span>)
-</span></span><span style="display:flex;"><span>	END
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">FROM</span> BST
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">ORDER</span> <span style="color:#66d9ef">BY</span> N <span style="color:#66d9ef">ASC</span>
-</span></span></code></pre></div><p>只有当P col为null时,N才能为Root节点,否则的话,判断N的值是否出现在P列中,true 则为中间节点,else则为叶子结点.</p>
-<h4 id="part2">Part2</h4>
-<p>首先Clone一份代码到本地,先不用忙着Make,Project 1的案例不需要.</p>
-<p>从<code>tablecodec.go</code>L39至L70代码就可以发现一些端倪,首先我们先理解<code>EncodeRowKeyWithHandle</code>这个function.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">var</span> (
-</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">tablePrefix</span>     = []<span style="color:#66d9ef">byte</span>{<span style="color:#e6db74">&#39;t&#39;</span>}
-</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">recordPrefixSep</span> = []byte(<span style="color:#e6db74">&#34;_r&#34;</span>)
-</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">indexPrefixSep</span>  = []byte(<span style="color:#e6db74">&#34;_i&#34;</span>)
-</span></span><span style="display:flex;"><span>)
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">const</span> (
-</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">idLen</span>     = <span style="color:#ae81ff">8</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">prefixLen</span> = <span style="color:#ae81ff">1</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">idLen</span> <span style="color:#75715e">/*tableID*/</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">2</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#75715e">// RecordRowKeyLen is public for calculating average row size.</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">RecordRowKeyLen</span>       = <span style="color:#a6e22e">prefixLen</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">idLen</span> <span style="color:#75715e">/*handle*/</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">tablePrefixLength</span>     = <span style="color:#ae81ff">1</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">recordPrefixSepLength</span> = <span style="color:#ae81ff">2</span>
-</span></span><span style="display:flex;"><span>)
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e">// TableSplitKeyLen is the length of key &#39;t{table_id}&#39; which is used for table split.</span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">TableSplitKeyLen</span> = <span style="color:#ae81ff">1</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">idLen</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e">// TablePrefix returns table&#39;s prefix &#39;t&#39;.</span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">TablePrefix</span>() []<span style="color:#66d9ef">byte</span> {
-</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">tablePrefix</span>
-</span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e">// appendTableRecordPrefix appends table record prefix  &#34;t[tableID]_r&#34;.</span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">appendTableRecordPrefix</span>(<span style="color:#a6e22e">buf</span> []<span style="color:#66d9ef">byte</span>, <span style="color:#a6e22e">tableID</span> <span style="color:#66d9ef">int64</span>) []<span style="color:#66d9ef">byte</span> {
-</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">buf</span> = append(<span style="color:#a6e22e">buf</span>, <span style="color:#a6e22e">tablePrefix</span><span style="color:#f92672">...</span>)				<span style="color:#75715e">//实际上将&#39;t&#39;插入到slice head.</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">buf</span> = <span style="color:#a6e22e">codec</span>.<span style="color:#a6e22e">EncodeInt</span>(<span style="color:#a6e22e">buf</span>, <span style="color:#a6e22e">tableID</span>)				<span style="color:#75715e">//对Tableid序列化插入到t后面.</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">buf</span> = append(<span style="color:#a6e22e">buf</span>, <span style="color:#a6e22e">recordPrefixSep</span><span style="color:#f92672">...</span>)			<span style="color:#75715e">//插入recordPrefixSep标识符&#34;_r&#34;</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">buf</span>
-</span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e">// EncodeRowKeyWithHandle encodes the table id, row handle into a kv.Key</span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">EncodeRowKeyWithHandle</span>(<span style="color:#a6e22e">tableID</span> <span style="color:#66d9ef">int64</span>, <span style="color:#a6e22e">handle</span> <span style="color:#66d9ef">int64</span>) <span style="color:#a6e22e">kv</span>.<span style="color:#a6e22e">Key</span> {
-</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">buf</span> <span style="color:#f92672">:=</span> make([]<span style="color:#66d9ef">byte</span>, <span style="color:#ae81ff">0</span>, <span style="color:#a6e22e">RecordRowKeyLen</span>)			<span style="color:#75715e">//创建一个byte Slice,其len为0,cap为(prefixLen + idLen)=8+1+8+2=19.</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">buf</span> = <span style="color:#a6e22e">appendTableRecordPrefix</span>(<span style="color:#a6e22e">buf</span>, <span style="color:#a6e22e">tableID</span>)		<span style="color:#75715e">//将空slice和tableID传入appendTableRecordPrefix.跳转到25行</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">buf</span> = <span style="color:#a6e22e">codec</span>.<span style="color:#a6e22e">EncodeInt</span>(<span style="color:#a6e22e">buf</span>, <span style="color:#a6e22e">handle</span>)
-</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">buf</span>
-</span></span><span style="display:flex;"><span>}
-</span></span></code></pre></div><p>让我们来看看<code>codec.EncodeInt</code>究竟对我们的TableID进行了什么操作</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">var</span> (
-</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">tablePrefix</span>     = []<span style="color:#66d9ef">byte</span>{<span style="color:#e6db74">&#39;t&#39;</span>}
-</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">recordPrefixSep</span> = []byte(<span style="color:#e6db74">&#34;_r&#34;</span>)
-</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">indexPrefixSep</span>  = []byte(<span style="color:#e6db74">&#34;_i&#34;</span>)
-</span></span><span style="display:flex;"><span>)
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">const</span> (
-</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">idLen</span>     = <span style="color:#ae81ff">8</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">prefixLen</span> = <span style="color:#ae81ff">1</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">idLen</span> <span style="color:#75715e">/*tableID*/</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">2</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#75715e">// RecordRowKeyLen is public for calculating average row size.</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">RecordRowKeyLen</span>       = <span style="color:#a6e22e">prefixLen</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">idLen</span> <span style="color:#75715e">/*handle*/</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">tablePrefixLength</span>     = <span style="color:#ae81ff">1</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">recordPrefixSepLength</span> = <span style="color:#ae81ff">2</span>
-</span></span><span style="display:flex;"><span>)
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e">// TableSplitKeyLen is the length of key &#39;t{table_id}&#39; which is used for table split.</span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">TableSplitKeyLen</span> = <span style="color:#ae81ff">1</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">idLen</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e">// TablePrefix returns table&#39;s prefix &#39;t&#39;.</span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">TablePrefix</span>() []<span style="color:#66d9ef">byte</span> {
-</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">tablePrefix</span>
-</span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e">// appendTableRecordPrefix appends table record prefix  &#34;t[tableID]_r&#34;.</span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">appendTableRecordPrefix</span>(<span style="color:#a6e22e">buf</span> []<span style="color:#66d9ef">byte</span>, <span style="color:#a6e22e">tableID</span> <span style="color:#66d9ef">int64</span>) []<span style="color:#66d9ef">byte</span> {
-</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">buf</span> = append(<span style="color:#a6e22e">buf</span>, <span style="color:#a6e22e">tablePrefix</span><span style="color:#f92672">...</span>)				<span style="color:#75715e">//实际上将&#39;t&#39;插入到slice head.</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">buf</span> = <span style="color:#a6e22e">codec</span>.<span style="color:#a6e22e">EncodeInt</span>(<span style="color:#a6e22e">buf</span>, <span style="color:#a6e22e">tableID</span>)				<span style="color:#75715e">//对Tableid序列化插入到t后面.</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">buf</span> = append(<span style="color:#a6e22e">buf</span>, <span style="color:#a6e22e">recordPrefixSep</span><span style="color:#f92672">...</span>)			<span style="color:#75715e">//插入recordPrefixSep标识符&#34;_r&#34;</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">buf</span>
-</span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e">// EncodeRowKeyWithHandle encodes the table id, row handle into a kv.Key</span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">EncodeRowKeyWithHandle</span>(<span style="color:#a6e22e">tableID</span> <span style="color:#66d9ef">int64</span>, <span style="color:#a6e22e">handle</span> <span style="color:#66d9ef">int64</span>) <span style="color:#a6e22e">kv</span>.<span style="color:#a6e22e">Key</span> {
-</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">buf</span> <span style="color:#f92672">:=</span> make([]<span style="color:#66d9ef">byte</span>, <span style="color:#ae81ff">0</span>, <span style="color:#a6e22e">RecordRowKeyLen</span>)			<span style="color:#75715e">//创建一个byte Slice,其len为0,cap为(prefixLen + idLen)=8+1+8+2=19.</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">buf</span> = <span style="color:#a6e22e">appendTableRecordPrefix</span>(<span style="color:#a6e22e">buf</span>, <span style="color:#a6e22e">tableID</span>)		<span style="color:#75715e">//将空slice和tableID传入appendTableRecordPrefix.跳转到25行</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">buf</span> = <span style="color:#a6e22e">codec</span>.<span style="color:#a6e22e">EncodeInt</span>(<span style="color:#a6e22e">buf</span>, <span style="color:#a6e22e">handle</span>)
-</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">buf</span>
-</span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">EncodeInt</span>(<span style="color:#a6e22e">b</span> []<span style="color:#66d9ef">byte</span>, <span style="color:#a6e22e">v</span> <span style="color:#66d9ef">int64</span>) []<span style="color:#66d9ef">byte</span> {
-</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">data</span> [<span style="color:#ae81ff">8</span>]<span style="color:#66d9ef">byte</span>								<span style="color:#75715e">//生成一个长度为8的Array</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">u</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">EncodeIntToCmpUint</span>(<span style="color:#a6e22e">v</span>)						<span style="color:#75715e">//跳转到第50行</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">binary</span>.<span style="color:#a6e22e">BigEndian</span>.<span style="color:#a6e22e">PutUint64</span>(<span style="color:#a6e22e">data</span>[:], <span style="color:#a6e22e">u</span>)			<span style="color:#75715e">//根据u来generate TableID</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">return</span> append(<span style="color:#a6e22e">b</span>, <span style="color:#a6e22e">data</span>[:]<span style="color:#f92672">...</span>)					<span style="color:#75715e">//世界线收束</span>
-</span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">signMask</span> <span style="color:#66d9ef">uint64</span> = <span style="color:#ae81ff">0x8000000000000000</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e">// EncodeIntToCmpUint make int v to comparable uint type</span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">EncodeIntToCmpUint</span>(<span style="color:#a6e22e">v</span> <span style="color:#66d9ef">int64</span>) <span style="color:#66d9ef">uint64</span> {
-</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">return</span> uint64(<span style="color:#a6e22e">v</span>) ^ <span style="color:#a6e22e">signMask</span>						<span style="color:#75715e">//进行一次异或操作</span>
-</span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">bigEndian</span>) <span style="color:#a6e22e">PutUint64</span>(<span style="color:#a6e22e">b</span> []<span style="color:#66d9ef">byte</span>, <span style="color:#a6e22e">v</span> <span style="color:#66d9ef">uint64</span>) {
-</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">_</span> = <span style="color:#a6e22e">b</span>[<span style="color:#ae81ff">7</span>] <span style="color:#75715e">// early bounds check to guarantee safety of writes below</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">b</span>[<span style="color:#ae81ff">0</span>] = byte(<span style="color:#a6e22e">v</span> <span style="color:#f92672">&gt;&gt;</span> <span style="color:#ae81ff">56</span>)
-</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">b</span>[<span style="color:#ae81ff">1</span>] = byte(<span style="color:#a6e22e">v</span> <span style="color:#f92672">&gt;&gt;</span> <span style="color:#ae81ff">48</span>)
-</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">b</span>[<span style="color:#ae81ff">2</span>] = byte(<span style="color:#a6e22e">v</span> <span style="color:#f92672">&gt;&gt;</span> <span style="color:#ae81ff">40</span>)
-</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">b</span>[<span style="color:#ae81ff">3</span>] = byte(<span style="color:#a6e22e">v</span> <span style="color:#f92672">&gt;&gt;</span> <span style="color:#ae81ff">32</span>)
-</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">b</span>[<span style="color:#ae81ff">4</span>] = byte(<span style="color:#a6e22e">v</span> <span style="color:#f92672">&gt;&gt;</span> <span style="color:#ae81ff">24</span>)
-</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">b</span>[<span style="color:#ae81ff">5</span>] = byte(<span style="color:#a6e22e">v</span> <span style="color:#f92672">&gt;&gt;</span> <span style="color:#ae81ff">16</span>)
-</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">b</span>[<span style="color:#ae81ff">6</span>] = byte(<span style="color:#a6e22e">v</span> <span style="color:#f92672">&gt;&gt;</span> <span style="color:#ae81ff">8</span>)
-</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">b</span>[<span style="color:#ae81ff">7</span>] = byte(<span style="color:#a6e22e">v</span>)
-</span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span><span style="color:#75715e">//进行一次位移操作</span>
-</span></span></code></pre></div><p>这时,我们的TableID看起来应该是这样</p>
-<p><code>&quot;t{TableId}_r{rowhandle}&quot;</code></p>
-<p>这下子Decode就非常简单了,因为序列化后的长度我们是已知的为8:对于t后的slice进行一次还原操作,以及对r后的slice进行一次还原,就可以得到tableID和handle.</p>
-<p>这里处理前需要做个判断,如果len(key)≠prefixLen + idLen,那么这个table是非法的.</p>
-<p>咱们再来看看<code>DecodeIndexKeyPrefix</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#75715e">// appendTableIndexPrefix appends table index prefix  &#34;t[tableID]_i&#34;.</span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">appendTableIndexPrefix</span>(<span style="color:#a6e22e">buf</span> []<span style="color:#66d9ef">byte</span>, <span style="color:#a6e22e">tableID</span> <span style="color:#66d9ef">int64</span>) []<span style="color:#66d9ef">byte</span> {
-</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">buf</span> = append(<span style="color:#a6e22e">buf</span>, <span style="color:#a6e22e">tablePrefix</span><span style="color:#f92672">...</span>)
-</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">buf</span> = <span style="color:#a6e22e">codec</span>.<span style="color:#a6e22e">EncodeInt</span>(<span style="color:#a6e22e">buf</span>, <span style="color:#a6e22e">tableID</span>)
-</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">buf</span> = append(<span style="color:#a6e22e">buf</span>, <span style="color:#a6e22e">indexPrefixSep</span><span style="color:#f92672">...</span>)
-</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">buf</span>
-</span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e">// EncodeIndexSeekKey encodes an index value to kv.Key.</span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">EncodeIndexSeekKey</span>(<span style="color:#a6e22e">tableID</span> <span style="color:#66d9ef">int64</span>, <span style="color:#a6e22e">idxID</span> <span style="color:#66d9ef">int64</span>, <span style="color:#a6e22e">encodedValue</span> []<span style="color:#66d9ef">byte</span>) <span style="color:#a6e22e">kv</span>.<span style="color:#a6e22e">Key</span> {
-</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">key</span> <span style="color:#f92672">:=</span> make([]<span style="color:#66d9ef">byte</span>, <span style="color:#ae81ff">0</span>, <span style="color:#a6e22e">prefixLen</span><span style="color:#f92672">+</span><span style="color:#a6e22e">idLen</span><span style="color:#f92672">+</span>len(<span style="color:#a6e22e">encodedValue</span>))
-</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">key</span> = <span style="color:#a6e22e">appendTableIndexPrefix</span>(<span style="color:#a6e22e">key</span>, <span style="color:#a6e22e">tableID</span>)
-</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">key</span> = <span style="color:#a6e22e">codec</span>.<span style="color:#a6e22e">EncodeInt</span>(<span style="color:#a6e22e">key</span>, <span style="color:#a6e22e">idxID</span>)
-</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">key</span> = append(<span style="color:#a6e22e">key</span>, <span style="color:#a6e22e">encodedValue</span><span style="color:#f92672">...</span>)
-</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">key</span>
-</span></span><span style="display:flex;"><span>}
-</span></span></code></pre></div><p>其实大同小异,无非是添加了一个encodedValue,这里留给大家思考</p>
-<p>具体的解码在<code>codec.DecodeInt</code>这个函数中,PingCAP的老师们已经帮忙写好了,非常的银杏化哈哈</p>
-<p>算是开了个大坑,有机会的话所有路径全部都做一遍,算是对自己的锻炼吧</p>
-<p>拜拜👋</p>
-
-      </div>
-    </article>
-
-    <hr />
-
-    <div class="post-info">
-      
-    <p>
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7" y2="7"></line></svg>
-
-        <span class="tag"><a href="https://co1a.me/tags/%E5%AD%A6%E4%B9%A0/">学习</a></span>
-        
-    </p>
-
-      
-
-      <p>
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text">
-          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-          <polyline points="14 2 14 8 20 8"></polyline>
-          <line x1="16" y1="13" x2="8" y2="13"></line>
-          <line x1="16" y1="17" x2="8" y2="17"></line>
-          <polyline points="10 9 9 9 8 9"></polyline>
-        </svg>
-        537字
-      </p>
-
-      <p>
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar">
-          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-          <line x1="16" y1="2" x2="16" y2="6"></line>
-          <line x1="8" y1="2" x2="8" y2="6"></line>
-          <line x1="3" y1="10" x2="21" y2="10"></line>
-        </svg>
-        
-          2021-03-04 00:11
-        
-
-         
-          
-        
-      </p>
-    </div>
-      <hr />
-      <div class="sharing-buttons">
-        
-<a class="resp-sharing-button__link" href="https://facebook.com/sharer/sharer.php?u=https%3a%2f%2fco1a.me%2fposts%2f2021%2f03%2fpingcap-talent-project-%25E8%25B7%25AF%25E5%25BE%25841-project1%2f" target="_blank" rel="noopener" aria-label="" title="Share on facebook">
-  <div class="resp-sharing-button resp-sharing-button--facebook resp-sharing-button--small"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>
-    </div>
-  </div>
-</a>
-
-
-<a class="resp-sharing-button__link" href="https://twitter.com/intent/tweet/?url=https%3a%2f%2fco1a.me%2fposts%2f2021%2f03%2fpingcap-talent-project-%25E8%25B7%25AF%25E5%25BE%25841-project1%2f" target="_blank" rel="noopener" aria-label="" title="Share on twitter">
-  <div class="resp-sharing-button resp-sharing-button--twitter resp-sharing-button--small">
-      <div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path></svg>
-    </div>
-  </div>
-</a>
-
-
-<a class="resp-sharing-button__link" href="https://www.tumblr.com/widgets/share/tool?posttype=link&amp;title=PingCAP%20Talent%20Project%20%e8%b7%af%e5%be%841%20Project1&amp;caption=PingCAP%20Talent%20Project%20%e8%b7%af%e5%be%841%20Project1&amp;canonicalUrl=https%3a%2f%2fco1a.me%2fposts%2f2021%2f03%2fpingcap-talent-project-%25E8%25B7%25AF%25E5%25BE%25841-project1%2f" target="_blank" rel="noopener" aria-label="" title="Share on tumblr">
-  <div class="resp-sharing-button resp-sharing-button--tumblr resp-sharing-button--small">
-    <div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
-      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.563 24c-5.093 0-7.031-3.756-7.031-6.411V9.747H5.116V6.648c3.63-1.313 4.512-4.596 4.71-6.469C9.84.051 9.941 0 9.999 0h3.517v6.114h4.801v3.633h-4.82v7.47c.016 1.001.375 2.371 2.207 2.371h.09c.631-.02 1.486-.205 1.936-.419l1.156 3.425c-.436.636-2.4 1.374-4.156 1.404h-.178l.011.002z"/></svg>
-    </div>
-  </div>
-</a>
-
-
-<a class="resp-sharing-button__link" href="mailto:?subject=PingCAP%20Talent%20Project%20%e8%b7%af%e5%be%841%20Project1&amp;body=https%3a%2f%2fco1a.me%2fposts%2f2021%2f03%2fpingcap-talent-project-%25E8%25B7%25AF%25E5%25BE%25841-project1%2f" target="_self" rel="noopener" aria-label="" title="Share via email">
-  <div class="resp-sharing-button resp-sharing-button--email resp-sharing-button--small"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
-    </div>
-  </div>
-</a>
-
-
-<a class="resp-sharing-button__link" href="https://pinterest.com/pin/create/button/?url=https%3a%2f%2fco1a.me%2fposts%2f2021%2f03%2fpingcap-talent-project-%25E8%25B7%25AF%25E5%25BE%25841-project1%2f&amp;media=https%3a%2f%2fco1a.me%2fposts%2f2021%2f03%2fpingcap-talent-project-%25E8%25B7%25AF%25E5%25BE%25841-project1%2f;description=PingCAP%20Talent%20Project%20%e8%b7%af%e5%be%841%20Project1" target="_blank" rel="noopener" aria-label="" title="Share on pinterest">
-  <div class="resp-sharing-button resp-sharing-button--pinterest resp-sharing-button--small"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12.017 0C5.396 0 .029 5.367.029 11.987c0 5.079 3.158 9.417 7.618 11.162-.105-.949-.199-2.403.041-3.439.219-.937 1.406-5.957 1.406-5.957s-.359-.72-.359-1.781c0-1.663.967-2.911 2.168-2.911 1.024 0 1.518.769 1.518 1.688 0 1.029-.653 2.567-.992 3.992-.285 1.193.6 2.165 1.775 2.165 2.128 0 3.768-2.245 3.768-5.487 0-2.861-2.063-4.869-5.008-4.869-3.41 0-5.409 2.562-5.409 5.199 0 1.033.394 2.143.889 2.741.099.12.112.225.085.345-.09.375-.293 1.199-.334 1.363-.053.225-.172.271-.401.165-1.495-.69-2.433-2.878-2.433-4.646 0-3.776 2.748-7.252 7.92-7.252 4.158 0 7.392 2.967 7.392 6.923 0 4.135-2.607 7.462-6.233 7.462-1.214 0-2.354-.629-2.758-1.379l-.749 2.848c-.269 1.045-1.004 2.352-1.498 3.146 1.123.345 2.306.535 3.55.535 6.607 0 11.985-5.365 11.985-11.987C23.97 5.39 18.592.026 11.985.026L12.017 0z"/></svg>
-    </div>
-  </div>
-</a>
-
-
-<a class="resp-sharing-button__link" href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https%3a%2f%2fco1a.me%2fposts%2f2021%2f03%2fpingcap-talent-project-%25E8%25B7%25AF%25E5%25BE%25841-project1%2f&amp;title=PingCAP%20Talent%20Project%20%e8%b7%af%e5%be%841%20Project1&amp;summary=PingCAP%20Talent%20Project%20%e8%b7%af%e5%be%841%20Project1&amp;source=https%3a%2f%2fco1a.me%2fposts%2f2021%2f03%2fpingcap-talent-project-%25E8%25B7%25AF%25E5%25BE%25841-project1%2f" target="_blank" rel="noopener" aria-label="" title="Share on linkedin">
-  <div class="resp-sharing-button resp-sharing-button--linkedin resp-sharing-button--small"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>
-    </div>
-  </div>
-</a>
-
-
-<a class="resp-sharing-button__link" href="https://reddit.com/submit/?url=https%3a%2f%2fco1a.me%2fposts%2f2021%2f03%2fpingcap-talent-project-%25E8%25B7%25AF%25E5%25BE%25841-project1%2f&amp;resubmit=true&amp;title=PingCAP%20Talent%20Project%20%e8%b7%af%e5%be%841%20Project1" target="_blank" rel="noopener" aria-label="" title="Share on reddit">
-  <div class="resp-sharing-button resp-sharing-button--reddit resp-sharing-button--small"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0zm5.01 4.744c.688 0 1.25.561 1.25 1.249a1.25 1.25 0 0 1-2.498.056l-2.597-.547-.8 3.747c1.824.07 3.48.632 4.674 1.488.308-.309.73-.491 1.207-.491.968 0 1.754.786 1.754 1.754 0 .716-.435 1.333-1.01 1.614a3.111 3.111 0 0 1 .042.52c0 2.694-3.13 4.87-7.004 4.87-3.874 0-7.004-2.176-7.004-4.87 0-.183.015-.366.043-.534A1.748 1.748 0 0 1 4.028 12c0-.968.786-1.754 1.754-1.754.463 0 .898.196 1.207.49 1.207-.883 2.878-1.43 4.744-1.487l.885-4.182a.342.342 0 0 1 .14-.197.35.35 0 0 1 .238-.042l2.906.617a1.214 1.214 0 0 1 1.108-.701zM9.25 12C8.561 12 8 12.562 8 13.25c0 .687.561 1.248 1.25 1.248.687 0 1.248-.561 1.248-1.249 0-.688-.561-1.249-1.249-1.249zm5.5 0c-.687 0-1.248.561-1.248 1.25 0 .687.561 1.248 1.249 1.248.688 0 1.249-.561 1.249-1.249 0-.687-.562-1.249-1.25-1.249zm-5.466 3.99a.327.327 0 0 0-.231.094.33.33 0 0 0 0 .463c.842.842 2.484.913 2.961.913.477 0 2.105-.056 2.961-.913a.361.361 0 0 0 .029-.463.33.33 0 0 0-.464 0c-.547.533-1.684.73-2.512.73-.828 0-1.979-.196-2.512-.73a.326.326 0 0 0-.232-.095z"/></svg>
-    </div>
-  </div>
-</a>
-
-
-<a class="resp-sharing-button__link" href="https://www.xing.com/app/user?op=share;url=https%3a%2f%2fco1a.me%2fposts%2f2021%2f03%2fpingcap-talent-project-%25E8%25B7%25AF%25E5%25BE%25841-project1%2f;title=PingCAP%20Talent%20Project%20%e8%b7%af%e5%be%841%20Project1" target="_blank" rel="noopener" aria-label="" title="Share on xing">
-  <div class="resp-sharing-button resp-sharing-button--xing resp-sharing-button--small"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M18.188 0c-.517 0-.741.325-.927.66 0 0-7.455 13.224-7.702 13.657.015.024 4.919 9.023 4.919 9.023.17.308.436.66.967.66h3.454c.211 0 .375-.078.463-.22.089-.151.089-.346-.009-.536l-4.879-8.916c-.004-.006-.004-.016 0-.022L22.139.756c.095-.191.097-.387.006-.535C22.056.078 21.894 0 21.686 0h-3.498zM3.648 4.74c-.211 0-.385.074-.473.216-.09.149-.078.339.02.531l2.34 4.05c.004.01.004.016 0 .021L1.86 16.051c-.099.188-.093.381 0 .529.085.142.239.234.45.234h3.461c.518 0 .766-.348.945-.667l3.734-6.609-2.378-4.155c-.172-.315-.434-.659-.962-.659H3.648v.016z"/></svg>
-    </div>
-  </div>
-</a>
-
-
-<a class="resp-sharing-button__link" href="whatsapp://send?text=PingCAP%20Talent%20Project%20%e8%b7%af%e5%be%841%20Project1%20https%3a%2f%2fco1a.me%2fposts%2f2021%2f03%2fpingcap-talent-project-%25E8%25B7%25AF%25E5%25BE%25841-project1%2f" target="_blank" rel="noopener" aria-label="" title="Share on whatsapp">
-  <div class="resp-sharing-button resp-sharing-button--whatsapp resp-sharing-button--small"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="none" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
-    </div>
-  </div>
-</a>
-
-
-<a class="resp-sharing-button__link" href="https://news.ycombinator.com/submitlink?u=https%3a%2f%2fco1a.me%2fposts%2f2021%2f03%2fpingcap-talent-project-%25E8%25B7%25AF%25E5%25BE%25841-project1%2f&amp;t=PingCAP%20Talent%20Project%20%e8%b7%af%e5%be%841%20Project1" target="_blank" rel="noopener" aria-label="" title="Share on hacker news">
-  <div class="resp-sharing-button resp-sharing-button--hackernews resp-sharing-button--small"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
-			<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M0 24V0h24v24H0zM6.951 5.896l4.112 7.708v5.064h1.583v-4.972l4.148-7.799h-1.749l-2.457 4.875c-.372.745-.688 1.434-.688 1.434s-.297-.708-.651-1.434L8.831 5.896h-1.88z"/></svg>
-    </div>
-  </div>
-</a>
-
-
-<a class="resp-sharing-button__link" href="https://telegram.me/share/url?text=PingCAP%20Talent%20Project%20%e8%b7%af%e5%be%841%20Project1&amp;url=https%3a%2f%2fco1a.me%2fposts%2f2021%2f03%2fpingcap-talent-project-%25E8%25B7%25AF%25E5%25BE%25841-project1%2f" target="_blank" rel="noopener" aria-label="" title="Share on telegram">
-  <div class="resp-sharing-button resp-sharing-button--telegram resp-sharing-button--small"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
-      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
-    </div>
-  </div>
-</a>
-
-      </div>
-
-    
-      <div class="pagination">
-        <div class="pagination__title">
-          <span class="pagination__title-h"></span>
-          <hr />
-        </div>
-
-        <div class="pagination__buttons">
-          
-
-          
-            <span class="button next">
-              <a href="https://co1a.me/posts/2020/08/2step%E4%B8%BAhexo%E4%B8%BB%E9%A2%98%E6%B7%BB%E5%8A%A0likecoin%E7%9A%84%E8%B5%9E%E8%B5%8F%E9%94%AE/">
-                <span class="button__text">2Step为Hexo主题添加LikeCoin的赞赏键</span>
-                <span class="button__icon">→</span>
-              </a>
-            </span>
-          
-        </div>
-      </div>
-    
-
-
-    
-
-  </main>
-
-            </div>
-
-            
-                <footer class="footer">
-    <div class="footer__inner">
-        <div class="footer__content">
-            <span>&copy; 2026</span>
-            
-                <span><a href="https://co1a.me/">Co1a</a></span>
-            
-            
-                <span><a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener">CC BY-NC 4.0</a></span>
-            
-            <span><a href="https://co1a.me/posts/index.xml" target="_blank" title="rss"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg></a></span>
-        </div>
-    </div>
-    <div class="footer__inner">
-        <div class="footer__content">
-            <span>Powered by <a href="http://gohugo.io">Hugo</a></span>
-            <span>Made with &#10084; by <a href="https://github.com/rhazdon">Djordje Atlialp</a></span>
-          </div>
-    </div>
-</footer>
-
-            
-        </div>
-
-        
-
-
-
-
-<script type="text/javascript" src="https://co1a.me/bundle.min.f0a83284a6a9c303ebdedda40cff4fae081def9d6a9799f08d51f2779bc03f8a9c5b606d59895c8c0cd5297ce84850caae34b98aace4b455e992310ed26193ba.js" integrity="sha512-8KgyhKapwwPr3t2kDP9Prggd751ql5nwjVHyd5vAP4qcW2BtWYlcjAzVKXzoSFDKrjS5iqzktFXpkjEO0mGTug=="></script>
-    
-
-
-
-    </body>
-</html>
+var ( tablePrefix = []byte{'t'} recordPrefixSep = []byte(&#34;_r&#34;) indexPrefixSep = []byte(&#34;_i&#34;) ) const ( idLen = 8 prefixLen = 1 + idLen /*tableID*/ + 2 // RecordRowKeyLen is public for calculating average row size. RecordRowKeyLen = prefixLen + idLen /*handle*/ tablePrefixLength = 1 recordPrefixSepLength = 2 ) // TableSplitKeyLen is the length of key 't{table_id}' which is used for table split. const TableSplitKeyLen = 1 + idLen // TablePrefix returns table's prefix 't'. func TablePrefix() []byte { return tablePrefix } // appendTableRecordPrefix appends table record prefix &#34;t[tableID]_r&#34;. func appendTableRecordPrefix(buf []byte, tableID int64) []byte { buf = append(buf, tablePrefix...)	//实际上将't'插入到slice head. buf = codec.EncodeInt(buf, tableID)	//对Tableid序列化插入到t后面. buf = append(buf, recordPrefixSep...)	//插入recordPrefixSep标识符&#34;_r&#34; return buf } // EncodeRowKeyWithHandle encodes the table id, row handle into a kv.Key func EncodeRowKeyWithHandle(tableID int64, handle int64) kv.Key { buf := make([]byte, 0, RecordRowKeyLen)	//创建一个byte Slice,其len为0,cap为(prefixLen + idLen)=8+1+8+2=19. buf = appendTableRecordPrefix(buf, tableID)	//将空slice和tableID传入appendTableRecordPrefix.跳转到25行 buf = codec.EncodeInt(buf, handle) return buf } 让我们来看看codec.EncodeInt究竟对我们的TableID进行了什么操作"><meta property="og:locale" content="zh_cn"><meta property="og:type" content="article"><meta property="article:section" content="posts"><meta property="article:published_time" content="2021-03-04T00:11:00+08:00"><meta property="article:modified_time" content="2021-03-04T00:11:00+08:00"><meta property="article:tag" content="学习"><meta property="og:image" content="https://co1a.me/"><meta property="article:published_time" content="2021-03-04 00:11:00 +0800 +0800"></head><body><div class=container><header class=header><span class=header__inner><a href=https://co1a.me/ style=text-decoration:none><div class=logo><span class=logo__mark>></span>
+<span class=logo__text>Please Enter...</span>
+<span class=logo__cursor></span></div></a><span class=header__right><nav class=menu><ul class=menu__inner><li><a href=https://co1a.me/about/>About</a></li><li><a href=https://co1a.me/posts/>Posts</a></li></ul></nav><span class=menu-trigger><svg viewBox="0 0 24 24"><path d="M0 0h24v24H0z" fill="none"/><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
+</span><span class="theme-toggle unselectable"><svg class="theme-toggler" width="24" height="24" viewBox="0 0 48 48" fill="none"><path d="M22 41c10.4934.0 19-8.5066 19-19C41 11.5066 32.4934 3 22 3 11.5066 3 3 11.5066 3 22s8.5066 19 19 19zM7 22C7 13.7157 13.7157 7 22 7V37C13.7157 37 7 30.2843 7 22z"/></svg></span></span></span></header><div class=content><main class=post><div class=post-info><p><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-clock"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+3分钟</p></div><article><h1 class=post-title><a href=https://co1a.me/posts/2021/03/pingcap-talent-project-%E8%B7%AF%E5%BE%841-project1/>PingCAP Talent Project 路径1 Project1</a></h1><div class=post-content><p>最近从武汉迁徙到了深圳,机会没有我想象的那么多,也仔细思考过这条路该怎么走,却怎么都走不好,找了一份相关的工作,工资不高,但好在有时间去自己学习.Anyway 还是来讲讲今天的正题.</p><p>过年那段时间看着tidb-dashboard有个挺简单的Feature,就自己做着玩玩,慢慢了解到这家公司思想和所做的事都是非常宏伟的,最近面试完了在深圳这边等着入职(<del>大专</del>应届像我这样的渣渣想入行还是非常困难的),下午有时间就顺着把路径1 Project1给做了,是个大坑可能会更新的比较慢,让基础的我非常的尴尬,好在相关文档还是讲的比较清晰的.</p><h4 id=part1>Part1</h4><p>首先是几道SQL,这里就不再赘述了,除了最后一题需要思考一下,其他的都还是非常简单的,主要还是CASE确实用的比较少,下面从评论区搞了一份答案过来讲讲思路.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-mysql data-lang=mysql><span style=display:flex><span><span style=color:#66d9ef>SELECT</span> <span style=color:#66d9ef>CASE</span>
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>WHEN</span> P <span style=color:#66d9ef>IS</span> <span style=color:#66d9ef>NULL</span> <span style=color:#66d9ef>THEN</span> <span style=color:#a6e22e>CONCAT</span>(N, <span style=color:#e6db74>&#39; Root&#39;</span>)
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>WHEN</span> N <span style=color:#66d9ef>IN</span> (<span style=color:#66d9ef>SELECT</span> <span style=color:#66d9ef>DISTINCT</span> P <span style=color:#66d9ef>FROM</span> BST) <span style=color:#66d9ef>THEN</span> <span style=color:#a6e22e>CONCAT</span>(N, <span style=color:#e6db74>&#39; Inner&#39;</span>)
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>ELSE</span> <span style=color:#a6e22e>CONCAT</span>(N, <span style=color:#e6db74>&#39; Leaf&#39;</span>)
+</span></span><span style=display:flex><span>	END
+</span></span><span style=display:flex><span><span style=color:#66d9ef>FROM</span> BST
+</span></span><span style=display:flex><span><span style=color:#66d9ef>ORDER</span> <span style=color:#66d9ef>BY</span> N <span style=color:#66d9ef>ASC</span>
+</span></span></code></pre></div><p>只有当P col为null时,N才能为Root节点,否则的话,判断N的值是否出现在P列中,true 则为中间节点,else则为叶子结点.</p><h4 id=part2>Part2</h4><p>首先Clone一份代码到本地,先不用忙着Make,Project 1的案例不需要.</p><p>从<code>tablecodec.go</code>L39至L70代码就可以发现一些端倪,首先我们先理解<code>EncodeRowKeyWithHandle</code>这个function.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#66d9ef>var</span> (
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>tablePrefix</span>     = []<span style=color:#66d9ef>byte</span>{<span style=color:#e6db74>&#39;t&#39;</span>}
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>recordPrefixSep</span> = []byte(<span style=color:#e6db74>&#34;_r&#34;</span>)
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>indexPrefixSep</span>  = []byte(<span style=color:#e6db74>&#34;_i&#34;</span>)
+</span></span><span style=display:flex><span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>const</span> (
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>idLen</span>     = <span style=color:#ae81ff>8</span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>prefixLen</span> = <span style=color:#ae81ff>1</span> <span style=color:#f92672>+</span> <span style=color:#a6e22e>idLen</span> <span style=color:#75715e>/*tableID*/</span> <span style=color:#f92672>+</span> <span style=color:#ae81ff>2</span>
+</span></span><span style=display:flex><span>	<span style=color:#75715e>// RecordRowKeyLen is public for calculating average row size.</span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>RecordRowKeyLen</span>       = <span style=color:#a6e22e>prefixLen</span> <span style=color:#f92672>+</span> <span style=color:#a6e22e>idLen</span> <span style=color:#75715e>/*handle*/</span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>tablePrefixLength</span>     = <span style=color:#ae81ff>1</span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>recordPrefixSepLength</span> = <span style=color:#ae81ff>2</span>
+</span></span><span style=display:flex><span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// TableSplitKeyLen is the length of key &#39;t{table_id}&#39; which is used for table split.</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>const</span> <span style=color:#a6e22e>TableSplitKeyLen</span> = <span style=color:#ae81ff>1</span> <span style=color:#f92672>+</span> <span style=color:#a6e22e>idLen</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// TablePrefix returns table&#39;s prefix &#39;t&#39;.</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>TablePrefix</span>() []<span style=color:#66d9ef>byte</span> {
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>return</span> <span style=color:#a6e22e>tablePrefix</span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// appendTableRecordPrefix appends table record prefix  &#34;t[tableID]_r&#34;.</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>appendTableRecordPrefix</span>(<span style=color:#a6e22e>buf</span> []<span style=color:#66d9ef>byte</span>, <span style=color:#a6e22e>tableID</span> <span style=color:#66d9ef>int64</span>) []<span style=color:#66d9ef>byte</span> {
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>buf</span> = append(<span style=color:#a6e22e>buf</span>, <span style=color:#a6e22e>tablePrefix</span><span style=color:#f92672>...</span>)				<span style=color:#75715e>//实际上将&#39;t&#39;插入到slice head.</span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>buf</span> = <span style=color:#a6e22e>codec</span>.<span style=color:#a6e22e>EncodeInt</span>(<span style=color:#a6e22e>buf</span>, <span style=color:#a6e22e>tableID</span>)				<span style=color:#75715e>//对Tableid序列化插入到t后面.</span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>buf</span> = append(<span style=color:#a6e22e>buf</span>, <span style=color:#a6e22e>recordPrefixSep</span><span style=color:#f92672>...</span>)			<span style=color:#75715e>//插入recordPrefixSep标识符&#34;_r&#34;</span>
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>return</span> <span style=color:#a6e22e>buf</span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// EncodeRowKeyWithHandle encodes the table id, row handle into a kv.Key</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>EncodeRowKeyWithHandle</span>(<span style=color:#a6e22e>tableID</span> <span style=color:#66d9ef>int64</span>, <span style=color:#a6e22e>handle</span> <span style=color:#66d9ef>int64</span>) <span style=color:#a6e22e>kv</span>.<span style=color:#a6e22e>Key</span> {
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>buf</span> <span style=color:#f92672>:=</span> make([]<span style=color:#66d9ef>byte</span>, <span style=color:#ae81ff>0</span>, <span style=color:#a6e22e>RecordRowKeyLen</span>)			<span style=color:#75715e>//创建一个byte Slice,其len为0,cap为(prefixLen + idLen)=8+1+8+2=19.</span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>buf</span> = <span style=color:#a6e22e>appendTableRecordPrefix</span>(<span style=color:#a6e22e>buf</span>, <span style=color:#a6e22e>tableID</span>)		<span style=color:#75715e>//将空slice和tableID传入appendTableRecordPrefix.跳转到25行</span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>buf</span> = <span style=color:#a6e22e>codec</span>.<span style=color:#a6e22e>EncodeInt</span>(<span style=color:#a6e22e>buf</span>, <span style=color:#a6e22e>handle</span>)
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>return</span> <span style=color:#a6e22e>buf</span>
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>让我们来看看<code>codec.EncodeInt</code>究竟对我们的TableID进行了什么操作</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#66d9ef>var</span> (
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>tablePrefix</span>     = []<span style=color:#66d9ef>byte</span>{<span style=color:#e6db74>&#39;t&#39;</span>}
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>recordPrefixSep</span> = []byte(<span style=color:#e6db74>&#34;_r&#34;</span>)
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>indexPrefixSep</span>  = []byte(<span style=color:#e6db74>&#34;_i&#34;</span>)
+</span></span><span style=display:flex><span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>const</span> (
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>idLen</span>     = <span style=color:#ae81ff>8</span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>prefixLen</span> = <span style=color:#ae81ff>1</span> <span style=color:#f92672>+</span> <span style=color:#a6e22e>idLen</span> <span style=color:#75715e>/*tableID*/</span> <span style=color:#f92672>+</span> <span style=color:#ae81ff>2</span>
+</span></span><span style=display:flex><span>	<span style=color:#75715e>// RecordRowKeyLen is public for calculating average row size.</span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>RecordRowKeyLen</span>       = <span style=color:#a6e22e>prefixLen</span> <span style=color:#f92672>+</span> <span style=color:#a6e22e>idLen</span> <span style=color:#75715e>/*handle*/</span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>tablePrefixLength</span>     = <span style=color:#ae81ff>1</span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>recordPrefixSepLength</span> = <span style=color:#ae81ff>2</span>
+</span></span><span style=display:flex><span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// TableSplitKeyLen is the length of key &#39;t{table_id}&#39; which is used for table split.</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>const</span> <span style=color:#a6e22e>TableSplitKeyLen</span> = <span style=color:#ae81ff>1</span> <span style=color:#f92672>+</span> <span style=color:#a6e22e>idLen</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// TablePrefix returns table&#39;s prefix &#39;t&#39;.</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>TablePrefix</span>() []<span style=color:#66d9ef>byte</span> {
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>return</span> <span style=color:#a6e22e>tablePrefix</span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// appendTableRecordPrefix appends table record prefix  &#34;t[tableID]_r&#34;.</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>appendTableRecordPrefix</span>(<span style=color:#a6e22e>buf</span> []<span style=color:#66d9ef>byte</span>, <span style=color:#a6e22e>tableID</span> <span style=color:#66d9ef>int64</span>) []<span style=color:#66d9ef>byte</span> {
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>buf</span> = append(<span style=color:#a6e22e>buf</span>, <span style=color:#a6e22e>tablePrefix</span><span style=color:#f92672>...</span>)				<span style=color:#75715e>//实际上将&#39;t&#39;插入到slice head.</span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>buf</span> = <span style=color:#a6e22e>codec</span>.<span style=color:#a6e22e>EncodeInt</span>(<span style=color:#a6e22e>buf</span>, <span style=color:#a6e22e>tableID</span>)				<span style=color:#75715e>//对Tableid序列化插入到t后面.</span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>buf</span> = append(<span style=color:#a6e22e>buf</span>, <span style=color:#a6e22e>recordPrefixSep</span><span style=color:#f92672>...</span>)			<span style=color:#75715e>//插入recordPrefixSep标识符&#34;_r&#34;</span>
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>return</span> <span style=color:#a6e22e>buf</span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// EncodeRowKeyWithHandle encodes the table id, row handle into a kv.Key</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>EncodeRowKeyWithHandle</span>(<span style=color:#a6e22e>tableID</span> <span style=color:#66d9ef>int64</span>, <span style=color:#a6e22e>handle</span> <span style=color:#66d9ef>int64</span>) <span style=color:#a6e22e>kv</span>.<span style=color:#a6e22e>Key</span> {
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>buf</span> <span style=color:#f92672>:=</span> make([]<span style=color:#66d9ef>byte</span>, <span style=color:#ae81ff>0</span>, <span style=color:#a6e22e>RecordRowKeyLen</span>)			<span style=color:#75715e>//创建一个byte Slice,其len为0,cap为(prefixLen + idLen)=8+1+8+2=19.</span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>buf</span> = <span style=color:#a6e22e>appendTableRecordPrefix</span>(<span style=color:#a6e22e>buf</span>, <span style=color:#a6e22e>tableID</span>)		<span style=color:#75715e>//将空slice和tableID传入appendTableRecordPrefix.跳转到25行</span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>buf</span> = <span style=color:#a6e22e>codec</span>.<span style=color:#a6e22e>EncodeInt</span>(<span style=color:#a6e22e>buf</span>, <span style=color:#a6e22e>handle</span>)
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>return</span> <span style=color:#a6e22e>buf</span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>EncodeInt</span>(<span style=color:#a6e22e>b</span> []<span style=color:#66d9ef>byte</span>, <span style=color:#a6e22e>v</span> <span style=color:#66d9ef>int64</span>) []<span style=color:#66d9ef>byte</span> {
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>var</span> <span style=color:#a6e22e>data</span> [<span style=color:#ae81ff>8</span>]<span style=color:#66d9ef>byte</span>								<span style=color:#75715e>//生成一个长度为8的Array</span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>u</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>EncodeIntToCmpUint</span>(<span style=color:#a6e22e>v</span>)						<span style=color:#75715e>//跳转到第50行</span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>binary</span>.<span style=color:#a6e22e>BigEndian</span>.<span style=color:#a6e22e>PutUint64</span>(<span style=color:#a6e22e>data</span>[:], <span style=color:#a6e22e>u</span>)			<span style=color:#75715e>//根据u来generate TableID</span>
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>return</span> append(<span style=color:#a6e22e>b</span>, <span style=color:#a6e22e>data</span>[:]<span style=color:#f92672>...</span>)					<span style=color:#75715e>//世界线收束</span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>const</span> <span style=color:#a6e22e>signMask</span> <span style=color:#66d9ef>uint64</span> = <span style=color:#ae81ff>0x8000000000000000</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// EncodeIntToCmpUint make int v to comparable uint type</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>EncodeIntToCmpUint</span>(<span style=color:#a6e22e>v</span> <span style=color:#66d9ef>int64</span>) <span style=color:#66d9ef>uint64</span> {
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>return</span> uint64(<span style=color:#a6e22e>v</span>) ^ <span style=color:#a6e22e>signMask</span>						<span style=color:#75715e>//进行一次异或操作</span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> (<span style=color:#a6e22e>bigEndian</span>) <span style=color:#a6e22e>PutUint64</span>(<span style=color:#a6e22e>b</span> []<span style=color:#66d9ef>byte</span>, <span style=color:#a6e22e>v</span> <span style=color:#66d9ef>uint64</span>) {
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>_</span> = <span style=color:#a6e22e>b</span>[<span style=color:#ae81ff>7</span>] <span style=color:#75715e>// early bounds check to guarantee safety of writes below</span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>b</span>[<span style=color:#ae81ff>0</span>] = byte(<span style=color:#a6e22e>v</span> <span style=color:#f92672>&gt;&gt;</span> <span style=color:#ae81ff>56</span>)
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>b</span>[<span style=color:#ae81ff>1</span>] = byte(<span style=color:#a6e22e>v</span> <span style=color:#f92672>&gt;&gt;</span> <span style=color:#ae81ff>48</span>)
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>b</span>[<span style=color:#ae81ff>2</span>] = byte(<span style=color:#a6e22e>v</span> <span style=color:#f92672>&gt;&gt;</span> <span style=color:#ae81ff>40</span>)
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>b</span>[<span style=color:#ae81ff>3</span>] = byte(<span style=color:#a6e22e>v</span> <span style=color:#f92672>&gt;&gt;</span> <span style=color:#ae81ff>32</span>)
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>b</span>[<span style=color:#ae81ff>4</span>] = byte(<span style=color:#a6e22e>v</span> <span style=color:#f92672>&gt;&gt;</span> <span style=color:#ae81ff>24</span>)
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>b</span>[<span style=color:#ae81ff>5</span>] = byte(<span style=color:#a6e22e>v</span> <span style=color:#f92672>&gt;&gt;</span> <span style=color:#ae81ff>16</span>)
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>b</span>[<span style=color:#ae81ff>6</span>] = byte(<span style=color:#a6e22e>v</span> <span style=color:#f92672>&gt;&gt;</span> <span style=color:#ae81ff>8</span>)
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>b</span>[<span style=color:#ae81ff>7</span>] = byte(<span style=color:#a6e22e>v</span>)
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span><span style=color:#75715e>//进行一次位移操作</span>
+</span></span></code></pre></div><p>这时,我们的TableID看起来应该是这样</p><p><code>"t{TableId}_r{rowhandle}"</code></p><p>这下子Decode就非常简单了,因为序列化后的长度我们是已知的为8:对于t后的slice进行一次还原操作,以及对r后的slice进行一次还原,就可以得到tableID和handle.</p><p>这里处理前需要做个判断,如果len(key)≠prefixLen + idLen,那么这个table是非法的.</p><p>咱们再来看看<code>DecodeIndexKeyPrefix</code></p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#75715e>// appendTableIndexPrefix appends table index prefix  &#34;t[tableID]_i&#34;.</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>appendTableIndexPrefix</span>(<span style=color:#a6e22e>buf</span> []<span style=color:#66d9ef>byte</span>, <span style=color:#a6e22e>tableID</span> <span style=color:#66d9ef>int64</span>) []<span style=color:#66d9ef>byte</span> {
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>buf</span> = append(<span style=color:#a6e22e>buf</span>, <span style=color:#a6e22e>tablePrefix</span><span style=color:#f92672>...</span>)
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>buf</span> = <span style=color:#a6e22e>codec</span>.<span style=color:#a6e22e>EncodeInt</span>(<span style=color:#a6e22e>buf</span>, <span style=color:#a6e22e>tableID</span>)
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>buf</span> = append(<span style=color:#a6e22e>buf</span>, <span style=color:#a6e22e>indexPrefixSep</span><span style=color:#f92672>...</span>)
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>return</span> <span style=color:#a6e22e>buf</span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// EncodeIndexSeekKey encodes an index value to kv.Key.</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>EncodeIndexSeekKey</span>(<span style=color:#a6e22e>tableID</span> <span style=color:#66d9ef>int64</span>, <span style=color:#a6e22e>idxID</span> <span style=color:#66d9ef>int64</span>, <span style=color:#a6e22e>encodedValue</span> []<span style=color:#66d9ef>byte</span>) <span style=color:#a6e22e>kv</span>.<span style=color:#a6e22e>Key</span> {
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>key</span> <span style=color:#f92672>:=</span> make([]<span style=color:#66d9ef>byte</span>, <span style=color:#ae81ff>0</span>, <span style=color:#a6e22e>prefixLen</span><span style=color:#f92672>+</span><span style=color:#a6e22e>idLen</span><span style=color:#f92672>+</span>len(<span style=color:#a6e22e>encodedValue</span>))
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>key</span> = <span style=color:#a6e22e>appendTableIndexPrefix</span>(<span style=color:#a6e22e>key</span>, <span style=color:#a6e22e>tableID</span>)
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>key</span> = <span style=color:#a6e22e>codec</span>.<span style=color:#a6e22e>EncodeInt</span>(<span style=color:#a6e22e>key</span>, <span style=color:#a6e22e>idxID</span>)
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>key</span> = append(<span style=color:#a6e22e>key</span>, <span style=color:#a6e22e>encodedValue</span><span style=color:#f92672>...</span>)
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>return</span> <span style=color:#a6e22e>key</span>
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>其实大同小异,无非是添加了一个encodedValue,这里留给大家思考</p><p>具体的解码在<code>codec.DecodeInt</code>这个函数中,PingCAP的老师们已经帮忙写好了,非常的银杏化哈哈</p><p>算是开了个大坑,有机会的话所有路径全部都做一遍,算是对自己的锻炼吧</p><p>拜拜👋</p></div></article><hr><div class=post-info><p><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83.0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7" y2="7"/></svg>
+<span class=tag><a href=https://co1a.me/tags/%E5%AD%A6%E4%B9%A0/>学习</a></span></p><p><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text"><path d="M14 2H6A2 2 0 004 4v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+537字</p><p><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+2021-03-03 16:11</p></div><hr><div class=sharing-buttons><a class=resp-sharing-button__link href="https://facebook.com/sharer/sharer.php?u=https%3a%2f%2fco1a.me%2fposts%2f2021%2f03%2fpingcap-talent-project-%25E8%25B7%25AF%25E5%25BE%25841-project1%2f" target=_blank rel=noopener aria-label title="Share on facebook"><div class="resp-sharing-button resp-sharing-button--facebook resp-sharing-button--small"><div aria-hidden=true class="resp-sharing-button__icon resp-sharing-button__icon--solid"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg></div></div></a><a class=resp-sharing-button__link href="https://twitter.com/intent/tweet/?url=https%3a%2f%2fco1a.me%2fposts%2f2021%2f03%2fpingcap-talent-project-%25E8%25B7%25AF%25E5%25BE%25841-project1%2f" target=_blank rel=noopener aria-label title="Share on twitter"><div class="resp-sharing-button resp-sharing-button--twitter resp-sharing-button--small"><div aria-hidden=true class="resp-sharing-button__icon resp-sharing-button__icon--solid"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 3a10.9 10.9.0 01-3.14 1.53 4.48 4.48.0 00-7.86 3v1A10.66 10.66.0 013 4s-4 9 5 13a11.64 11.64.0 01-7 2c9 5 20 0 20-11.5a4.5 4.5.0 00-.08-.83A7.72 7.72.0 0023 3z"/></svg></div></div></a><a class=resp-sharing-button__link href="https://www.tumblr.com/widgets/share/tool?posttype=link&amp;title=PingCAP%20Talent%20Project%20%e8%b7%af%e5%be%841%20Project1&amp;caption=PingCAP%20Talent%20Project%20%e8%b7%af%e5%be%841%20Project1&amp;canonicalUrl=https%3a%2f%2fco1a.me%2fposts%2f2021%2f03%2fpingcap-talent-project-%25E8%25B7%25AF%25E5%25BE%25841-project1%2f" target=_blank rel=noopener aria-label title="Share on tumblr"><div class="resp-sharing-button resp-sharing-button--tumblr resp-sharing-button--small"><div aria-hidden=true class="resp-sharing-button__icon resp-sharing-button__icon--solid"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.563 24c-5.093.0-7.031-3.756-7.031-6.411V9.747H5.116V6.648c3.63-1.313 4.512-4.596 4.71-6.469C9.84.051 9.941.0 9.999.0h3.517v6.114h4.801v3.633h-4.82v7.47c.016 1.001.375 2.371 2.207 2.371h.09c.631-.02 1.486-.205 1.936-.419l1.156 3.425c-.436.636-2.4 1.374-4.156 1.404h-.178l.011.002z"/></svg></div></div></a><a class=resp-sharing-button__link href="mailto:?subject=PingCAP%20Talent%20Project%20%e8%b7%af%e5%be%841%20Project1&amp;body=https%3a%2f%2fco1a.me%2fposts%2f2021%2f03%2fpingcap-talent-project-%25E8%25B7%25AF%25E5%25BE%25841-project1%2f" target=_self rel=noopener aria-label title="Share via email"><div class="resp-sharing-button resp-sharing-button--email resp-sharing-button--small"><div aria-hidden=true class="resp-sharing-button__icon resp-sharing-button__icon--solid"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1.0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1.0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div></div></a><a class=resp-sharing-button__link href="https://pinterest.com/pin/create/button/?url=https%3a%2f%2fco1a.me%2fposts%2f2021%2f03%2fpingcap-talent-project-%25E8%25B7%25AF%25E5%25BE%25841-project1%2f&amp;media=https%3a%2f%2fco1a.me%2fposts%2f2021%2f03%2fpingcap-talent-project-%25E8%25B7%25AF%25E5%25BE%25841-project1%2f;description=PingCAP%20Talent%20Project%20%e8%b7%af%e5%be%841%20Project1" target=_blank rel=noopener aria-label title="Share on pinterest"><div class="resp-sharing-button resp-sharing-button--pinterest resp-sharing-button--small"><div aria-hidden=true class="resp-sharing-button__icon resp-sharing-button__icon--solid"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12.017.0C5.396.0.029 5.367.029 11.987c0 5.079 3.158 9.417 7.618 11.162-.105-.949-.199-2.403.041-3.439.219-.937 1.406-5.957 1.406-5.957s-.359-.72-.359-1.781c0-1.663.967-2.911 2.168-2.911 1.024.0 1.518.769 1.518 1.688.0 1.029-.653 2.567-.992 3.992-.285 1.193.6 2.165 1.775 2.165 2.128.0 3.768-2.245 3.768-5.487.0-2.861-2.063-4.869-5.008-4.869-3.41.0-5.409 2.562-5.409 5.199.0 1.033.394 2.143.889 2.741.099.12.112.225.085.345-.09.375-.293 1.199-.334 1.363-.053.225-.172.271-.401.165-1.495-.69-2.433-2.878-2.433-4.646.0-3.776 2.748-7.252 7.92-7.252 4.158.0 7.392 2.967 7.392 6.923.0 4.135-2.607 7.462-6.233 7.462-1.214.0-2.354-.629-2.758-1.379l-.749 2.848c-.269 1.045-1.004 2.352-1.498 3.146 1.123.345 2.306.535 3.55.535 6.607.0 11.985-5.365 11.985-11.987C23.97 5.39 18.592.026 11.985.026L12.017.0z"/></svg></div></div></a><a class=resp-sharing-button__link href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https%3a%2f%2fco1a.me%2fposts%2f2021%2f03%2fpingcap-talent-project-%25E8%25B7%25AF%25E5%25BE%25841-project1%2f&amp;title=PingCAP%20Talent%20Project%20%e8%b7%af%e5%be%841%20Project1&amp;summary=PingCAP%20Talent%20Project%20%e8%b7%af%e5%be%841%20Project1&amp;source=https%3a%2f%2fco1a.me%2fposts%2f2021%2f03%2fpingcap-talent-project-%25E8%25B7%25AF%25E5%25BE%25841-project1%2f" target=_blank rel=noopener aria-label title="Share on linkedin"><div class="resp-sharing-button resp-sharing-button--linkedin resp-sharing-button--small"><div aria-hidden=true class="resp-sharing-button__icon resp-sharing-button__icon--solid"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg></div></div></a><a class=resp-sharing-button__link href="https://reddit.com/submit/?url=https%3a%2f%2fco1a.me%2fposts%2f2021%2f03%2fpingcap-talent-project-%25E8%25B7%25AF%25E5%25BE%25841-project1%2f&amp;resubmit=true&amp;title=PingCAP%20Talent%20Project%20%e8%b7%af%e5%be%841%20Project1" target=_blank rel=noopener aria-label title="Share on reddit"><div class="resp-sharing-button resp-sharing-button--reddit resp-sharing-button--small"><div aria-hidden=true class="resp-sharing-button__icon resp-sharing-button__icon--solid"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12 0A12 12 0 000 12a12 12 0 0012 12 12 12 0 0012-12A12 12 0 0012 0zm5.01 4.744c.688.0 1.25.561 1.25 1.249a1.25 1.25.0 01-2.498.056l-2.597-.547-.8 3.747c1.824.07 3.48.632 4.674 1.488.308-.309.73-.491 1.207-.491.968.0 1.754.786 1.754 1.754.0.716-.435 1.333-1.01 1.614a3.111 3.111.0 01.042.52c0 2.694-3.13 4.87-7.004 4.87s-7.004-2.176-7.004-4.87c0-.183.015-.366.043-.534A1.748 1.748.0 014.028 12c0-.968.786-1.754 1.754-1.754.463.0.898.196 1.207.49 1.207-.883 2.878-1.43 4.744-1.487l.885-4.182a.342.342.0 01.14-.197.35.35.0 01.238-.042l2.906.617a1.214 1.214.0 011.108-.701zM9.25 12C8.561 12 8 12.562 8 13.25c0 .687.561 1.248 1.25 1.248.687.0 1.248-.561 1.248-1.249S9.937 12 9.249 12zm5.5.0c-.687.0-1.248.561-1.248 1.25.0.687.561 1.248 1.249 1.248S16 13.937 16 13.249c0-.687-.562-1.249-1.25-1.249zm-5.466 3.99a.327.327.0 00-.231.094.33.33.0 000 .463c.842.842 2.484.913 2.961.913s2.105-.056 2.961-.913a.361.361.0 00.029-.463.33.33.0 00-.464.0c-.547.533-1.684.73-2.512.73-.828.0-1.979-.196-2.512-.73a.326.326.0 00-.232-.095z"/></svg></div></div></a><a class=resp-sharing-button__link href="https://www.xing.com/app/user?op=share;url=https%3a%2f%2fco1a.me%2fposts%2f2021%2f03%2fpingcap-talent-project-%25E8%25B7%25AF%25E5%25BE%25841-project1%2f;title=PingCAP%20Talent%20Project%20%e8%b7%af%e5%be%841%20Project1" target=_blank rel=noopener aria-label title="Share on xing"><div class="resp-sharing-button resp-sharing-button--xing resp-sharing-button--small"><div aria-hidden=true class="resp-sharing-button__icon resp-sharing-button__icon--solid"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M18.188.0c-.517.0-.741.325-.927.66.0.0-7.455 13.224-7.702 13.657.015.024 4.919 9.023 4.919 9.023.17.308.436.66.967.66h3.454c.211.0.375-.078.463-.22.089-.151.089-.346-.009-.536l-4.879-8.916c-.004-.006-.004-.016.0-.022L22.139.756c.095-.191.097-.387.006-.535C22.056.078 21.894.0 21.686.0h-3.498zM3.648 4.74c-.211.0-.385.074-.473.216-.09.149-.078.339.02.531l2.34 4.05c.004.01.004.016.0.021L1.86 16.051c-.099.188-.093.381.0.529.085.142.239.234.45.234h3.461c.518.0.766-.348.945-.667l3.734-6.609-2.378-4.155c-.172-.315-.434-.659-.962-.659H3.648v.016z"/></svg></div></div></a><a class=resp-sharing-button__link href="whatsapp://send?text=PingCAP%20Talent%20Project%20%e8%b7%af%e5%be%841%20Project1%20https%3a%2f%2fco1a.me%2fposts%2f2021%2f03%2fpingcap-talent-project-%25E8%25B7%25AF%25E5%25BE%25841-project1%2f" target=_blank rel=noopener aria-label title="Share on whatsapp"><div class="resp-sharing-button resp-sharing-button--whatsapp resp-sharing-button--small"><div aria-hidden=true class="resp-sharing-button__icon resp-sharing-button__icon--solid"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="none" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198.0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479.0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87.0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86.0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64.0 5.122 1.03 6.988 2.898a9.825 9.825.0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815.0 0012.05.0C5.495.0.16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882.0 005.683 1.448h.005c6.554.0 11.89-5.335 11.893-11.893a11.821 11.821.0 00-3.48-8.413z"/></svg></div></div></a><a class=resp-sharing-button__link href="https://news.ycombinator.com/submitlink?u=https%3a%2f%2fco1a.me%2fposts%2f2021%2f03%2fpingcap-talent-project-%25E8%25B7%25AF%25E5%25BE%25841-project1%2f&amp;t=PingCAP%20Talent%20Project%20%e8%b7%af%e5%be%841%20Project1" target=_blank rel=noopener aria-label title="Share on hacker news"><div class="resp-sharing-button resp-sharing-button--hackernews resp-sharing-button--small"><div aria-hidden=true class="resp-sharing-button__icon resp-sharing-button__icon--solid"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M0 24V0h24v24H0zM6.951 5.896l4.112 7.708v5.064h1.583v-4.972l4.148-7.799h-1.749l-2.457 4.875c-.372.745-.688 1.434-.688 1.434s-.297-.708-.651-1.434L8.831 5.896h-1.88z"/></svg></div></div></a><a class=resp-sharing-button__link href="https://telegram.me/share/url?text=PingCAP%20Talent%20Project%20%e8%b7%af%e5%be%841%20Project1&amp;url=https%3a%2f%2fco1a.me%2fposts%2f2021%2f03%2fpingcap-talent-project-%25E8%25B7%25AF%25E5%25BE%25841-project1%2f" target=_blank rel=noopener aria-label title="Share on telegram"><div class="resp-sharing-button resp-sharing-button--telegram resp-sharing-button--small"><div aria-hidden=true class="resp-sharing-button__icon resp-sharing-button__icon--solid"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></div></div></a></div><div class=pagination><div class=pagination__title><span class=pagination__title-h></span><hr></div><div class=pagination__buttons><span class="button next"><a href=https://co1a.me/posts/2020/08/2step%E4%B8%BAhexo%E4%B8%BB%E9%A2%98%E6%B7%BB%E5%8A%A0likecoin%E7%9A%84%E8%B5%9E%E8%B5%8F%E9%94%AE/><span class=button__text>2Step为Hexo主题添加LikeCoin的赞赏键</span>
+<span class=button__icon>→</span></a></span></div></div></main></div><footer class=footer><div class=footer__inner><div class=footer__content><span>&copy; 2026</span>
+<span><a href=https://co1a.me/>Co1a</a></span>
+<span><a href=https://creativecommons.org/licenses/by-nc/4.0/ target=_blank rel=noopener>CC BY-NC 4.0</a></span>
+<span><a href=https://co1a.me/posts/index.xml target=_blank title=rss><svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss"><path d="M4 11a9 9 0 019 9"/><path d="M4 4a16 16 0 0116 16"/><circle cx="5" cy="19" r="1"/></svg></a></span></div></div><div class=footer__inner><div class=footer__content><span>Powered by <a href=http://gohugo.io>Hugo</a></span>
+<span>Made with &#10084; by <a href=https://github.com/rhazdon>Djordje Atlialp</a></span></div></div></footer></div><script type=text/javascript src=https://co1a.me/bundle.min.f0a83284a6a9c303ebdedda40cff4fae081def9d6a9799f08d51f2779bc03f8a9c5b606d59895c8c0cd5297ce84850caae34b98aace4b455e992310ed26193ba.js integrity="sha512-8KgyhKapwwPr3t2kDP9Prggd751ql5nwjVHyd5vAP4qcW2BtWYlcjAzVKXzoSFDKrjS5iqzktFXpkjEO0mGTug=="></script></body></html>
